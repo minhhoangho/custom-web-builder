@@ -1,0 +1,112 @@
+<style type="text/css">
+	.box {
+		border: solid 2px #000;
+		padding: 10px 5px;
+		border-right: none;
+		border-left-style: dashed;
+	}
+	.pt-10 {
+		padding-top: 10px;
+	}
+	.pb-10 {
+		padding-bottom: 10px;
+	}
+	.px-10 {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	.ml-10 {
+		margin-left: 10px;
+	}
+	.hidden {
+		opacity: 0;
+	}
+</style>
+
+<container>
+	<table>
+		<tr>
+			<td colspan="2">
+				<p><%= name %> 様</p>
+				<p>
+					こんにちは。イータイピングです。<br />
+					イータイピングコンテスト開催アカウント発行完了をお知らせいたします。
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td width="500" class="px-10" colspan="2">
+				<p class="box">【１】初回ログインについて</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<p>
+					登録Email：<%= email %> <br />
+					仮パスワード：<%= password %>
+				</p>
+				<p>
+					下記アドレスからログイン画面に移ります。<br />
+					<a href="<%= login_page %>"><%= login_page %></a>
+				</p>
+				<p>
+					また、初回ログイン時にパスワード設定画面に移りますので <br />
+					パスワードの変更をお願いします。
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td width="500" class="px-10" colspan="2">
+				<p class="box">【２】お問い合わせ・わからないことは</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<p>登録内容の変更などはログイン後のメニュー右上にて行えます。</p>
+				<p>
+					ご利用上の問題についてはイータイピング・サポート係までお問い合わせください。<br />
+					以下のアドレスをクリックするとサポート宛のメールが開くので、
+				</p>
+				<p style="margin-left: 15px">
+					１．名前 <br />
+					２．メールアドレス <br />
+					３．状況（できるだけ詳しく）<br />
+					４．利用OS <br />
+					５．利用ブラウザ <br />
+				</p>
+				<p>の５項目をお知らせください。</p>
+			</td>
+		</tr>
+		<tr>
+			<td class="px-10" colspan="2">
+				<p>
+					イータイピングサポート・メールアドレス（下記をクリック）<br />
+					mailto:<a
+						href="mailto:support@e-typing.ne.jp?subject=e-typing_help_mail"
+						>support@e-typing.ne.jp</a
+					>
+				</p>
+				<p>
+					※このメールは自動でご送信しています。<br />
+					心当たりがない場合は以下へご連絡ください。<br />
+					<a href="#">support@e-typing.ne.jp</a>
+				</p>
+				<p>”タイピングがすこし上手くなると、あなたの可能性が拡がります”</p>
+				<!-- this ensures Gmail doesn't trim the email -->
+				<span class="hidden"> <%= Date.now() %> </span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span class="ml-10">__/___/___/___/</span><br />
+				<span>/___/___/___/</span><br />
+				<span class="ml-10">/___/___/___/</span><br />
+			</td>
+			<td>
+				イータイピング株式会社 <br />
+				<a href="https://www.e-typing.ne.jp/">https://www.e-typing.ne.jp/</a>
+				<span class="hidden"> <%= Date.now() %> </span>
+			</td>
+		</tr>
+	</table>
+</container>

@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+  # Currently, no need to run app in docker
+  #   app_server:
+  #     build:
+  #         context: .
+  #         dockerfile: ./docker/Dockerfile
+  #     tty: true
+  #     container_name: base-api
+  #     ports:
+  #       - "3000:3000"
+  #     volumes:
+  #       - ./:/var/www
+  #     depends_on:
+  #       - redis
+  #       - postgres
+
+  mysql:
+    container_name: 'base_mysql'
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: "${DB_DATABASE_NAME}"
+    volumes:
+      - ./docker/mysql/conf:/etc/mysql/conf.d
+      - ./docker/mysql/entrypoint/:/docker-entrypoint-initdb.d/
+      - ./docker/mysql/data:/var/lib/mysql
+    networks:
+      - sample-network
+
+  redis:
+    container_name: 'base_redis'
+    image: redis:6.0.9-alpine
+    restart: always
+    command: redis-server
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./docker/redis/data:/var/lib/redis
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - sample-network
+
+  # Kafka
+  zookeeper:
+    container_name: 'base_zookeeper'
+    image: docker.io/bitnami/zookeeper:3.9.0-debian-11-r28
+    restart: always
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - ./docker/zookeeper/log/version-2/:/bitnami/zookeeper/log/version-2
+      - ./docker/zookeeper/data/version-2/:/bitnami/zookeeper/data/version-2
+    networks:
+      - sample-network
+
+  kafka:
+    container_name: 'base_kafka'
+    image: docker.io/bitnami/kafka:3.5.1-debian-11-r58
+    restart: always
+    ports:
+      - "${KAFKA_PORT}:9092"
+      - "9093:9093"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://kafka:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+    depends_on:
+      - zookeeper
+    networks:
+      - sample-network
+
+networks:
+  sample-network:
+    driver: bridge
+
