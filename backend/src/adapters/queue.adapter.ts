@@ -2,10 +2,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger } from '@nestjs/common';
 import { QUEUE_NAMES } from '../features/jobs/constants';
 import * as _ from 'lodash';
-import { createBullBoard } from '@bull-board/api';
-import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { ExpressAdapter } from '@bull-board/express';
-import { Queue } from 'bull';
+import { Queue } from 'bullmq';
 
 export class QueueAdapter {
   serverAdapter: ExpressAdapter;
@@ -25,12 +23,5 @@ export class QueueAdapter {
         .map((queue) => queue.name)
         .join(',')}`,
     );
-
-    createBullBoard({
-      queues: queues.map((queue) => new BullAdapter(queue)),
-      serverAdapter: this.serverAdapter,
-    });
-
-    app.use('/admin/monitor/bull-board', this.serverAdapter.getRouter());
   }
 }

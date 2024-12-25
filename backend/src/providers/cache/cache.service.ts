@@ -8,6 +8,7 @@ export class RedisCacheService {
   private cache;
 
   constructor() {
+    console.log("loadConfig.redis.host", loadConfig.redis)
     this.cache = createClient({
       socket: {
         host: loadConfig.redis.host,
