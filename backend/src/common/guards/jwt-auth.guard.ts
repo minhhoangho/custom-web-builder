@@ -9,7 +9,7 @@ import { JSONObject } from '@common/types';
  */
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  handleRequest(err: Error, user: JSONObject, info: JSONObject): any {
+  handleRequest(err: Error, user: JSONObject, info: JSONObject): JSONObject {
     // No token found
     if (info?.message === 'No auth token') {
       throw new UnAuthorizedError(ErrorCode.UNAUTHORIZED, {

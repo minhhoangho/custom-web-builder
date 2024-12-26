@@ -11,12 +11,13 @@ import {
   IHeaders,
 } from 'kafkajs';
 import { ModuleMetadata, Type } from '@nestjs/common';
+import { JSONObject } from '@common/types';
 
 // export interface IHeaders {
 //   [key: string]: string | Buffer | number | boolean;
 // }
 export interface KafkaResponse {
-  response: never;
+  response: JSONObject;
   key: string;
   timestamp: string;
   offset: number;
@@ -42,7 +43,7 @@ export interface KafkaMessageObject extends Message {
 }
 export interface KafkaMessageSend extends Omit<ProducerRecord, 'topic'> {
   messages: KafkaMessageObject[];
-  topic?: string;
+  topic: string;
 }
 export interface KafkaModuleOptionsAsync
   extends Pick<ModuleMetadata, 'imports'> {

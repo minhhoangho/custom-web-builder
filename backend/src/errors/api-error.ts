@@ -5,7 +5,7 @@ import {
 
 // Use one error class for all places in project
 export class ApiError extends Error {
-  private status: number;
+  status: number;
 
   title: string | undefined;
 

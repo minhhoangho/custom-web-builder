@@ -35,7 +35,7 @@ export class KafkaResponseDeserializer<T>
 
     return {
       key: id,
-      response: response as T,
+      response,
       timestamp,
       offset: toNumber(offset) as number,
       headers: headers as IHeaders,

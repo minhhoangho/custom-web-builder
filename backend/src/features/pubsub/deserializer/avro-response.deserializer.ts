@@ -5,6 +5,7 @@ import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { SchemaRegistryAPIClientArgs } from '@kafkajs/confluent-schema-registry/dist/api';
 import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-registry/dist/@types';
 import { KafkaResponseDeserializer } from './kafka-response.deserializer';
+import { JSONObject } from '@common/types';
 
 export class KafkaAvroResponseDeserializer
   implements Deserializer<never, Promise<KafkaResponse>>
@@ -24,8 +25,8 @@ export class KafkaAvroResponseDeserializer
   }
 
   async deserialize(
-    message: any,
-    _options?: Record<string, any>,
+    message: JSONObject,
+    _options?: JSONObject,
   ): Promise<KafkaResponse> {
     const { value, key, timestamp, offset } = message;
     const decodeResponse = {

@@ -20,6 +20,7 @@ import {
   FindOneBuilderOptions,
   FindWithPaginationBuilderOptions,
 } from '@common/constants/types';
+import { JSONObject } from '@common/types';
 
 export class BaseRepository<E> extends Repository<E> {
   public entityName = _.replace(this.constructor.name, 'Repository', '');
@@ -93,9 +94,9 @@ export class BaseRepository<E> extends Repository<E> {
     let queryBuilder: SelectQueryBuilder<E> =
       this.createQueryBuilder(aliasName);
 
-    let limit = Number(options.limit || PAGINATION_DEFAULT.LIMIT);
-    let offset = Number(options.offset || PAGINATION_DEFAULT.OFFSET);
-    const orderBy: AnyObject = options.order || {
+    let limit = Number(options.limit ?? PAGINATION_DEFAULT.LIMIT);
+    let offset = Number(options.offset ?? PAGINATION_DEFAULT.OFFSET);
+    const orderBy: AnyObject = options.order ?? {
       [`${aliasName}.updatedAt`]: 'DESC',
     };
 

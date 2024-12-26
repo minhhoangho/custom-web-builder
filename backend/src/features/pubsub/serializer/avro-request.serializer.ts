@@ -4,7 +4,7 @@ import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { SchemaRegistryAPIClientArgs } from '@kafkajs/confluent-schema-registry/dist/api';
 import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-registry/dist/@types';
 
-import { KafkaMessageSend, KafkaMessageObject } from '../kafka.interfaces';
+import { KafkaMessageObject, KafkaMessageSend } from '../kafka.interfaces';
 
 type KafkaAvroRequestSerializerSchema = {
   topic: string;
@@ -101,8 +101,9 @@ export class KafkaAvroRequestSerializer
    * @param topic
    */
   private async updateSchemas(topic: string): Promise<void> {
-    const lastCheck = this.lastSchemaFetchInterval.get(topic);
-    const configCheckMs = this.config.schemaFetchIntervalSeconds / 1000;
+    const lastCheck = this.lastSchemaFetchInterval.get(topic) ?? 0;
+    const configCheckMs =
+      (this.config?.schemaFetchIntervalSeconds ?? 1000) / 1000;
     const now = Date.now();
 
     if (lastCheck + configCheckMs > now) {
@@ -119,7 +120,7 @@ export class KafkaAvroRequestSerializer
     try {
       await this.updateSchemas(value.topic);
 
-      const schema = this.schemas.get(value.topic);
+      const schema: KafkaSchemaMap = this.schemas.get(value.topic);
       const { keyId, valueId } = schema;
 
       const messages: Promise<KafkaMessageObject>[] = value.messages.map(

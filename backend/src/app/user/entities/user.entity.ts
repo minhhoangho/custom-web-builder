@@ -3,6 +3,7 @@ import { BaseEntityTimestampSoftDelete } from '@common/entity';
 import { Post, Role } from '@app/entity';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { JSONObject } from '@common/types';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntityTimestampSoftDelete {
@@ -62,8 +63,7 @@ export class User extends BaseEntityTimestampSoftDelete {
     type: 'json',
     nullable: true,
   })
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  credentials: object;
+  credentials: JSONObject;
 
   @Column({
     name: 'role_id',

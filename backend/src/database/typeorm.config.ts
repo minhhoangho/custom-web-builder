@@ -5,7 +5,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { TypeORMLogger } from '@database/db-logger';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
-  type: <any>envConfig.db.type,
+  type: <never>envConfig.db.type,
   host: envConfig.db.host,
   port: envConfig.db.port,
   username: envConfig.db.username,
