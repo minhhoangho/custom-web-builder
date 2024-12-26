@@ -1,12 +1,13 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { JSONObject } from '@common/types';
 
-export const PaginationResponseApiDoc = (exampleDatas: any[] = []) =>
+export const PaginationResponseApiDoc = (exampleData: JSONObject[] = []) =>
   applyDecorators(
     ApiOkResponse({
       schema: {
         example: {
-          data: exampleDatas,
+          data: exampleData,
           pagination: {
             total: 0,
             limit: 10,

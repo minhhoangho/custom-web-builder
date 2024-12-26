@@ -8,6 +8,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   ParseIntPipe,
   Post,
@@ -77,11 +78,10 @@ export class UserController {
 
   @Put('/mail')
   @HttpCode(HttpStatus.NO_CONTENT)
-  sendDummyEmail(): Promise<any> {
-    console.log('Dummy emails ....');
+  sendDummyEmail() {
+    Logger.log('Dummy emails ....');
     _.range(100).map(() =>
       this.mailProducer.sendMail(Math.random().toString(36).slice(6)),
     );
-    return null;
   }
 }

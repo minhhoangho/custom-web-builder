@@ -3,14 +3,15 @@ import { KafkaMessageObject, KafkaResponse } from '../kafka.interfaces';
 import { IHeaders, KafkaMessage } from 'kafkajs';
 import { Logger } from '@nestjs/common';
 import { toNumber } from 'lodash';
+import { JSONObject } from '@common/types';
 
 export class KafkaResponseDeserializer<T>
-  implements Deserializer<any, KafkaMessageObject>
+  implements Deserializer<JSONObject, KafkaMessageObject>
 {
   deserialize(
     message: KafkaMessage,
-    _options?: Record<string, any>,
-  ): KafkaResponse<T> {
+    _options?: Record<string, JSONObject>,
+  ): KafkaResponse {
     const { key, value, timestamp, offset, headers } = message;
     let id: string | Buffer | null = key;
     let response: string | unknown = value;

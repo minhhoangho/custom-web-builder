@@ -2,7 +2,7 @@ import loadConfig from 'src/configs';
 import { join } from 'path';
 
 const seedingConfig = {
-  type: <any>loadConfig.db.type,
+  type: <string>loadConfig.db.type,
   host: loadConfig.db.host,
   port: loadConfig.db.port,
   username: loadConfig.db.username,

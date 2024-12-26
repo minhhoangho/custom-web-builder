@@ -9,9 +9,10 @@ import type {
 import { ENTITY_METADATA_KEY } from './custom-repository.constants';
 import { Repository } from './utils/custom-repository.type';
 import { getCustomRepositoryToken } from './utils/custom-repository.util';
+import { JSONObject } from '@common/types';
 
 export function EntityRepository(target: EntityTarget<ObjectLiteral>) {
-  return function (constructor: { new (...args: any[]): any }) {
+  return function (constructor: { new (...args: JSONObject[]): JSONObject }) {
     Reflect.defineMetadata(ENTITY_METADATA_KEY, target, constructor);
   };
 }
