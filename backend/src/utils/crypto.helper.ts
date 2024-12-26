@@ -1,12 +1,17 @@
 import { AnyObject } from '@common/constants/types';
 import crypto from 'crypto';
+import { Logger } from '@nestjs/common';
 
 export class CryptoHelper {
-  static getBufferOfEncryptionKey(encryptionKey = ''):Buffer {
+  static getBufferOfEncryptionKey(encryptionKey = ''): Buffer {
     return Buffer.from(encryptionKey, 'hex');
   }
 
-  static aesEncrypt(payload: AnyObject, aes128EncryptionKey: string, algorithm = 'aes-128-ecb'): string {
+  static aesEncrypt(
+    payload: AnyObject,
+    aes128EncryptionKey: string,
+    algorithm = 'aes-128-ecb',
+  ): string {
     const payloadInString = JSON.stringify(payload);
     const key = this.getBufferOfEncryptionKey(aes128EncryptionKey);
     const cipher = crypto.createCipheriv(algorithm, key, null);
@@ -14,7 +19,11 @@ export class CryptoHelper {
     return cipher.update(payloadInString, 'utf8', 'hex') + cipher.final('hex');
   }
 
-  static aesDecrypt(encryptedInHex: string, aes128EncryptionKey: string, algorithm = 'aes-128-ecb') {
+  static aesDecrypt(
+    encryptedInHex: string,
+    aes128EncryptionKey: string,
+    algorithm = 'aes-128-ecb',
+  ) {
     const key = this.getBufferOfEncryptionKey(aes128EncryptionKey);
     const decipher = crypto.createDecipheriv(algorithm, key, null);
 
@@ -23,7 +32,8 @@ export class CryptoHelper {
         decipher.update(encryptedInHex, 'hex', 'utf8') + decipher.final('utf8');
 
       return JSON.parse(decrypted);
-    } catch (e) {
+    } catch (error) {
+      Logger.warn('aesDecrypt error', error);
       return false;
     }
   }

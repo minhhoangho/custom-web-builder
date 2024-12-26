@@ -5,7 +5,7 @@ export const NoContentResponseApiDoc = () =>
   applyDecorators(
     ApiResponse({
       status: HttpStatus.NO_CONTENT,
-      description: 'No Content'
+      description: 'No Content',
     }),
   );
 
@@ -14,8 +14,8 @@ export const CreatedResponseApiDoc = (exampleData: any = {}) =>
     ApiResponse({
       status: HttpStatus.CREATED,
       schema: {
-        example: exampleData
-      }
+        example: exampleData,
+      },
     }),
   );
 
@@ -23,7 +23,7 @@ export const ObjectResponseApiDoc = (exampleData: any = {}) =>
   applyDecorators(
     ApiOkResponse({
       schema: {
-        example: exampleData
-      }
+        example: exampleData,
+      },
     }),
   );

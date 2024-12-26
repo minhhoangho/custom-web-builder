@@ -8,8 +8,8 @@ export class CreateUserPayloadValidation extends BaseValidation {
       last_name: Joi.string().required(),
       email: Joi.string()
         .max(127)
-        .email({tlds: {allow: false}})
-        .required()
+        .email({ tlds: { allow: false } })
+        .required(),
     });
   }
 }

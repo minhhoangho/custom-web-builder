@@ -23,9 +23,9 @@ export class CreateRolesTable1626660508747 implements MigrationInterface {
         columnNames: ['key'],
       }),
     ];
-    for (const index of indexes) {
-      await queryRunner.createIndex('roles', index);
-    }
+    await Promise.all(
+      indexes.map((index) => queryRunner.createIndex('roles', index)),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

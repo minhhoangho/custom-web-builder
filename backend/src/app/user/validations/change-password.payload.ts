@@ -10,7 +10,7 @@ export class ChangePasswordPayloadValidation extends BaseValidation {
       password: Joi.string()
         .max(PASSWORD_MAX_LENGTH)
         .min(PASSWORD_MIN_LENGTH)
-        .required()
+        .required(),
     });
   }
 }

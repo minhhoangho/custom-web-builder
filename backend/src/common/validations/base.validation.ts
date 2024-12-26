@@ -9,13 +9,12 @@ export abstract class BaseValidation implements PipeTransform {
 
   abstract getSchema(): ObjectSchema;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transform(value: any, metadata: ArgumentMetadata) {
     if (!includes(['body', 'query'], metadata.type)) return value;
 
     this.schema = this.getSchema();
     const { error, value: validatedValue } = this.schema.validate(value, {
-      abortEarly: false
+      abortEarly: false,
     });
     if (error) {
       throw new JoiValidationError(error.details);

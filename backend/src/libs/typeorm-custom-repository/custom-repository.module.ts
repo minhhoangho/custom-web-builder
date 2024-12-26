@@ -16,14 +16,13 @@ function getProviders(
     const entity = getEntityByRepository(repository);
 
     return {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       module: CustomRepositoryModule,
       provide: getCustomRepositoryToken(repository, dataSource),
       useFactory: (ds: DataSource) => {
         return new repository(entity, ds.manager);
       },
       inject: [getDataSourceToken(dataSource)],
-    } as Provider<any>;
+    } as Provider;
   });
 }
 

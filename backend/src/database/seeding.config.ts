@@ -11,7 +11,7 @@ const seedingConfig = {
   entities: [join(__dirname, '../', '**/*.entity{.ts,.js}')],
   migrations: [join(__dirname, '../', 'database/migrations/**/*.ts')],
   seeds: ['src/database/seeds/*.seed{.ts,.js}'],
-  factories: ['src/database/factories/**/*{.ts,.js}']
+  factories: ['src/database/factories/**/*{.ts,.js}'],
   /* Optional for development */
   // ssl: {
   //   rejectUnauthorized: false

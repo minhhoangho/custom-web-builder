@@ -12,7 +12,7 @@ const typeormLogger = winston.createLogger({
 });
 export class TypeORMLogger implements Logger {
   // implement all methods from logger class
-  logQuery(query: string, parameters?: any[], _queryRunner?: QueryRunner) {
+  logQuery(query: string, parameters?: never[], _queryRunner?: QueryRunner) {
     typeormLogger.info(`[QUERY]: ${query}`);
     if (parameters) {
       typeormLogger.info(`[PARAMETERS]: ${JSON.stringify(parameters)}`);
@@ -22,7 +22,7 @@ export class TypeORMLogger implements Logger {
   logQueryError(
     error: string,
     query: string,
-    parameters?: any[],
+    parameters?: never[],
     _queryRunner?: QueryRunner,
   ) {
     typeormLogger.error(`[ERROR]: ${error}`);
@@ -35,7 +35,7 @@ export class TypeORMLogger implements Logger {
   logQuerySlow(
     time: number,
     query: string,
-    parameters?: any[],
+    parameters?: never[],
     _queryRunner?: QueryRunner,
   ) {
     typeormLogger.warn(`[SLOW QUERY (${time} ms)]: ${query}`);
@@ -54,7 +54,7 @@ export class TypeORMLogger implements Logger {
 
   log(
     level: 'log' | 'info' | 'warn',
-    message: any,
+    message: string,
     _queryRunner?: QueryRunner,
   ) {
     switch (level) {

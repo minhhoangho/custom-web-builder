@@ -6,19 +6,21 @@ import {
 } from '@nestjs/common/utils/shared.utils';
 import { Serializer } from '@nestjs/microservices';
 
-export interface KafkaRequest<T = any> {
+export interface KafkaRequest<T> {
   key: Buffer | string | null;
   value: T;
   topic: string;
-  headers: Record<string, any>;
+  headers: Record<string, string | number | boolean>;
 }
 
-export class KafkaRequestSerializer implements Serializer<any, KafkaRequest> {
-  serialize(value: any): KafkaRequest {
+export class KafkaRequestSerializer<T>
+  implements Serializer<string | number | boolean, KafkaRequest<T>>
+{
+  serialize(value): KafkaRequest<T> {
     return value;
   }
 
-  public encode(value: any): Buffer | string | null {
+  public encode(value): Buffer | string | null {
     const isObjectOrArray =
       !isNil(value) && !isString(value) && !Buffer.isBuffer(value);
 

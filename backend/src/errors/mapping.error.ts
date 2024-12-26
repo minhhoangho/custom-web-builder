@@ -10,10 +10,11 @@ import {
 import { get } from 'lodash';
 import { ApiError } from './api-error';
 import { UnAuthorizedError } from './unauthorized.error';
+import { HttpException } from '@nestjs/common/exceptions/http.exception';
 
 export class MappingError {
   error(error: ApiError): ApiErrorInterface {
-    let err = error as any;
+    let err = error as any; // eslint-disable-line @typescript-eslint/no-explicit-any
     const { constructor } = error;
 
     switch (constructor) {

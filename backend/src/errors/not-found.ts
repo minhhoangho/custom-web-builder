@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { ErrorCode } from '@common/constants';
 import { HttpStatus } from '@nestjs/common';
 import * as _ from 'lodash';

@@ -1,5 +1,5 @@
 export class KafkaPayload {
-  public body: any;
+  public body: never;
 
   public messageId: string;
 
@@ -15,7 +15,7 @@ export class KafkaPayload {
       body,
       messageType,
       topicName,
-      createdTime: new Date().toISOString()
+      createdTime: new Date().toISOString(),
     };
   }
 }

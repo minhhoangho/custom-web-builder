@@ -2,6 +2,7 @@ import { ErrorCode } from '@common/constants';
 import * as Sentry from '@sentry/node';
 import { get, isEmpty } from 'lodash';
 import loadConfig from 'src/configs';
+import { ApiError } from '../../errors';
 
 export class AppSentry {
   private sendable: boolean;
@@ -11,13 +12,15 @@ export class AppSentry {
   }
 
   allowSendException(error: Error): boolean {
-    const errorCodesToSend = [ErrorCode.INTERNAL_SERVER_ERROR];
-    const status = (error as any).status || 500;
-    const errorCode = (error as any).code;
-    return (this.sendable && status >= 500) || errorCodesToSend.includes(errorCode);
+    const errorCodesToSend: string[] = [ErrorCode.INTERNAL_SERVER_ERROR];
+    const status = (error as ApiError).status || 500;
+    const errorCode = (error as ApiError).code;
+    return (
+      (this.sendable && status >= 500) || errorCodesToSend.includes(errorCode)
+    );
   }
 
-  captureException(error: Error, request?: any, context = {}): any {
+  captureException(error: Error, request?: Request, context = {}) {
     if (this.allowSendException(error)) {
       error.name = error.constructor.name;
       Sentry.captureException(error, (scope) => {

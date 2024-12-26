@@ -63,7 +63,7 @@ export class User extends BaseEntityTimestampSoftDelete {
     nullable: true,
   })
   // eslint-disable-next-line @typescript-eslint/ban-types
-  credentials: Object;
+  credentials: object;
 
   @Column({
     name: 'role_id',

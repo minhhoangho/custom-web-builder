@@ -8,7 +8,6 @@ export class RedisCacheService {
   private cache;
 
   constructor() {
-    console.log("loadConfig.redis.host", loadConfig.redis)
     this.cache = createClient({
       socket: {
         host: loadConfig.redis.host,
@@ -35,7 +34,7 @@ export class RedisCacheService {
     return this.cache.exists(key);
   }
 
-  async set(key: string, value: any): Promise<boolean> {
+  async set(key: string, value: string | number): Promise<boolean> {
     return this.cache.set(key, value);
   }
 

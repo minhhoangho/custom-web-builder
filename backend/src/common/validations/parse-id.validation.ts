@@ -3,7 +3,6 @@ import { ApiError } from 'src/errors';
 import { ArgumentMetadata, HttpStatus, ParseIntPipe } from '@nestjs/common';
 
 export class ParseIdPipe extends ParseIntPipe {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async transform(value: string, _metadata: ArgumentMetadata): Promise<number> {
     const isNumeric =
       ['string', 'number'].includes(typeof value) &&

@@ -36,7 +36,7 @@ export const appConfig = {
   locale: {
     supportedLocales: get(process.env, 'LOCALE_SUPPORTED_LOCALES')?.split(
       ',',
-    ) || ['en', 'jp'],
+    ) ?? ['en', 'vi'],
     default: get(process.env, 'LOCALE_DEFAULT', 'vi'),
   },
   debug: get(process.env, 'DEBUG', 'true') === 'true',

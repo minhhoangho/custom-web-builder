@@ -7,7 +7,7 @@ import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-regist
 import { KafkaResponseDeserializer } from './kafka-response.deserializer';
 
 export class KafkaAvroResponseDeserializer
-  implements Deserializer<any, Promise<KafkaResponse>>
+  implements Deserializer<never, Promise<KafkaResponse>>
 {
   protected registry: SchemaRegistry;
 

@@ -7,7 +7,7 @@ export class AuthValidation extends BaseValidation {
     return Joi.object().keys({
       email: Joi.string().trim().email().max(EMAIL_MAX_LENGTH).required(),
       password: Joi.string().trim().max(PASSWORD_MAX_LENGTH).required(),
-      rememberMe: Joi.boolean().optional()
+      rememberMe: Joi.boolean().optional(),
     });
   }
 }

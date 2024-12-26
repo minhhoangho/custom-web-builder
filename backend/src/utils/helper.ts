@@ -1,4 +1,4 @@
-import { genSaltSync, compare, hashSync } from 'bcryptjs';
+import { compare, genSaltSync, hashSync } from 'bcryptjs';
 import slugify from 'slugify';
 import * as pluralize from 'pluralize';
 import moment from 'moment';
@@ -100,49 +100,45 @@ export const cleanObject = (obj) => {
 export const escapeString = (string: string) =>
   string.replace(/\\/g, '\\\\\\\\').replace(/[.*+?^${}|[\]'"]/g, '\\$&');
 
-export const convertMysqlValue = (value: any) =>
+export const convertMysqlValue = (value: string | number | boolean) =>
   typeof value === 'string' ? `'${escapeString(value)}'` : value;
 
-export const mapOperatorToString = (operator: FindOperator<any>): string => {
+export const mapOperatorToString = <T>(operator: FindOperator<T>): string => {
   if (operator?.child instanceof FindOperator)
-    return `${operator.type} ${mapOperatorToString(operator.value)}`;
+    return `${operator.type} ${mapOperatorToString(operator.value as FindOperator<T>)}`;
 
   switch (operator.type) {
     case 'like':
     case 'ilike':
     case 'not':
-      return `${operator.type} ${convertMysqlValue(operator.value)}`;
+      return `${operator.type} ${convertMysqlValue(operator.value as string | number | boolean)}`;
     case 'equal':
-      return `= ${convertMysqlValue(operator.value)}`;
+      return `= ${convertMysqlValue(operator.value as string | number | boolean)}`;
     case 'between':
       return `between ${convertMysqlValue(
         operator.value[0],
       )} AND ${convertMysqlValue(operator.value[1])}`;
     case 'in':
-      return `in (${map(operator.value as any, (element) =>
+      return `in (${map(operator.value as string, (element) =>
         convertMysqlValue(element),
       ).join(',')})`;
     case 'isNull':
       return 'is null';
     case 'lessThan':
-      return `< ${convertMysqlValue(operator.value)}`;
+      return `< ${convertMysqlValue(operator.value as number)}`;
     case 'lessThanOrEqual':
-      return `<= ${convertMysqlValue(operator.value)}`;
+      return `<= ${convertMysqlValue(operator.value as number)}`;
     case 'moreThan':
-      return `> ${convertMysqlValue(operator.value)}`;
+      return `> ${convertMysqlValue(operator.value as number)}`;
     case 'moreThanOrEqual':
-      return `>= ${convertMysqlValue(operator.value)}`;
+      return `>= ${convertMysqlValue(operator.value as number)}`;
     default:
-      return `= ${convertMysqlValue(operator)}`;
+      return `= ${convertMysqlValue(operator.value as number | string | boolean)}`;
   }
 };
 
-export const convertConditionToString = (
-  where:
-    | string
-    | FindOptionsWhere<any>
-    | FindOptionsWhere<any>[]
-    | ObjectLiteral,
+export const convertConditionToString = <E, T>(
+  where: string | FindOptionsWhere<E> | FindOptionsWhere<E>[] | ObjectLiteral,
   alias: string,
 ): string => {
   // Or operator for FindConditions<T>[] condition type
@@ -158,11 +154,10 @@ export const convertConditionToString = (
       where,
       (condition) => `(${convertConditionToString(condition, alias)})`,
     ).join(' OR ');
-    // eslint-disable-next-line no-else-return
   } else if (typeof where === 'object') {
     return reduce(
       where,
-      (acc: string[], operator: any, field: string) => {
+      (acc: string[], operator: FindOperator<T>, field: string) => {
         /**
          * someField: {
          *  We're here
@@ -310,7 +305,7 @@ export const charCodeAt = (text: string) => {
  * @param pId
  * @return null
  */
-export const encode = (pText: string, pId: number): any => {
+export const encode = (pText: string, pId: number): string => {
   if (isEmpty(pText)) return '';
   const dKey = pId * 208 + 1793;
   let dCode = '';

@@ -10,10 +10,10 @@ export const PaginationResponseApiDoc = (exampleDatas: any[] = []) =>
           pagination: {
             total: 0,
             limit: 10,
-            offset: 0
-          }
-        }
-      }
+            offset: 0,
+          },
+        },
+      },
     }),
   );
 
@@ -26,8 +26,8 @@ export const PaginationParamApiDoc = () =>
         default: 10,
         description: 'limit',
         maximum: 100,
-        minimum: 1
-      }
+        minimum: 1,
+      },
     }),
     ApiQuery({
       name: 'offset',
@@ -35,7 +35,7 @@ export const PaginationParamApiDoc = () =>
         type: 'integer',
         default: 0,
         description: 'offset',
-        minimum: 0
-      }
+        minimum: 0,
+      },
     }),
   );

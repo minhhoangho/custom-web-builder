@@ -122,8 +122,8 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
       try {
         const topicOffsets = await this.admin.fetchTopicOffsets(topic);
         this.topicOffsets.set(topic, topicOffsets);
-      } catch (e) {
-        this.logger.error('Error fetching topic offset: ', topic);
+      } catch (error) {
+        this.logger.error('Error fetching topic offset: ', topic, error);
       }
     }
   }
@@ -136,7 +136,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
   private async subscribe(topic: string): Promise<void> {
     await this.consumer.subscribe({
       topic,
-      fromBeginning: this.options.consumeFromBeginning || false,
+      fromBeginning: this.options.consumeFromBeginning ?? false,
     });
   }
 
@@ -148,7 +148,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
   async send(message: KafkaMessageSend): Promise<RecordMetadata[]> {
     if (!this.producer) {
       this.logger.error('There is no producer, unable to send message.');
-      return;
+      return Promise.reject('There is no producer, unable to send message.');
     }
 
     const serializedPacket = await this.serializer.serialize(message);
@@ -233,8 +233,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
    * @param options
    */
   protected initializeSerializer(options: KafkaModuleOption['options']): void {
-    this.serializer =
-      (options && options.serializer) || new KafkaRequestSerializer();
+    this.serializer = options?.serializer ?? new KafkaRequestSerializer();
   }
 
   /**
@@ -246,7 +245,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
     options: KafkaModuleOption['options'],
   ): void {
     this.deserializer =
-      (options && options.deserializer) || new KafkaResponseDeserializer();
+      options?.deserializer ?? new KafkaResponseDeserializer();
   }
 
   /**
@@ -300,7 +299,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
         let seek = String(seekPoint);
 
         // Seek by timestamp
-        if (typeof seekPoint == 'object') {
+        if (typeof seekPoint === 'object') {
           const time = seekPoint as Date;
           seek = time.getTime().toString();
         }

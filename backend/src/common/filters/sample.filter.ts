@@ -11,7 +11,7 @@ export class SampleFilter extends BaseFilter<User> {
    * - The result will be return in @Query() query: FindManyOptions<T> in controller
    * - Just use it to query with findWithPagination in Base Repository
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   async getWhereCondition(
     _conditionFields: AnyObject,
   ): Promise<

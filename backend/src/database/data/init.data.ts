@@ -5,15 +5,15 @@ export const adminDatas = [
   {
     email: 'admin@test.vn',
     name: 'admin',
-    password: hashSync('12345678', 10)
-  }
+    password: hashSync('12345678', 10),
+  },
 ];
 
 export const roleDatas = [
   {
-    name: Roles.ADMIN
+    name: Roles.ADMIN,
   },
   {
-    name: Roles.USER
-  }
+    name: Roles.USER,
+  },
 ];

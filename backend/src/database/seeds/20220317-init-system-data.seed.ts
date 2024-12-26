@@ -41,7 +41,7 @@ export default class InitSystemData implements Seeder {
       .execute();
   }
 
-  public async run(): Promise<any> {
+  public async run(): Promise<void> {
     if (!MysqlDataSource.isInitialized) {
       await MysqlDataSource.initialize();
     }

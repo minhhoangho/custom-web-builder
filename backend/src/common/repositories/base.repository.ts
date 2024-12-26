@@ -73,9 +73,9 @@ export class BaseRepository<E> extends Repository<E> {
 
   async findAndSoftDelete(
     options: FindOptionsWhere<E>,
-    deletedBy: any,
+    deletedBy: number | string,
   ): Promise<void> {
-    const payload: any = {
+    const payload = {
       deletedAt: new Date(),
       deletedBy,
     };

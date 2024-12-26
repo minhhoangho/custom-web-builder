@@ -62,7 +62,7 @@ export class LoggingMiddleware implements NestMiddleware {
 
       try {
         bodyContent = JSON.parse(resBody);
-      } catch (error) {
+      } catch (_error) {
         bodyContent = resBody;
       }
 

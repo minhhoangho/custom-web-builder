@@ -5,7 +5,7 @@ import {
 
 // Use one error class for all places in project
 export class ApiError extends Error {
-  status: number;
+  private status: number;
 
   title: string | undefined;
 
@@ -13,7 +13,7 @@ export class ApiError extends Error {
 
   code: string;
 
-  errors: ErrorItemInterface[] | [];
+  errors?: ErrorItemInterface[] | [];
 
   constructor(error: ApiErrorInterface) {
     super(error.message);

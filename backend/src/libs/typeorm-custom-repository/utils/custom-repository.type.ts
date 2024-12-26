@@ -6,7 +6,6 @@ import {
   Repository as TypeOrmRepository,
 } from 'typeorm';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export interface Repository extends Function {
   new (
     target: EntityTarget<any>,

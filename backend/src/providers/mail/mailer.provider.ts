@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 
@@ -22,7 +21,7 @@ export class MailerProvider {
             email,
             password: content.password,
             // login_page: `${loadConfig?.app?.domain}/login`
-          }
+          },
         })
         .then((res) => {
           Logger.log(res);

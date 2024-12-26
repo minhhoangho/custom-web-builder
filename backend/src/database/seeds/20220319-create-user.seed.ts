@@ -14,7 +14,7 @@ export default class CreateUser implements Seeder {
       .execute();
   }
 
-  public async run(factory: Factory): Promise<any> {
+  public async run(factory: Factory): Promise<void> {
     if (!MysqlDataSource.isInitialized) {
       await MysqlDataSource.initialize();
     }

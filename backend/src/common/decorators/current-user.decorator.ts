@@ -1,7 +1,4 @@
-import {
-  createParamDecorator,
-  ExecutionContext,
-} from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { NotFoundError } from '../../errors';
 /**
  * @Usage The custom decorator, used to extract information from JWT token

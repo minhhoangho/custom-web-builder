@@ -172,7 +172,7 @@ export class MigrationHelper {
     isPrimary?: boolean;
     isNullable?: boolean;
     isUnique?: boolean;
-    defaultValue?: any;
+    defaultValue?: number | null;
   }): TableColumnOptions {
     return {
       name,
@@ -193,7 +193,7 @@ export class MigrationHelper {
     name: string;
     isNullable?: boolean;
     isUnique?: boolean;
-    defaultValue?: any;
+    defaultValue?: number | null;
   }): TableColumnOptions {
     return {
       name,
@@ -211,7 +211,7 @@ export class MigrationHelper {
   }: {
     name: string;
     isNullable?: boolean;
-    defaultValue?: number;
+    defaultValue?: number | null;
   }): TableColumnOptions {
     return {
       name,

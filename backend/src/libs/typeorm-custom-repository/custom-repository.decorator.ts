@@ -1,5 +1,10 @@
 import { Inject } from '@nestjs/common';
-import type { DataSource, DataSourceOptions, EntityTarget, ObjectLiteral } from 'typeorm';
+import type {
+  DataSource,
+  DataSourceOptions,
+  EntityTarget,
+  ObjectLiteral,
+} from 'typeorm';
 
 import { ENTITY_METADATA_KEY } from './custom-repository.constants';
 import { Repository } from './utils/custom-repository.type';

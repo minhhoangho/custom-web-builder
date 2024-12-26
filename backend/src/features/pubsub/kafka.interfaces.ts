@@ -8,14 +8,15 @@ import {
   ConsumerRunConfig,
   Transaction,
   RecordMetadata,
+  IHeaders,
 } from 'kafkajs';
 import { ModuleMetadata, Type } from '@nestjs/common';
 
-export interface IHeaders {
-  [key: string]: any;
-}
-export interface KafkaResponse<T = any> {
-  response: T;
+// export interface IHeaders {
+//   [key: string]: string | Buffer | number | boolean;
+// }
+export interface KafkaResponse {
+  response: never;
   key: string;
   timestamp: string;
   offset: number;
@@ -36,8 +37,8 @@ export interface KafkaModuleOption {
   };
 }
 export interface KafkaMessageObject extends Message {
-  value: any | Buffer | string | null;
-  key: any;
+  key: string | Buffer;
+  value: string | Buffer;
 }
 export interface KafkaMessageSend extends Omit<ProducerRecord, 'topic'> {
   messages: KafkaMessageObject[];
@@ -45,11 +46,11 @@ export interface KafkaMessageSend extends Omit<ProducerRecord, 'topic'> {
 }
 export interface KafkaModuleOptionsAsync
   extends Pick<ModuleMetadata, 'imports'> {
-  inject?: any[];
+  inject?: never[];
   useExisting?: Type<KafkaOptionsFactory>;
   useClass?: Type<KafkaOptionsFactory>;
   useFactory?: (
-    ...args: any[]
+    ...args: never[]
   ) => Promise<KafkaModuleOption[]> | KafkaModuleOption[];
 }
 export interface KafkaOptionsFactory {

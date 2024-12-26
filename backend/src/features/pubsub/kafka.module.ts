@@ -48,7 +48,7 @@ export class KafkaModule {
 
     return {
       module: KafkaModule,
-      imports: connectOptions.imports || [],
+      imports: connectOptions.imports ?? [],
       providers: [
         createKafkaModuleOptionsProvider,
         KafkaModuleOptionsProvider,
@@ -65,14 +65,14 @@ export class KafkaModule {
       return {
         provide: KAFKA_MODULE_OPTIONS,
         useFactory: options.useFactory,
-        inject: options.inject || [],
+        inject: options.inject ?? [],
       };
     }
     return {
       provide: KAFKA_MODULE_OPTIONS,
       useFactory: async (optionsFactory: KafkaOptionsFactory) =>
         optionsFactory.creatKafkaModuleOptions(),
-      inject: [options.useExisting || options.useClass],
+      inject: [options.useExisting ?? options.useClass],
     };
   }
 }
