@@ -18,7 +18,7 @@ export function BaseLayout({
 }) {
   // const router = useRouter();
 
-  // const isAuthenticated: boolean = CookiesStorage.isAuthenticated();
+  // const isAuthenticated: boolean = CookieStorage.isAuthenticated();
   // useEffect(() => {
   //     isAuthenticated && router.pathname === "/login" && router.replace("/")
   // },[isAuthenticated, router])

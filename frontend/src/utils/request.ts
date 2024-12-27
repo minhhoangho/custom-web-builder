@@ -2,9 +2,9 @@ import axios from 'axios';
 import get from 'lodash/get';
 import qs from 'qs';
 import humps from 'humps';
-import { API_BASE_URL } from 'src/constants';
+import { API_BASE_URL } from '@constants/app-config';
 import { toast } from 'src/components/Toast';
-import CookiesStorage from './cookie-storage';
+import { CookieStorage } from './cookie-storage';
 
 export const request = axios.create({
   baseURL: API_BASE_URL,
@@ -24,7 +24,7 @@ request.interceptors.request.use(
     config.params = humps.decamelizeKeys(config.params);
     config.data = humps.decamelizeKeys(config.data);
 
-    const accessToken: string = CookiesStorage.getAccessToken(); // Get accessToken
+    const accessToken: string = CookieStorage.getAccessToken(); // Get accessToken
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -43,7 +43,7 @@ request.interceptors.response.use(
     const errorResponse = error?.response;
     if (errorResponse.status === 401) {
       toast('error', 'Token expired');
-      CookiesStorage.clearSession();
+      CookieStorage.clearSession();
       window.location.href = '/login';
       return Promise.reject(new Error(errorResponse?.data));
     }

@@ -8,9 +8,9 @@ import { UserInfo, userState } from 'src/app-recoil/atoms/user';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 // import { UserRole } from '../../constants/user';
-import { useResponsive } from '../../shared/hooks/use-responsive';
-import CookiesStorage from '../../utils/cookie-storage';
-import { CookieKey } from '../../constants';
+import { useResponsive } from '@shared/hooks/use-responsive';
+import { CookieStorage } from 'src/utils/cookie-storage';
+import { CookieKey } from '@constants/storage';
 
 type Props = {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
 
   const router = useRouter();
   const setCurrentUser = useSetRecoilState(userState);
-  const isAuthenticated = CookiesStorage.isAuthenticated();
+  const isAuthenticated = CookieStorage.isAuthenticated();
   console.log('isAuthenticated', isAuthenticated);
 
   const userData: UserInfo | null = null;
@@ -52,7 +52,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
       });
     } else {
       if (!userData) {
-        const userCookie = CookiesStorage.getCookieData(CookieKey.UserInfo);
+        const userCookie = CookieStorage.getCookieData(CookieKey.UserInfo);
         if (userCookie) {
           setCurrentUser(userCookie);
         }

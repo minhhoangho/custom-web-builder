@@ -1,10 +1,10 @@
 import Cookies from 'universal-cookie';
 import addSeconds from 'date-fns/addSeconds';
 import { getCurrentDomain } from 'src/utils';
-import {CookieKey} from "@constants/storage";
+import { CookieKey } from "@constants/storage";
 
 const cookies = new Cookies();
-const CookiesStorage = {
+const CookieStorage = {
   getCookieData(key: string) {
     return cookies.get(key);
   },
@@ -39,4 +39,6 @@ const CookiesStorage = {
   },
 };
 
-export default CookiesStorage;
+export {
+  CookieStorage
+};

@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { ConfirmType } from 'src/constants';
+import { ConfirmType } from '@constants/common';
 
 export const defaultConfirmBox = {
   type: ConfirmType.YesNo,

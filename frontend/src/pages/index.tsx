@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import CookiesStorage from 'src/utils/cookie-storage';
+import CookieStorage from 'src/utils/cookie-storage';
 
 export default function Index() {
-  const isAuthenticated = CookiesStorage.isAuthenticated();
+  const isAuthenticated = CookieStorage.isAuthenticated();
   const router = useRouter();
 
   useEffect(() => {

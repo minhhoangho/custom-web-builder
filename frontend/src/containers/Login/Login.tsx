@@ -1,14 +1,13 @@
 import * as React from 'react';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
-
+import { CookieStorage } from "../../utils";
 import { Button } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import CookiesStorage from '@utils/cookie-storage';
 import { BaseLayout } from 'src/layouts';
 import { toast } from 'src/components/Toast';
 import { login } from '@api/auth';
@@ -17,8 +16,8 @@ import { FormInput } from '@components/form';
 import { LoginPayloadRequest, LoginResponse } from './models';
 import styles from './Login.module.scss';
 import { UserData } from '../UserManagement/models';
-import {PathName} from "@constants/routes";
-import {CookieKey} from "@constants/storage";
+import { PathName } from "@constants/routes";
+import { CookieKey } from "@constants/storage";
 
 export function Login() {
   const router = useRouter();
@@ -39,12 +38,12 @@ export function Login() {
     mutationFn: (data: LoginPayloadRequest): Promise<LoginResponse> =>
       login(data),
     onSuccess: ({ accessToken, expirationTime, user }: LoginResponse) => {
-      CookiesStorage.setCookieData(
+      CookieStorage.setCookieData(
         CookieKey.AccessToken,
         accessToken,
         expirationTime - 10,
       );
-      CookiesStorage.setCookieData(
+      CookieStorage.setCookieData(
         CookieKey.UserInfo,
         user,
         expirationTime - 10,
@@ -57,7 +56,7 @@ export function Login() {
       if (redirectUrl) {
         router.push(redirectUrl);
       } else {
-        router.push(PathName.Analytic);
+        router.push(PathName.Admin);
       }
     },
     onError: () => {

@@ -50,9 +50,6 @@
       "@layouts/*": [
         "./src/layouts/*"
       ],
-      "@utils": [
-        "./src/utils/index"
-      ],
       "@shared/*": [
         "./src/shared/*"
       ]
