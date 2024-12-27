@@ -1,8 +1,8 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import {TypeOrmModuleOptions} from '@nestjs/typeorm';
 import envConfig from 'src/configs';
-import { join } from 'path';
-import { DataSource, DataSourceOptions } from 'typeorm';
-import { TypeORMLogger } from '@database/db-logger';
+import {join} from 'path';
+import {DataSource, DataSourceOptions} from 'typeorm';
+import {TypeORMLogger} from '@database/db-logger';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: <never>envConfig.db.type,
