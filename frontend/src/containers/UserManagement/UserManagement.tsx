@@ -68,7 +68,6 @@ export function UserManagement() {
       filterable: false,
       width: 200,
       valueGetter: (params: GridValueGetterParams) =>
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     },
     {

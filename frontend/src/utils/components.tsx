@@ -11,7 +11,7 @@ export const linkComponent = (href: string, title: string): JSX.Element => (
 );
 
 export const renderTooltip = (
-  props: Record<string, any> ,
+  props: Record<string, any>,
   content: string,
 ): JSX.Element => (
   <Tooltip id="button-tooltip" {...props}>

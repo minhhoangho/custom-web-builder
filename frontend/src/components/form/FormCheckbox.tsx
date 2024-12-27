@@ -1,13 +1,11 @@
-import React from "react";
-import { Controller } from "react-hook-form";
+import React from 'react';
+import { Controller } from 'react-hook-form';
 import { Checkbox, CheckboxProps } from 'src/components/Checkbox';
 
-
 type Props = {
-  name: string,
-  control: any,
-} & CheckboxProps
-
+  name: string;
+  control: any;
+} & CheckboxProps;
 
 const FormCheckbox = ({ name, control, ...restInput }: Props) => (
   <Controller

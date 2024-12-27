@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
-import {cloneDeep} from "lodash";
+import { cloneDeep } from 'lodash';
 import { TablePaginationAction } from './TablePaginationAction';
 import { PaginationMeta } from '../../shared/models/responses';
 import { PaginationQueryParams } from '../../shared/models/requests';
@@ -38,7 +38,13 @@ export function Table({
     }
     // reorder column id to the first of array columns, if not exist -> add id to the first of array columns
     columns = columns.filter((column) => column.field !== 'id');
-    columns.unshift({ field: 'rowId', headerName: 'ID', width: 50, sortable: false, filterable: false });
+    columns.unshift({
+      field: 'rowId',
+      headerName: 'ID',
+      width: 50,
+      sortable: false,
+      filterable: false,
+    });
 
     return _rows.map((row, index) => {
       return {
@@ -69,7 +75,6 @@ export function Table({
         onPaginationModelChange={handleChangePage}
         paginationMode="server"
         sortingMode="server"
-
         slotProps={{
           toolbar: {
             showQuickFilter: true,

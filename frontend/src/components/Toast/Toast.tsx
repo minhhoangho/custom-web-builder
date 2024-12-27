@@ -2,7 +2,7 @@ import React from 'react';
 import isEqual from 'lodash/isEqual';
 import FontIcon from 'src/components/FontIcon';
 
-const getIconName = type => {
+const getIconName = (type) => {
   switch (type) {
     case 'success':
       return 'check-circle';
@@ -13,7 +13,7 @@ const getIconName = type => {
   }
 };
 
-const getIconClassName = type => {
+const getIconClassName = (type) => {
   switch (type) {
     case 'success':
       return 'tx-color-green-01';
@@ -30,7 +30,9 @@ const Toast = ({ type, message }) => {
   return (
     <div className="d-flex">
       <FontIcon iconName={iconName} className={`tx-24 ${iconClassName}`} />
-      <span className="tx-color-black w-auto toast-content-component">{message}</span>
+      <span className="tx-color-black w-auto toast-content-component">
+        {message}
+      </span>
     </div>
   );
 };

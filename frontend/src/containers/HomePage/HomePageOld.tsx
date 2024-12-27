@@ -1,12 +1,12 @@
 import React from 'react';
-import { Container, Grid, Typography} from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import { BaseLayout, PrivateLayout } from 'src/layouts';
 import { WidgetSummary } from './WidgetSummary';
 import styles from './HomePage.module.scss';
 import { WidgetWebsiteVisit } from './WidgetWebsiteVisit';
 import { WidgetCurrentVisit } from './WidgetCurrentVisit';
-import {WidgetCarTracking} from "./WidgetCarTracking";
+import { WidgetCarTracking } from './WidgetCarTracking';
 export function HomePage() {
   return (
     <BaseLayout>
@@ -77,8 +77,8 @@ export function HomePage() {
                 }
               />
             </Grid>
-             <Grid item xs={12}>
-              <WidgetCarTracking title={"Tracking"} subheader="Result"/>
+            <Grid item xs={12}>
+              <WidgetCarTracking title={'Tracking'} subheader="Result" />
             </Grid>
 
             <Grid item xs={12} md={6} lg={8}>
@@ -135,7 +135,6 @@ export function HomePage() {
                 }}
               />
             </Grid>
-
           </Grid>
         </Container>
       </PrivateLayout>

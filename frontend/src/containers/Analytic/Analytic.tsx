@@ -31,16 +31,17 @@ export function Analytic() {
     const numMotorcycle = data['motorcycle'] ?? 0;
     return (
       <div className="mt-3" key={viewPoint.id}>
-          <div className="mb-2">
-            <span>Địa điểm: </span>
-            <span className="cursor-pointer underline font-bold py-2"
+        <div className="mb-2">
+          <span>Địa điểm: </span>
+          <span
+            className="cursor-pointer underline font-bold py-2"
             onClick={() => {
               router.push(`${PathName.Analytic}/${viewPoint.id}`);
             }}
-            >
-              {viewPoint.name}
-            </span>
-          </div>
+          >
+            {viewPoint.name}
+          </span>
+        </div>
         <Grid container columnSpacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary

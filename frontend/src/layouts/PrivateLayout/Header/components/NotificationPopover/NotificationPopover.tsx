@@ -88,10 +88,9 @@ export function NotificationPopover() {
     (item) => item.isUnRead === true,
   ).length;
 
-
   const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
     // eslint-disable-next-line no-console
-    console.log("Temporary disabled ", event);
+    console.log('Temporary disabled ', event);
     // setAnchorEl(event.currentTarget);
   };
 
@@ -111,7 +110,7 @@ export function NotificationPopover() {
   return (
     <>
       <IconButton color={anchorEl ? 'primary' : 'default'} onClick={handleOpen}>
-          <NotificationsIcon />
+        <NotificationsIcon />
       </IconButton>
 
       <Popover
@@ -130,15 +129,15 @@ export function NotificationPopover() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant='subtitle1'>Notifications</Typography>
-            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            <Typography variant="subtitle1">Notifications</Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               You have {totalUnRead} unread messages
             </Typography>
           </Box>
 
           {totalUnRead > 0 && (
-            <Tooltip title=' Mark all as read'>
-              <IconButton color='primary' onClick={handleMarkAllAsRead}>
+            <Tooltip title=" Mark all as read">
+              <IconButton color="primary" onClick={handleMarkAllAsRead}>
                 <DoneAllIcon />
               </IconButton>
             </Tooltip>
@@ -212,11 +211,11 @@ type NotificationItemProps = {
 function NotificationItem({ notification }: NotificationItemProps) {
   function renderContent(notification: NotificationItemObject) {
     const title = (
-      <Typography variant='subtitle2'>
+      <Typography variant="subtitle2">
         {notification.title}
         <Typography
-          component='span'
-          variant='body2'
+          component="span"
+          variant="body2"
           sx={{ color: 'text.secondary' }}
         >
           &nbsp; {notification.description}
@@ -231,7 +230,7 @@ function NotificationItem({ notification }: NotificationItemProps) {
             width={24}
             height={24}
             alt={notification.title}
-            src='/static/icons/ic_notification_package.svg'
+            src="/static/icons/ic_notification_package.svg"
           />
         ),
         title,
@@ -244,7 +243,7 @@ function NotificationItem({ notification }: NotificationItemProps) {
             width={24}
             height={24}
             alt={notification.title}
-            src='/static/icons/ic_notification_shipping.svg'
+            src="/static/icons/ic_notification_shipping.svg"
           />
         ),
         title,
@@ -257,7 +256,7 @@ function NotificationItem({ notification }: NotificationItemProps) {
             width={24}
             height={24}
             alt={notification.title}
-            src='/static/icons/ic_notification_mail.svg'
+            src="/static/icons/ic_notification_mail.svg"
           />
         ),
         title,
@@ -270,7 +269,7 @@ function NotificationItem({ notification }: NotificationItemProps) {
             width={24}
             height={24}
             alt={notification.title}
-            src='/static/icons/ic_notification_chat.svg'
+            src="/static/icons/ic_notification_chat.svg"
           />
         ),
         title,
@@ -309,7 +308,7 @@ function NotificationItem({ notification }: NotificationItemProps) {
         primary={title}
         secondary={
           <Typography
-            variant='caption'
+            variant="caption"
             sx={{
               mt: 0.5,
               display: 'flex',

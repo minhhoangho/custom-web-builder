@@ -11,11 +11,10 @@ export function CustomSidebarMenu(): React.ReactElement {
   const [selectedMenuItem, setSelectedMenuItem] = useState('');
   const router = useRouter();
 
-
   const handleSelectMenuItem = (menuItem: MenuItemMapInterface) => {
-    setSelectedMenuItem(menuItem.key)
-    router.replace(menuItem.url ?? PathName.Home)
-  }
+    setSelectedMenuItem(menuItem.key);
+    router.replace(menuItem.url ?? PathName.Home);
+  };
 
   const renderMenu = (menuList: MenuItemMapInterface[]): JSX.Element[] => {
     return menuList.map((item) => renderMenuItem(item));
@@ -59,9 +58,7 @@ export function CustomSidebarMenu(): React.ReactElement {
             button: ({ active }) => {
               return {
                 color: active ? '#1877F2' : undefined,
-                backgroundColor: active
-                  ? '#e2eef9'
-                  : undefined,
+                backgroundColor: active ? '#e2eef9' : undefined,
 
                 '&:hover': {
                   backgroundColor: active

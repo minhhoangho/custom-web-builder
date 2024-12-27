@@ -7,7 +7,7 @@ export const ImageWithTimeout = ({
 }: {
   src: string;
   timeoutDuration: number;
-  alt: string
+  alt: string;
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -42,16 +42,16 @@ export const ImageWithTimeout = ({
       {isLoading && <p>Loading...</p>}
       {hasError && (
         <p style={{ color: 'red' }}>Failed to load image or timed out.</p>
-      )} {
-      !hasError && (<img
-        src={src}
-        alt={alt}
-        onLoad={handleLoad}
-        onError={handleError}
-        style={{ display: isLoading || hasError ? 'none' : 'block' }}
-      />)
-    }
-
+      )}{' '}
+      {!hasError && (
+        <img
+          src={src}
+          alt={alt}
+          onLoad={handleLoad}
+          onError={handleError}
+          style={{ display: isLoading || hasError ? 'none' : 'block' }}
+        />
+      )}
     </div>
   );
 };

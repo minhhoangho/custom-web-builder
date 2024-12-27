@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useInfiniteQuery } from 'react-query';
-import classNames from "classnames";
+import classNames from 'classnames';
 import Image from 'next/image';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -46,8 +46,6 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
   const [activeViewPoint, setActiveViewPoint] =
     React.useState<ViewPointData | null>(null);
   const setMapFocus = useSetRecoilState(mapFocusState);
-
-
 
   const { data, fetchNextPage, isLoading, isFetching } =
     useInfiniteQuery<ListViewPointPaginateResponse>({
@@ -94,15 +92,14 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
     }
   };
 
-
   const setActiveViewPointAndZoom = (viewPointItem: ViewPointData) => {
-    setActiveViewPoint(viewPointItem)
+    setActiveViewPoint(viewPointItem);
     setMapFocus({
       lat: viewPointItem.lat,
       long: viewPointItem.long - 0.001,
-      zoom: 20
-    })
-  }
+      zoom: 20,
+    });
+  };
 
   const renderResultItem = (item: ViewPointData) => {
     return (
@@ -114,11 +111,14 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
           background: 'transparent',
         }}
       >
-        <CardActionArea className={styles['custom-card-border']} onClick={() => setActiveViewPointAndZoom(item)}>
+        <CardActionArea
+          className={styles['custom-card-border']}
+          onClick={() => setActiveViewPointAndZoom(item)}
+        >
           {item.thumbnail ? (
             <div>
               <Image
-                style={{ height: 140, width: '-webkit-fill-available'}}
+                style={{ height: 140, width: '-webkit-fill-available' }}
                 width={210}
                 height={140}
                 alt={item.name}
@@ -143,13 +143,11 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
 
   const renderContent = (
     <>
-      <div className={classNames("flex")}>
+      <div className={classNames('flex')}>
         <div className={styles['list-content']}>
           <div className="mt-2">
             <Box sx={{ my: 1.5, px: 2 }} className="flex">
-              <Button
-                onClick={() => router.push(PathName.Analytic)}
-              >
+              <Button onClick={() => router.push(PathName.Analytic)}>
                 <Iconify
                   icon="mdi:user"
                   color="text.disabled"
@@ -204,7 +202,12 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
             )}
           </Scrollbar>
         </div>
-        <div className={classNames(styles["camera-content"], !!activeViewPoint && styles["active-camera-wrapper"])}>
+        <div
+          className={classNames(
+            styles['camera-content'],
+            !!activeViewPoint && styles['active-camera-wrapper'],
+          )}
+        >
           <PublicCameraSidebar
             onClose={() => setActiveViewPoint(null)}
             open={!!activeViewPoint}
@@ -215,7 +218,6 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
       </div>
     </>
   );
-
 
   return (
     <Box
@@ -233,7 +235,7 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
         PaperProps={{
           sx: {
             minWidth: 300,
-            maxWidth: '50vw'
+            maxWidth: '50vw',
           },
         }}
       >

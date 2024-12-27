@@ -11,7 +11,11 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import Tooltip from '@mui/material/Tooltip';
-import { GridCellParams, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import {
+  GridCellParams,
+  GridColDef,
+  GridRenderCellParams,
+} from '@mui/x-data-grid';
 import { format } from 'date-fns';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -80,9 +84,8 @@ export function GisMapViewPointManagement() {
     if (result) {
       try {
         await deleteViewPoint(id);
-      } catch (error) {
+      } catch (_error) {
         toast('error', 'Có lỗi xảy ra, vui lòng thử lại sau');
-
       }
       await refetch();
     }
@@ -94,7 +97,6 @@ export function GisMapViewPointManagement() {
         <Tooltip title="Chỉnh sửa">
           <Button
             onClick={() =>
-              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
               router.push(`${PathName.GisLocationManagement}/${params.row.id}`)
             }
             style={{ padding: 0, minWidth: 0 }}
@@ -134,7 +136,6 @@ export function GisMapViewPointManagement() {
         return (
           <span
             onClick={() =>
-              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
               router.push(`${PathName.GisLocationManagement}/${params.row?.id}`)
             }
             className="cursor-pointer  hover:underline font-semibold"
@@ -216,7 +217,6 @@ export function GisMapViewPointManagement() {
   const onFilterName = (event: {
     target: { value: React.SetStateAction<string | null> };
   }) => {
-    // eslint-disable-next-line no-console
     setKeyword(event?.target.value);
   };
 

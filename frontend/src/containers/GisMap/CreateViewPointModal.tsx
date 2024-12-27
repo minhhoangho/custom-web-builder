@@ -36,7 +36,7 @@ export function CreateViewPointModal({ onClose, isOpen }: ModalProps) {
     resolver: yupResolver(validationSchema),
     defaultValues: {
       warningThreshold: 10,
-    }
+    },
   });
 
   const { mutate: createViewpointMutate } = useMutation({
@@ -61,8 +61,8 @@ export function CreateViewPointModal({ onClose, isOpen }: ModalProps) {
         zoom: 15,
         lat: data.lat,
         long: data.long,
-      }
-    }
+      },
+    };
     createViewpointMutate(submitData);
   };
 

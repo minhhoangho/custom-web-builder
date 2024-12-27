@@ -59,12 +59,12 @@ const TextWrapper = styled('span')(
 );
 
 export const Text: FC<TextProps> = ({
-                                      // className,
-                                      color = 'secondary',
-                                      flex,
-                                      children,
-                                      ...rest
-                                    }) => {
+  // className,
+  color = 'secondary',
+  flex,
+  children,
+  ...rest
+}) => {
   return (
     <TextWrapper
       className={clsx('MuiText-' + color, { flexItem: flex })}
@@ -74,6 +74,3 @@ export const Text: FC<TextProps> = ({
     </TextWrapper>
   );
 };
-
-
-

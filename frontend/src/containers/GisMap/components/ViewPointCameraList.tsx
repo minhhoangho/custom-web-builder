@@ -9,7 +9,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { toast } from 'src/components/Toast';
 import { Table } from 'src/components/Table';
-import { deleteViewPointCamera, getListViewPointCameras } from 'src/api/view-point';
+import {
+  deleteViewPointCamera,
+  getListViewPointCameras,
+} from 'src/api/view-point';
 import { DEFAULT_PAGINATION_PARAMS } from 'src/constants';
 import { PaginationQueryParams } from 'src/shared/models/requests';
 import { UpsertCameraSourceModal } from './UpsertCameraSourceModal';
@@ -28,10 +31,16 @@ import { Iconify } from '../../../components/Iconify';
 
 type ViewPointCameraListProps = {
   viewPointId: number;
-  setShowRealtimeCamera: (val: boolean, viewPointCamera: ViewPointCameraData) => void;
+  setShowRealtimeCamera: (
+    val: boolean,
+    viewPointCamera: ViewPointCameraData,
+  ) => void;
 };
 
-export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: ViewPointCameraListProps) {
+export function ViewPointCameraList({
+  viewPointId,
+  setShowRealtimeCamera,
+}: ViewPointCameraListProps) {
   const [paginationParams, setPaginationParams] = React.useState(
     DEFAULT_PAGINATION_PARAMS,
   );
@@ -63,7 +72,7 @@ export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: View
       headerName:
         VIEW_POINT_CAMERA_MANAGEMENT_COLUMNS_LABEL[
           VIEW_POINT_CAMERA_MANAGEMENT_KEY.ID
-          ],
+        ],
       sortable: false,
       filterable: false,
       width: 80,
@@ -73,21 +82,23 @@ export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: View
       headerName:
         VIEW_POINT_CAMERA_MANAGEMENT_COLUMNS_LABEL[
           VIEW_POINT_CAMERA_MANAGEMENT_KEY.CAMERA_SOURCE
-          ],
+        ],
       sortable: false,
       filterable: false,
       width: 80,
       renderCell: (params: GridRenderCellParams<any, any>) => {
         const sourceEnum: Record<number, React.ReactElement> = {
           0: (
-            <span className='flex'>
-          <span className='mr-1'>RTSP</span><Iconify icon="icon-park:camera-one" width={20} height={20} />
-        </span>
+            <span className="flex">
+              <span className="mr-1">RTSP</span>
+              <Iconify icon="icon-park:camera-one" width={20} height={20} />
+            </span>
           ),
           1: (
-            <span  className='flex'>
-          <span className='mr-1'>Youtube</span> <Iconify icon="logos:youtube-icon" width={20} height={20} />
-        </span>
+            <span className="flex">
+              <span className="mr-1">Youtube</span>{' '}
+              <Iconify icon="logos:youtube-icon" width={20} height={20} />
+            </span>
           ),
         };
         return <span className="">{sourceEnum[params.row.cameraSource]}</span>;
@@ -98,7 +109,7 @@ export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: View
       headerName:
         VIEW_POINT_CAMERA_MANAGEMENT_COLUMNS_LABEL[
           VIEW_POINT_CAMERA_MANAGEMENT_KEY.CAMERA_URI
-          ],
+        ],
       sortable: false,
       filterable: false,
       width: 200,
@@ -108,7 +119,7 @@ export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: View
       headerName:
         VIEW_POINT_MANAGEMENT_COLUMNS_LABEL[
           VIEW_POINT_MANAGEMENT_KEY.UPDATED_AT
-          ],
+        ],
       sortable: false,
       filterable: false,
       width: 100,
@@ -132,7 +143,6 @@ export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: View
     },
   ];
 
-
   const handleNextPage = (query: PaginationQueryParams) => {
     setPaginationParams({ limit: query.limit, offset: query.offset });
   };
@@ -147,13 +157,14 @@ export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: View
         >
           <EditIcon style={{ fontSize: '20px', outline: 'none' }} />
         </Tooltip>
-         <Tooltip
+        <Tooltip
           title="View viewpoint"
           className="cursor-pointer"
           onClick={() => handleUpdate(item)}
         >
-          <VisibilityIcon style={{ fontSize: '20px', outline: 'none' }}
-          onClick={() => setShowRealtimeCamera(true, item)}
+          <VisibilityIcon
+            style={{ fontSize: '20px', outline: 'none' }}
+            onClick={() => setShowRealtimeCamera(true, item)}
           />
         </Tooltip>
         <Tooltip
@@ -172,7 +183,6 @@ export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: View
   };
 
   const handleDelete = async (cam: ViewPointCameraData) => {
-
     const result = await confirmBox.confirm({
       title: 'Xác nhận xóa',
       message: 'Bạn có chắc muốn xóa?',
@@ -185,9 +195,8 @@ export function ViewPointCameraList({ viewPointId, setShowRealtimeCamera }: View
         toast('error', 'Error');
       }
       await refetch();
-
     }
-  }
+  };
 
   const handleUpdate = (viewPointCamera: ViewPointCameraData) => {
     setSelectedCameraViewPoint(viewPointCamera);

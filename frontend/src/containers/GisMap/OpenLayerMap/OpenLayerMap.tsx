@@ -18,12 +18,15 @@ import CardContent from '@mui/material/CardContent';
 import { useRecoilValue } from 'recoil';
 import { Circle } from 'ol/style';
 import Fill from 'ol/style/Fill';
-import _toNumber from 'lodash/toNumber'
+import _toNumber from 'lodash/toNumber';
 import styles from './OpenLayerMap.module.scss';
 import { CenterProps } from '../types';
 import { ViewPointData } from '../models';
 import { mapFocusState } from '../../../app-recoil/atoms/map';
-import { useWebsocket, WebsocketMessagePayload } from '../../../shared/hooks/use-websocket';
+import {
+  useWebsocket,
+  WebsocketMessagePayload,
+} from '../../../shared/hooks/use-websocket';
 import { SOCKET_BASE_URL } from '../../../constants';
 // Import OpenLayers CSS
 
@@ -50,46 +53,48 @@ export function OpenLayerMap({
   const mapRef = useRef<Map | null>(null);
   const [hoverPoint, setHoverPoint] = useState<ViewPointData | null>(null);
   const mapFocus = useRecoilValue(mapFocusState);
-  const [isConnected, message, _, disconnect] = useWebsocket(`${SOCKET_BASE_URL}/ws/`);
+  const [isConnected, message, _, disconnect] = useWebsocket(
+    `${SOCKET_BASE_URL}/ws/`,
+  );
 
   const removePointLayer = () => {
-    mapRef?.current.getLayers().forEach((layer:VectorLayer) => {
+    mapRef?.current.getLayers().forEach((layer: VectorLayer) => {
       if (layer.getClassName() === 'point-layer') {
         mapRef?.current.removeLayer(layer);
       }
     });
-  }
+  };
 
-  const handleDrawPoints = (points: Array<Record<string, number>>)=> {
+  const handleDrawPoints = (points: Array<Record<string, number>>) => {
     // remove existing point layer
     removePointLayer();
 
     const pointVectorSource = new VectorSource();
 
     points.forEach((point) => {
-      const {lat, long} = point
+      const { lat, long } = point;
       const pointFeature = new Feature({
         geometry: new Point(fromLonLat([long, lat])),
       });
 
       pointVectorSource.addFeature(pointFeature);
       // mapRef.current.addFeature(pointFeature);
-    })
+    });
 
     // Draw points
-    mapRef.current?.addLayer(new VectorLayer({
-      className: 'point-layer',
-      source: pointVectorSource,
-      style: new Style({
-        image: new Circle({
-          radius: 7,
-          fill: new Fill({color: 'red'}),
+    mapRef.current?.addLayer(
+      new VectorLayer({
+        className: 'point-layer',
+        source: pointVectorSource,
+        style: new Style({
+          image: new Circle({
+            radius: 7,
+            fill: new Fill({ color: 'red' }),
+          }),
         }),
       }),
-    }));
-  }
-
-
+    );
+  };
 
   useEffect(() => {
     if (isConnected) {
@@ -100,10 +105,12 @@ export function OpenLayerMap({
     if (message) {
       const messageJson: WebsocketMessagePayload = JSON.parse(message);
       if (messageJson.type === 'send_points') {
-        removePointLayer()
-        if (_toNumber(mapRef?.current?.getView().getZoom()) >=20) {
+        removePointLayer();
+        if (_toNumber(mapRef?.current?.getView().getZoom()) >= 20) {
           // If zoom level is greater than 20, draw points
-          handleDrawPoints(messageJson.data.vehicle_points as Array<Record<string, number>>)
+          handleDrawPoints(
+            messageJson.data.vehicle_points as Array<Record<string, number>>,
+          );
         }
       }
     }
@@ -131,7 +138,7 @@ export function OpenLayerMap({
         zoom: zoom, // Initial zoom level
       }),
     });
-    mapContainer.current && mapRef.current.setTarget(mapContainer.current);
+    mapContainer?.current && mapRef.current.setTarget(mapContainer.current);
 
     const pointStyle = new Style({
       image: new Icon({
@@ -169,7 +176,9 @@ export function OpenLayerMap({
         },
       );
       if (mapRef.current) {
-        mapRef.current.getTargetElement().style.cursor = feature ? 'pointer' : '';
+        mapRef.current.getTargetElement().style.cursor = feature
+          ? 'pointer'
+          : '';
       }
       // Show the tooltip information of the feature
       if (feature) {
@@ -205,7 +214,7 @@ export function OpenLayerMap({
       }
     });
     return () => {
-      console.info("[Openlayer map] Unmounted")
+      console.info('[Openlayer map] Unmounted');
       mapRef?.current?.setTarget(undefined);
     };
   }, [center, geoData, zoom]);
@@ -216,15 +225,13 @@ export function OpenLayerMap({
       duration: 1800,
       zoom,
     });
-  }
-
+  };
 
   useEffect(() => {
     if (mapFocus) {
       zoomTo(mapFocus.long, mapFocus.lat, mapFocus.zoom);
     }
   }, [mapFocus]);
-
 
   return (
     <div className={styles['openlayer']}>

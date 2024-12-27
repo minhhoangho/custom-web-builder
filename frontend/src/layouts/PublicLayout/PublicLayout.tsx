@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import * as React from 'react';
 import { useResponsive } from '../../shared/hooks/use-responsive';
 
-
 type Props = {
   children: React.ReactNode;
 };

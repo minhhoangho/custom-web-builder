@@ -7,7 +7,6 @@ import { fNumber } from 'src/utils/format-number';
 import { useChart } from 'src/components/Chart/use-chart';
 import Chart from 'src/components/Chart/Chart';
 
-
 const CHART_HEIGHT = 400;
 const LEGEND_HEIGHT = 72;
 
@@ -32,11 +31,11 @@ type Props = {
 };
 
 export function WidgetCurrentVisit({
-                                     title,
-                                     subheader,
-                                     chart,
-                                     ...other
-                                   }: Props) {
+  title,
+  subheader,
+  chart,
+  ...other
+}: Props) {
   const theme = useTheme();
 
   const { colors, series, options } = chart;

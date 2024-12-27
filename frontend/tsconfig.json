@@ -1,5 +1,4 @@
 {
-
   "compilerOptions": {
     "incremental": false,
     "target": "ESNext",
@@ -33,21 +32,43 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+      "@api/*": [
+        "./src/api/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@layouts/*": [
+        "./src/layouts/*"
+      ],
+      "@utils": [
+        "./src/utils/index"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
+      ]
+    }
   },
-  "include": [
-    "global.d.ts",
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src",
-    "src/**/*",
-    "eslint.config.mjs",
-    ".next/types/**/*.ts"
-  ],
-
   "exclude": [
     "node_modules",
     "cypress"
+  ],
+  "extensions": [
+    ".ts",
+    ".tsx",
+    ".js",
+    ".jsx",
+    ".json"
+  ],
+  "include": [
+    ".next/types/**/*.ts",
+    "global.d.ts",
+    "next-env.d.ts",
+    "src",
+    "src/**/*",
+    "eslint.config.mjs"
   ]
 }

@@ -6,10 +6,10 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { FileUpload } from 'src/components/FileUpload';
 import { toast } from 'src/components/Toast';
 import { FormInput } from 'src/components/Form';
 import { Iconify } from 'src/components/Iconify';
-import { FileUpload } from 'src/components/FileUpload';
 import {
   getDetailViewPoint,
   getViewPointCameraDetail,
@@ -195,7 +195,10 @@ export function ViewPointDetail() {
           </Card>
         </Grid>
         <Grid item>
-          <BevMetadata viewPointCamera={selectedViewPointCamera} viewPoint={dataDetail as ViewPointData}/>
+          <BevMetadata
+            viewPointCamera={selectedViewPointCamera}
+            viewPoint={dataDetail as ViewPointData}
+          />
         </Grid>
       </Grid>
     );

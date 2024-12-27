@@ -24,29 +24,30 @@ export function WidgetCarTracking({ title, subheader }: Props) {
   //   };
   // }, []);
 
-
   const renderListItem = (key: string, value: number) => {
     return (
-      <ListItem disablePadding className='d-flex' key={key}>
+      <ListItem disablePadding className="d-flex" key={key}>
         <div>
           <p>
-            <span>{key}: {value}</span>
+            <span>
+              {key}: {value}
+            </span>
           </p>
         </div>
       </ListItem>
-    )
-  }
+    );
+  };
 
   const renderObjectCounting = () => {
-    return <List >
-      {Object.keys({}).map(key => renderListItem(key, objects[key]))}
-    </List>
-  }
-
-
+    return (
+      <List>
+        {Object.keys({}).map((key) => renderListItem(key, objects[key]))}
+      </List>
+    );
+  };
 
   return (
-    <Grid container spacing={3}  alignItems="stretch">
+    <Grid container spacing={3} alignItems="stretch">
       <Grid item xs={6}>
         <Card>
           <CardHeader title={title} subheader={subheader} />
@@ -55,12 +56,10 @@ export function WidgetCarTracking({ title, subheader }: Props) {
           </Box>
         </Card>
       </Grid>
-      <Grid item xs={6} className='h-auto'>
-        <Card className='h-[100%]'>
+      <Grid item xs={6} className="h-auto">
+        <Card className="h-[100%]">
           <CardHeader title="Counting" />
-          <Box sx={{ p: 3, pb: 1 }} >
-            {renderObjectCounting()}
-          </Box>
+          <Box sx={{ p: 3, pb: 1 }}>{renderObjectCounting()}</Box>
         </Card>
       </Grid>
     </Grid>

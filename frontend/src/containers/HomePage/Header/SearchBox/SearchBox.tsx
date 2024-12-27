@@ -18,8 +18,6 @@ import { GeoProperty } from '../../recoil/locationState';
 const SEARCH_API_ENDPOINT = 'https://api.geoapify.com/v1/geocode/autocomplete';
 const GEOAPIFY_API_KEY = 'c03ef2b9bca04d8ba477409f929517f9';
 
-
-
 export function SearchBox() {
   const theme = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,7 +89,7 @@ export function SearchBox() {
     setSelectedLocation(item);
     // setSearchQuery('');
     // setSearchResults([]);
-  }
+  };
 
   return (
     <div style={{ position: 'relative', flexGrow: 1, maxWidth: 400 }}>
@@ -127,22 +125,27 @@ export function SearchBox() {
           }}
         >
           {searchResults.map((res: GeoProperty, index) => (
-            <ListItem key={`search-result-${index}`}
-                      sx={{
-                        cursor: 'pointer',
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                        },
-                      }}
-                      onClick={() => handleClickLocation(res)}>
+            <ListItem
+              key={`search-result-${index}`}
+              sx={{
+                cursor: 'pointer',
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                },
+              }}
+              onClick={() => handleClickLocation(res)}
+            >
               <ListItemText>
-                <div className="flex" >
-                 <div className="my-2"> <Iconify
-                   icon="basil:location-outline"
-                   color="text.disabled"
-                   width={20}
-                   height={20}
-                 /></div>
+                <div className="flex">
+                  <div className="my-2">
+                    {' '}
+                    <Iconify
+                      icon="basil:location-outline"
+                      color="text.disabled"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
                   <p className="ml-2 my-1">{res.addressFormated}</p>
                 </div>
               </ListItemText>

@@ -3,14 +3,18 @@ import { Controller } from 'react-hook-form';
 
 import { Input, InputProps } from '../Input';
 
-
 type FormInputProps = {
-  name: string,
-  control: any,
-  onChange?: (e?: any) => void,
-} & InputProps
+  name: string;
+  control: any;
+  onChange?: (e?: any) => void;
+} & InputProps;
 
-export const FormInput = ({ name, control, onChange, ...restInput }: FormInputProps) => (
+export const FormInput = ({
+  name,
+  control,
+  onChange,
+  ...restInput
+}: FormInputProps) => (
   <Controller
     name={name}
     control={control}

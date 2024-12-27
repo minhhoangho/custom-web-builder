@@ -1,24 +1,23 @@
-import React from "react";
-import classNames from "classnames";
+import React from 'react';
+import classNames from 'classnames';
 import { Tooltip } from '@mui/material';
 
 export type CheckboxProps = {
-  label: string,
-  name: string,
-  checked?: boolean,
-  isRequired?: boolean,
-  value?: boolean,
-  tooltipContent?: string,
-  className?: string,
-  inputClassName?: string,
-  checkboxClassName?: string,
-  errorMessage?: string,
-  disabled?:boolean,
-  onBlur?: (e?: any) => void,
-  onFocus?: (e?: any) => void,
-  onInputChange?: (e?: any) => void,
-}
-
+  label: string;
+  name: string;
+  checked?: boolean;
+  isRequired?: boolean;
+  value?: boolean;
+  tooltipContent?: string;
+  className?: string;
+  inputClassName?: string;
+  checkboxClassName?: string;
+  errorMessage?: string;
+  disabled?: boolean;
+  onBlur?: (e?: any) => void;
+  onFocus?: (e?: any) => void;
+  onInputChange?: (e?: any) => void;
+};
 
 // eslint-disable-next-line react/display-name
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
@@ -29,7 +28,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       checked,
       isRequired,
       value = false,
-      tooltipContent = "",
+      tooltipContent = '',
       checkboxClassName,
       inputClassName,
       errorMessage,
@@ -45,7 +44,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       <div>
         <div
           className={classNames(
-            "inline-flex items-center cursor-pointer",
+            'inline-flex items-center cursor-pointer',
             checkboxClassName,
           )}
         >
@@ -53,7 +52,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             <input
               type="checkbox"
               className={classNames(
-                "form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 cursor-pointer ease-linear transition-all duration-150",
+                'form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 cursor-pointer ease-linear transition-all duration-150',
                 inputClassName,
               )}
               ref={ref}

@@ -39,7 +39,7 @@ export function Header({ onOpenNav }: Props) {
       >
         {!lgUp && (
           <IconButton onClick={onOpenNav} sx={{ mr: 1 }}>
-            <MenuIcon/>
+            <MenuIcon />
           </IconButton>
         )}
         <Box sx={{ flexGrow: 1 }} />

@@ -1,1 +1,1 @@
-export * from './Iconify'
+export * from './Iconify';

@@ -26,7 +26,7 @@ export const FileUpload = (props: FileUploadProps) => {
           fileName as string
         }`;
         props.uploadFileCallback(fileUrl);
-      } catch (error) {
+      } catch (_error) {
         toast('error', 'Có lỗi xảy ra, vui lòng thử lại sau');
       }
     }

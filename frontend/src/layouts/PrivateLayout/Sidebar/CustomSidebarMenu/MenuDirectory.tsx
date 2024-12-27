@@ -23,13 +23,13 @@ export const MenuDirectory = [
         key: MENU_KEY.HOME,
         label: MENU_LABEL[MENU_KEY.HOME] as string,
         icon: <HomeIcon />,
-        url: PathName.Home
+        url: PathName.Home,
       },
       {
         key: MENU_KEY.UPDATE_INFO,
         label: MENU_LABEL[MENU_KEY.UPDATE_INFO] as string,
         icon: <PersonIcon />,
-        url: PathName.Home
+        url: PathName.Home,
       },
     ],
   },
@@ -62,22 +62,22 @@ export const MenuDirectory = [
       {
         key: MENU_KEY.MODEL_BENCHMARK,
         label: MENU_LABEL[MENU_KEY.MODEL_BENCHMARK] as string,
-        icon: <AutoGraphIcon/>,
-        url: PathName.ModelBenchmark
+        icon: <AutoGraphIcon />,
+        url: PathName.ModelBenchmark,
       },
       {
         key: MENU_KEY.GIS_MANAGEMENT,
         label: MENU_LABEL[MENU_KEY.GIS_MANAGEMENT] as string,
         icon: <MapIcon />,
-        url: PathName.GisLocationManagement
+        url: PathName.GisLocationManagement,
       },
-    ]
+    ],
   },
   {
     key: MENU_KEY.ANALYTIC,
     label: MENU_LABEL[MENU_KEY.ANALYTIC] as string,
     icon: <AnalyticsIcon />,
-    url: PathName.Analytic
+    url: PathName.Analytic,
   },
 ];
 

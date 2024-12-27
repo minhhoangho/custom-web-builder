@@ -24,8 +24,7 @@ export function Login() {
   const router = useRouter();
   const redirectUrl = router.query['redirectUrl'] as string;
   const [isLoading, setIsLoading] = useState(false);
-  const setCurrentUser = useSetRecoilState(userState)
-
+  const setCurrentUser = useSetRecoilState(userState);
 
   const validationSchema = yup.object({
     email: yup.string().trim().email().required('Email is required'),
@@ -53,7 +52,7 @@ export function Login() {
 
       setIsLoading(false);
       toast('success', 'Login sucessfully');
-      setCurrentUser(user as UserData)
+      setCurrentUser(user as UserData);
 
       if (redirectUrl) {
         router.push(redirectUrl);

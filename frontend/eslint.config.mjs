@@ -113,9 +113,11 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
 
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         {
-          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_[^_].*$|^_$',
+          varsIgnorePattern: '^_[^_].*$|^_$',
+          caughtErrorsIgnorePattern: '^_[^_].*$|^_$',
         },
       ],
 

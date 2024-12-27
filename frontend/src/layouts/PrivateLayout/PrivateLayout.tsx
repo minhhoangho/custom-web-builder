@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import {useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import { Box } from '@mui/material';
 import { UserInfo, userState } from 'src/app-recoil/atoms/user';
@@ -24,7 +22,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
   const lgUp = useResponsive('up', 'lg');
 
   const router = useRouter();
-  const setCurrentUser = useSetRecoilState(userState)
+  const setCurrentUser = useSetRecoilState(userState);
   const isAuthenticated = CookiesStorage.isAuthenticated();
 
   const userData: UserInfo | null = null;
@@ -40,10 +38,8 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
   React.useEffect(() => {
     setIsClient(true);
     // refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const redirectUrl = router.asPath;
-
 
   React.useEffect(() => {
     if (!isAuthenticated) {
@@ -61,16 +57,14 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
         }
       }
 
-
-
-        // if (!userData) {
-        // if (
-        //   userData?.role?.key !== UserRole.Admin &&
-        //   router.pathname.includes('/admin')
-        // ) {
-        //   router.push('/404');
-        // }
-        // }
+      // if (!userData) {
+      // if (
+      //   userData?.role?.key !== UserRole.Admin &&
+      //   router.pathname.includes('/admin')
+      // ) {
+      //   router.push('/404');
+      // }
+      // }
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

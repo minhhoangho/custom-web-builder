@@ -56,8 +56,11 @@ const ConfirmBox = ({
       <Card sx={{ ...style, width: 400 }}>
         <CardHeader title={title || classNameTitle || 'Xác nhận'} />
         <CardContent>
-          <Typography id="parent-modal-description" className={classNames('px-2', contentClassName)}>
-              {message || classNameContent || 'Bạn có muốn tiếp tục không ?'}
+          <Typography
+            id="parent-modal-description"
+            className={classNames('px-2', contentClassName)}
+          >
+            {message || classNameContent || 'Bạn có muốn tiếp tục không ?'}
           </Typography>
         </CardContent>
         <CardActions>

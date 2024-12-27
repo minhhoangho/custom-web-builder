@@ -1,4 +1,3 @@
-
 import { Container, Grid } from '@mui/material';
 // import styles from './ViewPointChart.module.scss'
 import { useQuery } from 'react-query';
@@ -11,14 +10,12 @@ import { useChart } from '../../../components/Chart/use-chart';
 import Chart from '../../../components/Chart/Chart';
 
 type ViewPointChartContainerProps = {
-  viewPointId: number
-}
+  viewPointId: number;
+};
 
 export function ViewPointChartContainer(props: ViewPointChartContainerProps) {
-  const { viewPointId } = props
-  const {
-    data: dataDetail,
-  } = useQuery({
+  const { viewPointId } = props;
+  const { data: dataDetail } = useQuery({
     queryKey: ['getViewPointDetail', viewPointId],
     queryFn: () => {
       return getDetailViewPoint(viewPointId);
@@ -28,11 +25,11 @@ export function ViewPointChartContainer(props: ViewPointChartContainerProps) {
     cacheTime: 1000,
   });
 
-  const vehicleData = [
-    0, 1, 3, 12, 45, 35,
-    12, 12, 59, 36, 39, 20
-  ]
-  const timeBox = Array.from({ length: 12 }, (_, i) => `${(i * 2).toString().padStart(2, '0')}:00`);
+  const vehicleData = [0, 1, 3, 12, 45, 35, 12, 12, 59, 36, 39, 20];
+  const timeBox = Array.from(
+    { length: 12 },
+    (_, i) => `${(i * 2).toString().padStart(2, '0')}:00`,
+  );
   const charts = {
     labels: timeBox,
     series: [
@@ -40,12 +37,12 @@ export function ViewPointChartContainer(props: ViewPointChartContainerProps) {
         name: 'Số phương tiện',
         type: 'line',
         fill: 'solid',
-        data: vehicleData
+        data: vehicleData,
       },
     ],
-  }
+  };
 
-  const { labels, series,  } = charts
+  const { labels, series } = charts;
 
   const chartOptions = useChart({
     plotOptions: {
@@ -80,7 +77,6 @@ export function ViewPointChartContainer(props: ViewPointChartContainerProps) {
     },
   });
 
-
   return (
     <BaseLayout>
       <PrivateLayout>
@@ -102,5 +98,5 @@ export function ViewPointChartContainer(props: ViewPointChartContainerProps) {
         </Container>
       </PrivateLayout>
     </BaseLayout>
-  )
+  );
 }

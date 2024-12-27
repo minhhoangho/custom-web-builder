@@ -32,7 +32,9 @@ export function MapTiler({ geoData, center, zoom }: Props) {
   const mapContainer = useRef<string>(null);
   const map = useRef<maptilersdk.Map | null>(null);
   const [hoverPoint, setHoverPoint] = useState<ViewPointData | null>(null);
-  const [isConnected, message, _, _dis] = useWebsocket(`${SOCKET_BASE_URL}/ws/`);
+  const [isConnected, message, _, _dis] = useWebsocket(
+    `${SOCKET_BASE_URL}/ws/`,
+  );
   const mapFocus = useRecoilValue(mapFocusState);
 
   const handleControlRotate = useCallback((map: Map) => {
