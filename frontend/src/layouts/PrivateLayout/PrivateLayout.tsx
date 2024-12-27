@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
 import { Box } from '@mui/material';
-import { CookieStorage } from 'src/utils/cookie-storage';
+import { CookieStorage } from 'src/utils';
 import { CookieKey } from '@constants/storage';
 import { UserInfo, userState } from 'src/app-recoil/atoms/user';
 // import {useGetCurrentUser} from "src/modules/UserProfile/hooks";

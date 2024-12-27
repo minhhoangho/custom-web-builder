@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import S3 from 'aws-sdk/clients/s3';
-import { S3Config } from '../../constants';
+import { S3Config } from 'src/constants/app-config';
 
 const config = {
   bucketName: S3Config.bucketName,

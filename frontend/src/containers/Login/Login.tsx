@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { CookieStorage } from 'src/utils/cookie-storage';
+import { CookieStorage } from 'src/utils';
 import { BaseLayout } from 'src/layouts';
 import { toast } from 'src/components/Toast';
 import { login } from '@api/auth';

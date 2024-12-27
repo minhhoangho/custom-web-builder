@@ -5,14 +5,10 @@ import take from 'lodash/take';
 import isEmpty from 'lodash/isEmpty';
 import { nanoid } from 'nanoid';
 import { EventEmitter } from 'eventemitter3';
-import {
-  CLOUD_FRONT,
-  ENV,
-  FE_URL,
-  START_DATE_OF_WEEKS,
-  StorageKey,
-  TIMEZONE,
-} from 'src/constants';
+import { CLOUD_FRONT, ENV, FE_URL } from '@constants/app-config';
+import { TIMEZONE } from '@constants/timezone';
+import { StorageKey } from '@constants/storage';
+import { START_DATE_OF_WEEKS } from '@constants/date-time-format';
 
 const getHostnameFromRegex = (url: string) => {
   // run against regex

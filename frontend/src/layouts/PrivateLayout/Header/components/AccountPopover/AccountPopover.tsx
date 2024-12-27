@@ -45,7 +45,7 @@ export function AccountPopover() {
   };
 
   const handleLogout = () => {
-    CookieStorage?.clearSession();
+    CookieStorage.clearSession();
     handleClose();
     router.replace('/login');
   };

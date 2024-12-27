@@ -1,5 +1,5 @@
 import { Manager } from 'socket.io-client';
-import { SOCKET_BASE_URL } from '../constants';
+import { SOCKET_BASE_URL } from 'src/constants/app-config';
 
 const manager = new Manager(`${SOCKET_BASE_URL}`, {
   transports: ['websocket'],
@@ -11,8 +11,6 @@ const manager = new Manager(`${SOCKET_BASE_URL}`, {
 });
 
 export const socketClient = manager.socket('/');
-
-const socketClient = new WebSocket(`${SOCKET_BASE_URL}/socket.io`);
 
 // console.log("socketClient.connected: ", socketClient.connected)
 // export const socketClient = io(`${SOCKET_BASE_URL}/ws/vehicle_count_group`, {
