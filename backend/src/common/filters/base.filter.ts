@@ -12,7 +12,7 @@ import { get, omit } from 'lodash';
 import { Request } from 'express';
 import { catchError } from 'rxjs/operators';
 import { ApiError } from 'src/errors';
-import { AnyObject, FilterMethods } from '@common/constants/types';
+import { AnyObject, FilterMethods } from '@common/interfaces';
 import { of } from 'rxjs';
 
 @Injectable()

@@ -12,7 +12,7 @@ import { Repository } from './utils/custom-repository.type';
 import { getCustomRepositoryToken } from './utils/custom-repository.util';
 
 export function EntityRepository(target: EntityTarget<ObjectLiteral>) {
-  return function (constructor: { new (...args: AnyObject[]): AnyObject }) {
+  return function (constructor: { new (...args: any[]): any }) {
     Reflect.defineMetadata(ENTITY_METADATA_KEY, target, constructor);
   };
 }

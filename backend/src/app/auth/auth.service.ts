@@ -37,8 +37,13 @@ export class AuthService {
   };
 
   public async verifyAccessToken(token: string, jwtPayload): Promise<User> {
-    const user: User = _.get(jwtPayload, 'user');
+    const user: User = _.get(jwtPayload, 'user') as User;
     const cacheKey = _.get(jwtPayload, 'id');
+    if (!cacheKey) {
+      throw new UnAuthorizedError(ErrorCode.UNAUTHORIZED, {
+        message: 'Cache key is required',
+      });
+    }
 
     if (!user) {
       throw new UnAuthorizedError();
@@ -61,10 +66,11 @@ export class AuthService {
     context: { userAgent: string; ip: string },
   ): Promise<LoginResponseDto> {
     const { userAgent, ip } = context;
+
     return this.createToken(user, { userAgent, ip });
   }
 
-  private async issueTokens(user, context = null) {
+  private async issueTokens(user, context = {}) {
     const accessTokenId = uuidv4();
     const refreshTokenId = uuidv4();
 

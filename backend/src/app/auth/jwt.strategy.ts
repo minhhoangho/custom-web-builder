@@ -22,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    *  @Usage A "verify callback", which is where you tell Passport how to interact with your user store
    */
   async validate(req: Request, payload: any): Promise<User> {
-    const token: string = req.get('authorization').split(' ')[1];
+    const token: string = (req.get('authorization')?? ' ').split(' ')[1];
     const user: User = await this.authService.verifyAccessToken(token, payload);
     CurrentUserContext.set(user);
     return user;

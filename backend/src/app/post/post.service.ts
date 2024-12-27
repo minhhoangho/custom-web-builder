@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreatePostDto, UpdatePostDto } from '@app/post/dto/requests';
 import { Post } from '@app/post/entities/post.entity';
 import { PostRepository } from '@app/post/post.repository';
-import { FindWithPaginationBuilderOptions } from '@common/constants/types';
+import { FindWithPaginationBuilderOptions } from '@common/interfaces';
 import { PaginationParamDto } from '@common/dtos/pagination-param.dto';
 import { IPaginationEntity } from '@common/interfaces';
 import { NotFoundError } from '../../errors';
@@ -32,7 +32,7 @@ export class PostService {
   }
 
   async detail(id: number): Promise<Post> {
-    const postDetail: Post = await this.postRepository.findOneWithRelations({
+    const postDetail = await this.postRepository.findOneWithRelations({
       where: {
         id,
       },

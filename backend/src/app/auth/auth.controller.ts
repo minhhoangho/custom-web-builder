@@ -21,8 +21,8 @@ export class AuthController {
       email,
       password,
     );
-    const userAgent = req.get('user-agent');
-    const { ip } = req;
+    const userAgent = req.get('user-agent') ?? 'UNKNOWN';
+    const ip = req.ip ?? 'UNKNOWN';
     const data: LoginResponseDto = await this.authService.createAuthToken(
       user,
       {

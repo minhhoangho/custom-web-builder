@@ -26,7 +26,7 @@ export class SampleFilter extends BaseFilter<User> {
    * Use this method when you want to remove the custom field from query after you handle it in getWhereCondition method
    * @returns {string[]}
    */
-  getCustomFields(): string[] {
+  getCustomFields() {
     return [];
   }
 }

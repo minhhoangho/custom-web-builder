@@ -56,7 +56,7 @@ export class UserController {
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   retrieve(@Param('id', ParseIntPipe) id: number): Promise<UserDetailDto> {
-    return this.userService.detail(id);
+    return this.userService.detail(id) as Promise<UserDetailDto>;
   }
 
   @Auth()
@@ -66,7 +66,7 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateUserDto,
   ): Promise<BasicUserInfoDto> {
-    return this.userService.update(id, payload);
+    return this.userService.update(id, payload) as Promise<BasicUserInfoDto>;
   }
 
   @Auth()

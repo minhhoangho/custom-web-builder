@@ -47,12 +47,10 @@ export class LoggingMiddleware implements NestMiddleware {
       body,
     });
 
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const reqInfo = `PID: ${global.process.pid} FROM: ${req.ip}, ENDPOINT: ${method} ${req.protocol}://${req.hostname}${req.originalUrl}, X_REQUEST_ID: ${req.headers['x-request-id']}`;
 
     Logger.log(`${reqInfo}, REQUEST_INFO: ${requestPayload}`, 'Request');
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     const oldEndFn = res.end;
     const chunks: Buffer[] = [];
     res.end = (resBuffer) => {
