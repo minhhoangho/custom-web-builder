@@ -2,13 +2,15 @@ import { useTheme } from '@mui/material/styles';
 import { AppBar, Box, IconButton, Toolbar } from '@mui/material';
 import { Stack } from '@mui/system';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useResponsive } from '@shared/hooks/use-responsive';
+import { bgBlur } from 'src/theme/css';
 import { AccountPopover } from './components/AccountPopover';
 import { NotificationPopover } from './components/NotificationPopover';
-import { useResponsive } from '../../../shared/hooks/use-responsive';
-import { bgBlur } from '../../../theme/css';
+
 type Props = {
   onOpenNav: () => void;
 };
+
 export function Header({ onOpenNav }: Props) {
   const theme = useTheme();
   const lgUp = useResponsive('up', 'lg');

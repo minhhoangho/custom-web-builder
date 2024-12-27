@@ -96,7 +96,6 @@ export function BevMetadata({
     homographyMatrix: any;
     image_coordinates: any;
   }) => {
-    console.info('handleSubmitForm ', homographyMatrix, image_coordinates);
     const isEmptyPayload = () => {
       return (
         isEmptyMatrix(homographyMatrix) || isEmptyCoordinates(image_coordinates)

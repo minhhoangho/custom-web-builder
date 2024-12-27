@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
-
 import { Box } from '@mui/material';
+import { CookieStorage } from 'src/utils/cookie-storage';
+import { CookieKey } from '@constants/storage';
 import { UserInfo, userState } from 'src/app-recoil/atoms/user';
 // import {useGetCurrentUser} from "src/modules/UserProfile/hooks";
+import { useResponsive } from '@shared/hooks/use-responsive';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 // import { UserRole } from '../../constants/user';
-import { useResponsive } from '@shared/hooks/use-responsive';
-import { CookieStorage } from 'src/utils/cookie-storage';
-import { CookieKey } from '@constants/storage';
 
 type Props = {
   children: React.ReactNode;
@@ -24,7 +23,6 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
   const router = useRouter();
   const setCurrentUser = useSetRecoilState(userState);
   const isAuthenticated = CookieStorage.isAuthenticated();
-  console.log('isAuthenticated', isAuthenticated);
 
   const userData: UserInfo | null = null;
   const isLoading = false;

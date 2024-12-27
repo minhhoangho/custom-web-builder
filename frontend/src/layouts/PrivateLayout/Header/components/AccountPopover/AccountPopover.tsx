@@ -12,9 +12,9 @@ import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { account } from 'src/mocks/account';
-import { CookieStorage } from 'src/utils/cookie-storage';
 import { userState } from 'src/app-recoil/atoms/user';
 import { UserData } from 'src/containers/UserManagement/models';
+import { CookieStorage } from 'src/utils/cookie-storage';
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ export function AccountPopover() {
   };
 
   const handleLogout = () => {
-    CookieStorage.clearSession();
+    CookieStorage?.clearSession();
     handleClose();
     router.replace('/login');
   };
@@ -105,7 +105,7 @@ export function AccountPopover() {
           </Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }}/>
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
           <MenuItem key={option.label} onClick={handleClose}>
@@ -113,7 +113,7 @@ export function AccountPopover() {
           </MenuItem>
         ))}
 
-        <Divider sx={{ borderStyle: 'dashed', m: 0 }}/>
+        <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 
         <MenuItem
           disableRipple
