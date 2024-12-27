@@ -33,6 +33,7 @@ export class MappingError {
           _.size(get(err, 'response.message'))
         ) {
           err.message = get(err, 'response.message.0');
+          err.errors = get(err, 'response.message', [])
         } else {
           err.message = get(err, 'response.message');
         }
