@@ -24,7 +24,7 @@ export class MappingError {
       case BadRequestException:
         err.status = get(
           err,
-          'response.status',
+          'status',
           get(err, 'response.statusCode'),
         );
         err.title = 'Bad request';
@@ -39,10 +39,10 @@ export class MappingError {
         err.code = ErrorCode.BAD_REQUEST;
         break;
       case NotFoundException:
-        err.status = get(err, 'response.status');
+        err.status = get(err, 'status');
         err.title = 'Not found';
         err.message = get(err, 'response.message');
-        err.code = ErrorCode.BAD_REQUEST;
+        err.code = ErrorCode.NOT_FOUND;
         break;
       default:
         break;

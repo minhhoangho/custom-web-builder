@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { ErrorCode } from '../common/constants/error-code';
+import { ErrorCode } from '@common/constants/error-code';
 import { ApiError } from './api-error';
 import { ErrorOptionInterface } from '@common/interfaces';
 
