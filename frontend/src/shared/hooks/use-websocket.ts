@@ -9,7 +9,7 @@ export const useWebsocket = (url: string) => {
   const [isReady, setIsReady] = useState(false);
   const [val, setVal] = useState(null);
 
-  const ws = useRef(null);
+  const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     const socket = new WebSocket(url);
