@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Spinner from 'src/components/Spinner';
 
 const getPageTitle = (title: string): string => {
-  return title ? `City camera - ${title}` : 'City camera';
+  return title ? `Web - ${title}` : 'Web app';
 };
 
 export function BaseLayout({

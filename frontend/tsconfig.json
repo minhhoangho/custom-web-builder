@@ -38,6 +38,9 @@
       "@api/*": [
         "./src/api/*"
       ],
+      "@constants/*": [
+        "./src/constants/*"
+      ],
       "@components/*": [
         "./src/components/*"
       ],

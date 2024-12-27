@@ -78,4 +78,4 @@ const ConfirmBox = ({
   );
 };
 
-export default ConfirmBox;
+export { ConfirmBox };

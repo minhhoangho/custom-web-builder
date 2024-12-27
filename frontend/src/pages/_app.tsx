@@ -8,8 +8,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import { CookiesProvider } from 'react-cookie';
 import { ToastContainer } from 'react-toastify';
-import ConfirmBox from 'src/components/ConfirmBox';
 import { ThemeProvider } from 'src/theme';
+import { ConfirmBox } from '@components/common/ConfirmBox';
 import { userState } from '../app-recoil/atoms/user';
 
 import '../styles/globals.css';

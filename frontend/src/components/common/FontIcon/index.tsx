@@ -2,17 +2,17 @@ import React from 'react';
 import classNames from 'classnames';
 
 const FontIcon = ({
-  disabled,
   className,
   status,
   iconName = '',
-  onClick,
+  disabled = false,
+  onClick = () => {},
 }: {
-  disabled: boolean;
   className: string;
-  status: string;
+  status?: string;
   iconName: string;
-  onClick: any;
+  disabled?: boolean;
+  onClick?: any;
 }) => {
   return (
     <i
@@ -24,4 +24,4 @@ const FontIcon = ({
   );
 };
 
-export default FontIcon;
+export { FontIcon };

@@ -1,6 +1,6 @@
 import React from 'react';
 import isEqual from 'lodash/isEqual';
-import FontIcon from 'src/components/FontIcon';
+import { FontIcon } from '@components/common/FontIcon';
 
 const getIconName = (type) => {
   switch (type) {

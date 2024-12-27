@@ -1,18 +1,38 @@
 import React from 'react';
+import { Box, Button, Container, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
+import { PathName } from '@constants/routes';
 import { BaseLayout, PublicLayout } from 'src/layouts';
-import { HomeMap } from './HomeMap/HomeMap';
-import { HomeSidebar } from './Sidebar';
-import { Header } from './Header';
-
+import styles from './HomePage.module.scss';
 export function HomePage() {
-  const [collapsed, setCollapsed] = React.useState<boolean>(false);
+  const router = useRouter();
 
+  const handleRedirect = () => {
+    router.push(PathName.Admin);
+  };
   return (
     <BaseLayout>
       <PublicLayout>
-        <Header onOpenNav={() => setCollapsed(true)} />
-        <HomeSidebar open={collapsed} onClose={() => setCollapsed(false)} />
-        <HomeMap width="100%" height="100%" />
+        <Container className={styles['container']} maxWidth="xl">
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            height="100vh"
+          >
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              Hi, Welcome back 👋
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleRedirect}
+            >
+              Go to Admin
+            </Button>
+          </Box>
+        </Container>
       </PublicLayout>
     </BaseLayout>
   );

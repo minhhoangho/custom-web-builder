@@ -24,6 +24,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
   const router = useRouter();
   const setCurrentUser = useSetRecoilState(userState);
   const isAuthenticated = CookiesStorage.isAuthenticated();
+  console.log('isAuthenticated', isAuthenticated);
 
   const userData: UserInfo | null = null;
   const isLoading = false;

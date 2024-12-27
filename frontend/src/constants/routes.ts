@@ -4,6 +4,7 @@ export const PathName = {
   AuthRegister: '/auth/register',
   BlankVerifyPage: '/auth/verify',
 
+  Admin: '/admin',
   Home: '/home',
 
   Profile: '/me/profile',
