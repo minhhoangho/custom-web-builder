@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { BaseEntityTimestampSoftDelete } from '@common/entity';
-import { Post, Role } from '@app/entity';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
-import { JSONObject } from '@common/types';
+import { BaseEntityTimestampSoftDelete } from '@common/entity';
+import { Post, Role } from '@app/entity';
+import { AnyObject } from '@common/interfaces';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntityTimestampSoftDelete {
@@ -63,7 +63,7 @@ export class User extends BaseEntityTimestampSoftDelete {
     type: 'json',
     nullable: true,
   })
-  credentials: JSONObject;
+  credentials: AnyObject;
 
   @Column({
     name: 'role_id',

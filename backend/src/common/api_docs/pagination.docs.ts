@@ -1,8 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery } from '@nestjs/swagger';
-import { JSONObject } from '@common/types';
+import { AnyObject } from '@common/interfaces';
 
-export const PaginationResponseApiDoc = (exampleData: JSONObject[] = []) =>
+export const PaginationResponseApiDoc = (exampleData: AnyObject[] = []) =>
   applyDecorators(
     ApiOkResponse({
       schema: {

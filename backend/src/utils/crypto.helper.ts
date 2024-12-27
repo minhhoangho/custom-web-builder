@@ -1,6 +1,6 @@
-import { AnyObject } from '@common/constants/types';
-import crypto from 'crypto';
 import { Logger } from '@nestjs/common';
+import crypto from 'crypto';
+import { AnyObject } from '@common/interfaces';
 
 export class CryptoHelper {
   static getBufferOfEncryptionKey(encryptionKey = ''): Buffer {

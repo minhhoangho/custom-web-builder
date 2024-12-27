@@ -1,15 +1,15 @@
-import { ErrorCode } from '@common/constants';
-import { UnAuthorizedError } from 'src/errors';
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JSONObject } from '@common/types';
+import { ErrorCode } from '@common/constants';
+import { UnAuthorizedError } from 'src/errors';
+import { AnyObject } from '@common/interfaces';
 /**
  * Guard will determine whether a given request will be handled by the route handler or not.
  * @Usage This guard is used to custom the JWT AuthGuard for error handling
  */
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  handleRequest(err: Error, user: JSONObject, info: JSONObject): JSONObject {
+  handleRequest(err: any, user: any, info: any): AnyObject {
     // No token found
     if (info?.message === 'No auth token') {
       throw new UnAuthorizedError(ErrorCode.UNAUTHORIZED, {

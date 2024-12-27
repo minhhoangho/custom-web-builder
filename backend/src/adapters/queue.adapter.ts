@@ -1,9 +1,9 @@
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger } from '@nestjs/common';
-import { QUEUE_NAMES } from '../features/jobs/constants';
 import * as _ from 'lodash';
 import { ExpressAdapter } from '@bull-board/express';
 import { Queue } from 'bullmq';
+import { QUEUE_NAMES } from 'src/features/jobs/constants';
 
 export class QueueAdapter {
   serverAdapter: ExpressAdapter;

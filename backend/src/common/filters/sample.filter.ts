@@ -1,6 +1,6 @@
-import { AnyObject } from '@common/constants/types';
-import { BaseFilter } from '@common/filters';
 import { FindOptionsWhere, ObjectLiteral } from 'typeorm';
+import { AnyObject } from '@common/interfaces';
+import { BaseFilter } from '@common/filters';
 import { User } from '@app/user/entities/user.entity';
 
 export class SampleFilter extends BaseFilter<User> {

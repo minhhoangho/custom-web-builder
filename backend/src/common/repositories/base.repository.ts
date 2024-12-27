@@ -1,13 +1,5 @@
 import * as _ from 'lodash';
 import {
-  ErrorCode,
-  PAGINATION_DEFAULT,
-  PAGINATION_MAX_LIMIT,
-} from '@common/constants';
-import { NotFoundError } from 'src/errors';
-import { IPaginationEntity } from '@common/interfaces';
-import { convertConditionToString } from '@utils';
-import {
   FindOneOptions,
   FindOptionsWhere,
   ObjectLiteral,
@@ -19,10 +11,17 @@ import {
   AnyObject,
   FindOneBuilderOptions,
   FindWithPaginationBuilderOptions,
-} from '@common/constants/types';
-import { JSONObject } from '@common/types';
+} from '@common/interfaces';
+import {
+  ErrorCode,
+  PAGINATION_DEFAULT,
+  PAGINATION_MAX_LIMIT,
+} from '@common/constants';
+import { NotFoundError } from 'src/errors';
+import { IPaginationEntity } from '@common/interfaces';
+import { convertConditionToString } from '@utils';
 
-export class BaseRepository<E> extends Repository<E> {
+export class BaseRepository<E extends ObjectLiteral> extends Repository<E> {
   public entityName = _.replace(this.constructor.name, 'Repository', '');
 
   public async findOneByIdOrFail(id: number): Promise<E> {
@@ -76,7 +75,7 @@ export class BaseRepository<E> extends Repository<E> {
     options: FindOptionsWhere<E>,
     deletedBy: number | string,
   ): Promise<void> {
-    const payload = {
+    const payload: Partial<ObjectLiteral> = {
       deletedAt: new Date(),
       deletedBy,
     };
@@ -90,7 +89,7 @@ export class BaseRepository<E> extends Repository<E> {
     // const aliasName = _.camelCase(this.metadata.tableName);
     const aliasName: string = this.metadata.name.toLowerCase();
 
-    const selectFields = [];
+    const selectFields: string[] = [];
     let queryBuilder: SelectQueryBuilder<E> =
       this.createQueryBuilder(aliasName);
 
@@ -126,19 +125,21 @@ export class BaseRepository<E> extends Repository<E> {
     }
 
     if (!_.isEmpty(options.where)) {
-      queryBuilder = this.convertWhereToBuilder(queryBuilder, options.where);
+      queryBuilder = this.convertWhereToBuilder(
+        queryBuilder,
+        options.where ?? {},
+      );
     }
 
     if (!_.isEmpty(options.select)) {
-      selectFields.push(
-        ...options.select.map((field) => {
-          // If the field is explicitly demonstrated from param -> return field
-          if (_.size(field.split('.')) > 1) {
-            return field;
-          }
-          return `${this.metadata.tableName}.${field}`;
-        }),
+      const selectFieldsFromOptions: string[] = (options.select ?? []).map(
+        (field: string) => {
+          return _.size(field.split('.')) > 1
+            ? field
+            : `${this.metadata.tableName}.${field}`;
+        },
       );
+      selectFields.push(...selectFieldsFromOptions);
       queryBuilder = queryBuilder.select(selectFields);
     }
 
@@ -157,9 +158,11 @@ export class BaseRepository<E> extends Repository<E> {
     };
   }
 
-  async findOneWithRelations(options: FindOneBuilderOptions<E>): Promise<E> {
+  async findOneWithRelations(
+    options: FindOneBuilderOptions<E>,
+  ): Promise<E | null> {
     const aliasName: string = this.metadata.name.toLowerCase();
-    const selectFields = [];
+    const selectFields: string[] = [];
     let queryBuilder: SelectQueryBuilder<E> =
       this.createQueryBuilder(aliasName);
 
@@ -174,18 +177,21 @@ export class BaseRepository<E> extends Repository<E> {
     }
 
     if (!_.isEmpty(options.where)) {
-      queryBuilder = this.convertWhereToBuilder(queryBuilder, options.where);
-    }
-    if (!_.isEmpty(options.select)) {
-      selectFields.push(
-        ...options.select.map((field) => {
-          // If the field is explicitly demonstrated from param -> return field
-          if (_.size(field.split('.')) > 1) {
-            return field;
-          }
-          return `${this.metadata.tableName}.${field}`;
-        }),
+      queryBuilder = this.convertWhereToBuilder(
+        queryBuilder,
+        options.where ?? {},
       );
+    }
+
+    if (!_.isEmpty(options.select)) {
+      const selectFieldsFromOptions: string[] = (options.select ?? []).map(
+        (field: string) => {
+          return _.size(field.split('.')) > 1
+            ? field
+            : `${this.metadata.tableName}.${field}`;
+        },
+      );
+      selectFields.push(...selectFieldsFromOptions);
       queryBuilder = queryBuilder.select(selectFields);
     }
 

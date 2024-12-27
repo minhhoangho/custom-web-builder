@@ -1,8 +1,8 @@
 import { PaginationResponseDto } from '@common/dtos/pagination.dto';
-import { JSONObject } from '@common/types';
+import { AnyObject } from '@common/interfaces';
 
 export interface ListWithPaginationResponseDto {
-  data: JSONObject[];
+  data: AnyObject[];
 
   pagination: PaginationResponseDto;
 }

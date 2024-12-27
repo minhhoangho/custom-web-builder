@@ -1,8 +1,8 @@
-import { JoiValidationError } from 'src/errors/joi-error';
 import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 import { ObjectSchema } from 'joi';
 import { includes } from 'lodash';
-import { JSONObject } from '@common/types';
+import { JoiValidationError } from 'src/errors/joi-error';
+import { AnyObject } from '@common/interfaces';
 
 @Injectable()
 export abstract class BaseValidation implements PipeTransform {
@@ -10,7 +10,7 @@ export abstract class BaseValidation implements PipeTransform {
 
   abstract getSchema(): ObjectSchema;
 
-  transform(value: JSONObject, metadata: ArgumentMetadata) {
+  transform(value: AnyObject, metadata: ArgumentMetadata) {
     if (!includes(['body', 'query'], metadata.type)) return value;
 
     this.schema = this.getSchema();

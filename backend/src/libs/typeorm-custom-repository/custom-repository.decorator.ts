@@ -6,13 +6,13 @@ import type {
   ObjectLiteral,
 } from 'typeorm';
 
+import { AnyObject } from '@common/interfaces';
 import { ENTITY_METADATA_KEY } from './custom-repository.constants';
 import { Repository } from './utils/custom-repository.type';
 import { getCustomRepositoryToken } from './utils/custom-repository.util';
-import { JSONObject } from '@common/types';
 
 export function EntityRepository(target: EntityTarget<ObjectLiteral>) {
-  return function (constructor: { new (...args: JSONObject[]): JSONObject }) {
+  return function (constructor: { new (...args: AnyObject[]): AnyObject }) {
     Reflect.defineMetadata(ENTITY_METADATA_KEY, target, constructor);
   };
 }

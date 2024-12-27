@@ -1,6 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOkResponse, ApiResponse } from '@nestjs/swagger';
-import { JSONObject } from '@common/types';
+import { AnyObject } from '@common/interfaces';
 
 export const NoContentResponseApiDoc = () =>
   applyDecorators(
@@ -10,7 +10,7 @@ export const NoContentResponseApiDoc = () =>
     }),
   );
 
-export const CreatedResponseApiDoc = (exampleData: JSONObject = {}) =>
+export const CreatedResponseApiDoc = (exampleData: AnyObject = {}) =>
   applyDecorators(
     ApiResponse({
       status: HttpStatus.CREATED,
@@ -20,7 +20,7 @@ export const CreatedResponseApiDoc = (exampleData: JSONObject = {}) =>
     }),
   );
 
-export const ObjectResponseApiDoc = (exampleData: JSONObject = {}) =>
+export const ObjectResponseApiDoc = (exampleData: AnyObject = {}) =>
   applyDecorators(
     ApiOkResponse({
       schema: {
