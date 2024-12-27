@@ -3,7 +3,7 @@ import React from 'react';
 type SpinnerProps = {
   className?: string;
 };
-function Spinner(props: SpinnerProps) {
+export function Spinner(props: SpinnerProps) {
   return (
     <div role="status">
       <svg
@@ -25,5 +25,3 @@ function Spinner(props: SpinnerProps) {
     </div>
   );
 }
-
-export default Spinner;

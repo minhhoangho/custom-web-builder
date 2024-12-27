@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import Head from 'next/head';
-import Spinner from 'src/components/Spinner';
+import { Spinner } from '@components/Spinner';
 
 const getPageTitle = (title: string): string => {
   return title ? `Web - ${title}` : 'Web app';

@@ -6,9 +6,9 @@ import { Button } from '@mui/material';
 import { ArrowLeftOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormInput } from 'src/components/Form';
+import { FormInput } from '@components/form';
+import { BaseLayout } from 'src/layouts';
 import styles from './Register.module.scss';
-import { BaseLayout } from '../../layouts';
 
 const validationSchema = yup.object({
   email: yup.string().trim().required('Email is required'),

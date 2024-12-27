@@ -6,16 +6,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
 import { format } from 'date-fns';
 import { Table } from 'src/components/Table';
-import { useGetListUser } from './hooks/use-get-list-user';
+import { DEFAULT_PAGINATION_PARAMS } from '@constants/pagination';
+import { useDebouncedCallback } from '@shared/hooks/use-debounce-callback';
+import { PathName } from '@constants/routes';
+import { PaginationQueryParams } from '@shared/models/requests';
 import {
   USER_MANAGEMENT_COLUMNS_LABEL,
   USER_MANAGEMENT_KEY,
 } from './constants';
+import { useGetListUser } from './hooks/use-get-list-user';
 import { BaseLayout, PrivateLayout } from '../../layouts';
-import { DEFAULT_PAGINATION_PARAMS } from '../../constants';
-import { useDebouncedCallback } from '../../shared/hooks/use-debounce-callback';
-import { PathName } from '../../constants/routes';
-import { PaginationQueryParams } from '../../shared/models/requests';
 
 export function UserManagement() {
   const router = useRouter();

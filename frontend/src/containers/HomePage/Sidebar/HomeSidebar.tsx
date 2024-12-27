@@ -19,9 +19,9 @@ import CardContent from '@mui/material/CardContent';
 import SearchIcon from '@mui/icons-material/Search';
 import _isEmpty from 'lodash/isEmpty';
 import { useSetRecoilState } from 'recoil';
-import { Scrollbar } from 'src/components/Scrollbar';
-import Spinner from 'src/components/Spinner';
-import { Iconify } from 'src/components/Iconify';
+import { Scrollbar } from '@components/Scrollbar';
+import { Spinner } from '@components/Spinner';
+import { Iconify } from '@components/common/Iconify';
 import { PublicCameraSidebar } from './PublicCameraSidebar/PublicCameraSidebar';
 import styles from './HomeSidebar.module.scss';
 import {

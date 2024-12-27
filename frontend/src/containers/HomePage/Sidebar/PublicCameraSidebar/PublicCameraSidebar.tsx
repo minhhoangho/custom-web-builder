@@ -8,8 +8,8 @@ import Button from '@mui/material/Button';
 import { useQuery } from 'react-query';
 import classNames from 'classnames';
 import Image from 'next/image';
-import { toast } from 'src/components/Toast';
-import Spinner from 'src/components/Spinner';
+import { toast } from '@components/Toast';
+import { Spinner } from '@components/Spinner';
 
 import { getListViewPointCameras } from 'src/api/view-point';
 import styles from './PublicCameraSidebar.module.scss';

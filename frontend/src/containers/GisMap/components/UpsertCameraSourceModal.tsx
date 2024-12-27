@@ -8,12 +8,12 @@ import * as React from 'react';
 import { FormInput } from 'src/components/Form';
 import { FormSelect } from 'src/components/Form/FormSelect';
 import { toast } from 'src/components/Toast';
+import { Spinner } from '@components/Spinner';
+import { upsertNewViewPointCamera } from '@api/view-point';
 import {
   UpsertCameraSourcePayloadRequest,
   ViewPointCameraData,
 } from '../models';
-import { upsertNewViewPointCamera } from '../../../api/view-point';
-import Spinner from '../../../components/Spinner';
 
 type ModalProps = {
   viewPointId: number;
