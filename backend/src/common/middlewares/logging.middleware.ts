@@ -1,11 +1,22 @@
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import {Injectable, NestMiddleware} from '@nestjs/common';
 
-import { Request, Response, NextFunction } from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import {Request, Response, NextFunction} from 'express';
+import {v4 as uuidv4} from 'uuid';
 import * as _ from 'lodash';
-
+import * as winston from 'winston';
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
+  private logger: winston.Logger;
+
+  constructor() {
+    this.logger = winston.createLogger({
+      transports: [
+        new winston.transports.File({ filename: 'logs/app.log', level: 'info' }),
+        new winston.transports.Console()
+      ],
+    });
+  }
+
   private setupRequestId(req: Request) {
     let requestId = req.headers['x-request-id'];
     if (!requestId) {
@@ -19,7 +30,7 @@ export class LoggingMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     // const { ip, method, path: url } = req;
     // const userAgent = req.get('user-agent') || '';
-    const { method } = req;
+    const {method} = req;
 
     this.setupRequestId(req);
     // Sensitive field that need to be hided when logging
@@ -49,10 +60,10 @@ export class LoggingMiddleware implements NestMiddleware {
 
     const reqInfo = `PID: ${global.process.pid} FROM: ${req.ip}, ENDPOINT: ${method} ${req.protocol}://${req.hostname}${req.originalUrl}, X_REQUEST_ID: ${req.headers['x-request-id']}`;
 
-    Logger.log(`${reqInfo}, REQUEST_INFO: ${requestPayload}`, 'Request');
+    this.logger.info(`${reqInfo}, REQUEST_INFO: ${requestPayload}`, 'Request');
 
     const oldEndFn = res.end;
-    const chunks: Buffer[] = [];
+    const chunks: any = [];
     res.end = (resBuffer) => {
       if (resBuffer) {
         chunks.push(Buffer.from(resBuffer));
@@ -72,7 +83,7 @@ export class LoggingMiddleware implements NestMiddleware {
         data: bodyContent,
       });
 
-      Logger.log(`${reqInfo}, RESPONSE_INFO: ${responsePayload}`, 'Response');
+      this.logger.info(`${reqInfo}, RESPONSE_INFO: ${responsePayload}`, 'Response');
 
       return oldEndFn.apply(res, [resBuffer]);
     };
