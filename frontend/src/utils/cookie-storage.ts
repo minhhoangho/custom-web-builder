@@ -1,7 +1,7 @@
 import Cookies from 'universal-cookie';
 import addSeconds from 'date-fns/addSeconds';
 import { getCurrentDomain } from 'src/utils';
-import { CookieKey } from 'src/constants';
+import {CookieKey} from "@constants/storage";
 
 const cookies = new Cookies();
 const CookiesStorage = {

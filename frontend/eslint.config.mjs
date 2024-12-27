@@ -1,5 +1,6 @@
 import tsParser from '@typescript-eslint/parser';
 import unusedImports from 'eslint-plugin-unused-imports';
+import typescriptEslintEslintPlugin from '@typescript-eslint/eslint-plugin';
 
 import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
@@ -39,8 +40,12 @@ export default [
     'plugin:prettier/recommended',
     'next/core-web-vitals',
   ),
-
   {
+    plugins: {
+      'unused-imports': unusedImports,
+      '@typescript-eslint': typescriptEslintEslintPlugin,
+    },
+
     languageOptions: {
       ecmaVersion: 5,
       sourceType: 'module',
@@ -48,9 +53,6 @@ export default [
       parserOptions: {
         project: 'tsconfig.json',
       },
-    },
-    plugins: {
-      'unused-imports': unusedImports,
     },
 
     rules: {

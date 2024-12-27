@@ -38,6 +38,9 @@
       "@api/*": [
         "./src/api/*"
       ],
+      "@app-recoil/*": [
+        "./src/app-recoil/*"
+      ],
       "@constants/*": [
         "./src/constants/*"
       ],

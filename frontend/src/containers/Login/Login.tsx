@@ -8,17 +8,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { FormInput } from 'src/components/Form/FormInput';
+import CookiesStorage from '@utils/cookie-storage';
 import { BaseLayout } from 'src/layouts';
 import { toast } from 'src/components/Toast';
-import styles from './Login.module.scss';
+import { login } from '@api/auth';
+import { userState } from '@app-recoil/atoms/user';
+import { FormInput } from '@components/form';
 import { LoginPayloadRequest, LoginResponse } from './models';
-import { login } from '../../api/auth';
-import { PathName } from '../../constants/routes';
-import CookiesStorage from '../../utils/cookie-storage';
-import { CookieKey } from '../../constants';
-import { userState } from '../../app-recoil/atoms/user';
+import styles from './Login.module.scss';
 import { UserData } from '../UserManagement/models';
+import {PathName} from "@constants/routes";
+import {CookieKey} from "@constants/storage";
 
 export function Login() {
   const router = useRouter();
