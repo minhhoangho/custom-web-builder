@@ -1,13 +1,10 @@
 import { Container, Grid } from '@mui/material';
-// import styles from './ViewPointChart.module.scss'
 import { useQuery } from 'react-query';
-// import { getAnalyticData } from '../../../api/analytic';
-import { toast } from '../../../components/Toast';
-import { getDetailViewPoint } from '../../../api/view-point';
-// import { ViewPointData } from '../../GisMap/models';
-import { BaseLayout, PrivateLayout } from '../../../layouts';
-import { useChart } from '../../../components/Chart/use-chart';
-import Chart from '../../../components/Chart/Chart';
+import { toast } from '@components/common';
+import { getDetailViewPoint } from '@api/view-point';
+import { useChart } from '@components/visualization/Chart/use-chart';
+import Chart from '@components/visualization/Chart/Chart';
+import { BaseLayout, PrivateLayout } from 'src/layouts';
 
 type ViewPointChartContainerProps = {
   viewPointId: number;

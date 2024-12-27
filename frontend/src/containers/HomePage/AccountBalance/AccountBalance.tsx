@@ -17,8 +17,8 @@ import {
 import type { ApexOptions } from 'apexcharts';
 import TrendingUp from '@mui/icons-material/TrendingUp';
 import Image from 'next/image';
-import { Chart } from 'src/components/Chart';
-import { Text } from 'src/components/Text';
+import Chart from '@components/visualization/Chart/Chart';
+import { Text } from '@components/common';
 
 export const AccountBalance = () => {
   const theme = useTheme();

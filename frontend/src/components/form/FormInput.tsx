@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 
-import { Input, InputProps } from '../Input';
+import { Input, InputProps } from './Input';
 
 type FormInputProps = {
   name: string;

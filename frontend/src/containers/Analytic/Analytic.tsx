@@ -4,10 +4,11 @@ import Image from 'next/image';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { BaseLayout, PrivateLayout } from 'src/layouts';
+import { toast } from '@components/common';
 import { WidgetSummary } from './WidgetSummary';
 import styles from './Analytic.module.scss';
 import { ViewPointDataAnalyticItem } from './models/analytic-response';
-import { toast } from '../../components/Toast';
+
 import { getAnalyticData } from '../../api/analytic';
 import { PathName } from '../../constants/routes';
 

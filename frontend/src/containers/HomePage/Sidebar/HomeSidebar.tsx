@@ -19,20 +19,17 @@ import CardContent from '@mui/material/CardContent';
 import SearchIcon from '@mui/icons-material/Search';
 import _isEmpty from 'lodash/isEmpty';
 import { useSetRecoilState } from 'recoil';
-import { Scrollbar } from '@components/Scrollbar';
-import { Spinner } from '@components/Spinner';
 import { Iconify } from '@components/common/Iconify';
-import { PublicCameraSidebar } from './PublicCameraSidebar/PublicCameraSidebar';
+import { DEFAULT_PAGINATION_PARAMS } from '@constants/pagination';
+import { listViewPointsPaginate } from '@api/view-point';
+import { mapFocusState } from '@app-recoil/atoms/map';
+import { Scrollbar, Spinner } from '@components/common';
+import { PathName } from '@constants/routes';
 import styles from './HomeSidebar.module.scss';
 import {
   ListViewPointPaginateResponse,
   ViewPointData,
 } from '../../GisMap/models';
-
-import { DEFAULT_PAGINATION_PARAMS } from '../../../constants';
-import { listViewPointsPaginate } from '../../../api/view-point';
-import { PathName } from '../../../constants/routes';
-import { mapFocusState } from '../../../app-recoil/atoms/map';
 
 type Props = {
   onClose: () => void;
@@ -207,14 +204,7 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
             styles['camera-content'],
             !!activeViewPoint && styles['active-camera-wrapper'],
           )}
-        >
-          <PublicCameraSidebar
-            onClose={() => setActiveViewPoint(null)}
-            open={!!activeViewPoint}
-            activeViewPoint={activeViewPoint}
-            viewPointId={activeViewPoint?.id ?? 0}
-          />
-        </div>
+        ></div>
       </div>
     </>
   );

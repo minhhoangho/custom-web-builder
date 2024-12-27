@@ -18,7 +18,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Image from 'next/image';
-import { Scrollbar } from 'src/components/Scrollbar';
+import { Scrollbar } from '@components/common';
 
 // ----------------------------------------------------------------------
 

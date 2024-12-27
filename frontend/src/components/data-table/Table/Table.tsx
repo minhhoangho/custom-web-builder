@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { cloneDeep } from 'lodash';
+import { PaginationMeta } from '@shared/models/responses';
+import { PaginationQueryParams } from '@shared/models/requests';
 import { TablePaginationAction } from './TablePaginationAction';
-import { PaginationMeta } from '../../shared/models/responses';
-import { PaginationQueryParams } from '../../shared/models/requests';
 type TableProps = {
   rows: Record<string, any>[];
   columns: GridColDef[];

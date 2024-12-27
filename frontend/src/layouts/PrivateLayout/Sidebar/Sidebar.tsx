@@ -5,10 +5,10 @@ import { Avatar, Box, Drawer, Typography } from '@mui/material';
 import Link from 'next/link';
 import Image from 'next/image';
 import { account } from 'src/mocks/account';
-import { Scrollbar } from 'src/components/Scrollbar';
+import { Scrollbar } from '@components/common';
+import { useResponsive } from '@shared/hooks/use-responsive';
 import { CustomSidebarMenu } from './CustomSidebarMenu';
 import styles from './Sidebar.module.scss';
-import { useResponsive } from '../../../shared/hooks/use-responsive';
 
 type Props = {
   onClose: () => void;

@@ -3,7 +3,7 @@ import get from 'lodash/get';
 import qs from 'qs';
 import humps from 'humps';
 import { API_BASE_URL } from '@constants/app-config';
-import { toast } from 'src/components/Toast';
+import { toast } from '@components/common';
 import { CookieStorage } from './cookie-storage';
 
 export const request = axios.create({

@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import Chart from '@components/Chart/Chart';
-import { useChart } from '@components/Chart/use-chart';
+import Chart from '@components/visualization/Chart/Chart';
+import { useChart } from '@components/visualization/Chart/use-chart';
 
 type Props = {
   title: string;

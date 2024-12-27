@@ -8,10 +8,8 @@ import Button from '@mui/material/Button';
 import { useQuery } from 'react-query';
 import classNames from 'classnames';
 import Image from 'next/image';
-import { toast } from '@components/Toast';
-import { Spinner } from '@components/Spinner';
-
-import { getListViewPointCameras } from 'src/api/view-point';
+import { Spinner, toast, Iconify } from '@components/common';
+import { getListViewPointCameras } from '@api/view-point';
 import styles from './PublicCameraSidebar.module.scss';
 import {
   ListViewPointCameraPaginateResponse,
@@ -19,7 +17,6 @@ import {
   ViewPointData,
 } from '../../../GisMap/models';
 import { RealtimeCamera } from '../../../GisMap/components/RealtimeCamera';
-import { Iconify } from '../../../../components/Iconify';
 
 type Props = {
   onClose: () => void;

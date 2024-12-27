@@ -4,8 +4,8 @@ import { alpha, styled } from '@mui/material/styles';
 
 import dynamic from 'next/dynamic';
 import { bgBlur } from 'src/theme/css';
+import { CustomThemeType } from 'src/theme/types';
 import { ApexChartProps } from './types';
-import { CustomThemeType } from '../../theme/types';
 
 const ApexChart: JSX.Element | ComponentType = dynamic(
   () => import('react-apexcharts'),

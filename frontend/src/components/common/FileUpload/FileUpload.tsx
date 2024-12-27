@@ -1,6 +1,6 @@
 import React from 'react';
-import { S3Client } from '../../utils/aws/s3-utils';
-import { S3Config } from '../../constants';
+import { S3Client } from 'src/utils';
+import { S3Config } from '@constants/app-config';
 import { toast } from '../Toast';
 
 type FileUploadProps = {
