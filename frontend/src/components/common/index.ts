@@ -1,4 +1,6 @@
+export * from './Banner';
 export * from './Checkbox';
+export * from './ColorPicker';
 export * from './ConfirmBox';
 export * from './FileUpload';
 export * from './FontIcon';
