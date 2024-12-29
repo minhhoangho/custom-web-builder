@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Sidebar, SubMenu, MenuItem, Menu } from 'react-pro-sidebar';
 import { useState } from 'react';
+import { Menu, MenuItem, Sidebar, SubMenu } from 'react-pro-sidebar';
 import { useRouter } from 'next/router';
+import { PathName } from '@constants/routes';
 import { MenuItemMapInterface } from './types';
 import { MenuDirectory } from './MenuDirectory';
 import styles from './CustomSidebarMenu.module.scss';
-import { PathName } from '../../../../constants/routes';
 
 export function CustomSidebarMenu(): React.ReactElement {
   const [selectedMenuItem, setSelectedMenuItem] = useState('');

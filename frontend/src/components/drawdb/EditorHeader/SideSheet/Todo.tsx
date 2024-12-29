@@ -1,5 +1,17 @@
-import { useState } from "react";
-import { Button, Checkbox, Chip, Grid, List, ListItem, Menu, Popover, Radio, RadioGroup, } from "@mui/material";
+import { MouseEvent, useState } from "react";
+import {
+  Button,
+  Checkbox,
+  Chip,
+  Grid,
+  List,
+  ListItem,
+  Menu,
+  MenuItem,
+  Popover,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import { Input } from '@components/form/Input'
 import { Iconify } from '@components/common/Iconify';
 import { State } from "@constants/editor";
@@ -23,6 +35,14 @@ const SortOrder = {
 export default function Todo() {
   const [activeTask, setActiveTask] = useState(-1);
   const [, setSortOrder] = useState(SortOrder.ORIGINAL);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const {tasks, setTasks, updateTask} = useTasks();
   const {setSaveState} = useSaveState();
   const {t} = useTranslation();
@@ -92,13 +112,18 @@ export default function Todo() {
       <div className="flex justify-between items-center mx-5 mb-2 sidesheet-theme">
         <div className="my-menu">
           <Button
-            style={{marginRight: "10px"}}
-            theme="borderless"
-            type="tertiary"
+            variant="outlined"
+            color="primary"
+            onClick={handleClick}
           >
             {t("sort_by")} <Iconify icon="mdi:caret-down"/>
           </Button>
-          <Menu>
+          <Menu
+            anchorEl={anchorEl}
+            id="todo-menu"
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
             {Object.values(SortOrder).map((order) => (
               <MenuItem
                 key={order}
@@ -114,7 +139,6 @@ export default function Todo() {
 
         </div>
         <Button
-          icon={<Iconify icon="mdi:plus"/>}
           onClick={() => {
             setTasks((prev) => [
               {
@@ -128,7 +152,7 @@ export default function Todo() {
             ]);
           }}
         >
-          {t("add_task")}
+          <Iconify icon="mdi:plus"/><span>{t("add_task")}</span>
         </Button>
       </div>
       {
@@ -142,7 +166,7 @@ export default function Todo() {
                 onClick={() => setActiveTask(i)}
               >
                 <div className="w-full">
-                  <Grid container gutter={6} align="middle" type="flex" className="mb-2">
+                  <Grid container rowSpacing={3} className="mb-2">
                     <Grid item xs={1}>
                       <Checkbox
                         checked={task.complete}
