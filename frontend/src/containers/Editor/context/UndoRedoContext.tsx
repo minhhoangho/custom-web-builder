@@ -2,9 +2,9 @@ import { createContext, useState } from 'react';
 
 export const UndoRedoContext = createContext({
   undoStack: [],
-  setUndoStack: () => {},
+  setUndoStack: (data: any[] | Function) => {},
   redoStack: [],
-  setRedoStack: () => {},
+  setRedoStack: (data: any[]) => {},
 });
 
 export default function UndoRedoContextProvider({ children }) {

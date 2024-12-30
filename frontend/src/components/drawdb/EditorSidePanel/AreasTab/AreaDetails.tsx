@@ -1,25 +1,29 @@
 import { useState } from "react";
-import { Row, Col, Button, Input, Popover } from "@douyinfe/semi-ui";
-import { IconDeleteStroked } from "@douyinfe/semi-icons";
-import { useAreas, useSaveState, useUndoRedo } from "../../../hooks";
+// import { Row, Col, Button, Input, Popover } from "@douyinfe/semi-ui";
+import { useArea, useSaveState, useUndoRedo } from "src/containers/Editor/hooks";
 import {
   Action,
   ObjectType,
   State,
   defaultBlue,
-} from "../../../data/constants";
-import ColorPalette from "../../ColorPicker";
+} from "@constants/editor";
 import { useTranslation } from "react-i18next";
+import { Iconify, ColorPalette } from "@components/common";
+import { Grid, Button, Popover } from "@mui/material";
+import { Input } from '@components/form/Input';
 
 export default function AreaInfo({ data, i }) {
   const { t } = useTranslation();
   const { setSaveState } = useSaveState();
-  const { deleteArea, updateArea } = useAreas();
+  const { deleteArea, updateArea } = useArea();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState({});
+  const [anchorEl, setAnchorEl] = useState(null);
+
 
   return (
-    <Row
+    <Grid
+      container
       gutter={6}
       type="flex"
       justify="start"
@@ -27,11 +31,11 @@ export default function AreaInfo({ data, i }) {
       id={`scroll_area_${data.id}`}
       className="my-3"
     >
-      <Col span={18}>
+      <Grid item xs={9}>
         <Input
           value={data.name}
           placeholder={t("name")}
-          onChange={(value) => updateArea(data.id, { name: value })}
+          onInputChange={(value) => updateArea(data.id, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {
             if (e.target.value === editField.name) return;
@@ -52,10 +56,19 @@ export default function AreaInfo({ data, i }) {
             setRedoStack([]);
           }}
         />
-      </Col>
-      <Col span={3}>
-        <Popover
-          content={
+      </Grid>
+      <Grid item span={2}>
+        <div>
+          <div
+            className="h-[32px] w-[32px] rounded"
+            style={{ backgroundColor: data.color }}
+            onClick={(e) => setAnchorEl(e.currentTarget)}
+          />
+          <Popover
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          >
             <div className="popover-theme">
               <ColorPalette
                 currentColor={data.color}
@@ -83,24 +96,17 @@ export default function AreaInfo({ data, i }) {
                 }}
               />
             </div>
-          }
-          trigger="click"
-          position="bottomLeft"
-          showArrow
-        >
-          <div
-            className="h-[32px] w-[32px] rounded"
-            style={{ backgroundColor: data.color }}
-          />
-        </Popover>
-      </Col>
-      <Col span={3}>
+          </Popover>
+        </div>
+
+      </Grid>
+      <Grid item span={1}>
         <Button
-          icon={<IconDeleteStroked />}
-          type="danger"
+          startIcon={<Iconify icon="typcn:delete"/>}
+          color="error"
           onClick={() => deleteArea(i, true)}
         />
-      </Col>
-    </Row>
+      </Grid>
+    </Grid>
   );
 }

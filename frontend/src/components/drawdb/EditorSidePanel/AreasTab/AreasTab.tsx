@@ -1,13 +1,12 @@
-import { Button } from "@douyinfe/semi-ui";
-import { IconPlus } from "@douyinfe/semi-icons";
-import Empty from "../Empty";
-import { useAreas } from "../../../hooks";
+import { useArea } from "src/containers/Editor/hooks";
 import SearchBar from "./SearchBar";
 import AreaInfo from "./AreaDetails";
 import { useTranslation } from "react-i18next";
+import { Button, Skeleton } from "@mui/material";
+import { Iconify } from "@components/common";
 
 export default function AreasTab() {
-  const { areas, addArea } = useAreas();
+  const { areas, addArea } = useArea();
   const { t } = useTranslation();
 
   return (
@@ -15,16 +14,17 @@ export default function AreasTab() {
       <div className="flex gap-2">
         <SearchBar />
         <div>
-          <Button icon={<IconPlus />} block onClick={() => addArea()}>
+          <Button startIcon={<Iconify icon="mdi:plus" />} block onClick={() => addArea()}>
             {t("add_area")}
           </Button>
         </div>
       </div>
       {areas.length <= 0 ? (
-        <Empty
-          title={t("no_subject_areas")}
-          text={t("no_subject_areas_text")}
-        />
+        // <Empty
+        //   title={t("no_subject_areas")}
+        //   text={t("no_subject_areas_text")}
+        // />
+        <Skeleton animation={false} />
       ) : (
         <div className="p-2">
           {areas.map((a, i) => (

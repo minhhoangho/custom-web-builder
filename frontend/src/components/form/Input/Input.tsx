@@ -12,6 +12,8 @@ export type InputProps = {
   value?: string;
   labelClassName?: string;
   onInputChange?: (e?: any) => void;
+  onFocus?: (e?: any) => void;
+  onBlur?: (e?: any) => void;
   errorMessage?: string;
   isTextarea?: boolean;
   autoComplete?: string;
