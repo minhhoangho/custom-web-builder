@@ -1,9 +1,9 @@
-import { useArea } from "src/containers/Editor/hooks";
-import SearchBar from "./SearchBar";
-import AreaInfo from "./AreaDetails";
-import { useTranslation } from "react-i18next";
-import { Button, Skeleton } from "@mui/material";
-import { Iconify } from "@components/common";
+import { useTranslation } from 'react-i18next';
+import { Button, Skeleton } from '@mui/material';
+import { useArea } from 'src/containers/Editor/hooks';
+import { Iconify } from '@components/common';
+import SearchBar from './SearchBar';
+import AreaInfo from './AreaDetails';
 
 export default function AreasTab() {
   const { areas, addArea } = useArea();
@@ -14,8 +14,12 @@ export default function AreasTab() {
       <div className="flex gap-2">
         <SearchBar />
         <div>
-          <Button startIcon={<Iconify icon="mdi:plus" />} block onClick={() => addArea()}>
-            {t("add_area")}
+          <Button
+            startIcon={<Iconify icon="mdi:plus" />}
+            block
+            onClick={() => addArea()}
+          >
+            {t('add_area')}
           </Button>
         </div>
       </div>
@@ -28,7 +32,7 @@ export default function AreasTab() {
       ) : (
         <div className="p-2">
           {areas.map((a, i) => (
-            <AreaInfo data={a} key={"area_" + i} i={i} />
+            <AreaInfo data={a} key={'area_' + i} i={i} />
           ))}
         </div>
       )}

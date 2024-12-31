@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useState } from 'react';
 // import { Row, Col, Button, Input, Popover } from "@douyinfe/semi-ui";
-import { useArea, useSaveState, useUndoRedo } from "src/containers/Editor/hooks";
+import { useTranslation } from 'react-i18next';
+import { Button, Grid, Popover } from '@mui/material';
 import {
-  Action,
-  ObjectType,
-  State,
-  defaultBlue,
-} from "@constants/editor";
-import { useTranslation } from "react-i18next";
-import { Iconify, ColorPalette } from "@components/common";
-import { Grid, Button, Popover } from "@mui/material";
+  useArea,
+  useSaveState,
+  useUndoRedo,
+} from 'src/containers/Editor/hooks';
+import { Action, defaultBlue, ObjectType, State } from '@constants/editor';
+import { ColorPalette, Iconify } from '@components/common';
 import { Input } from '@components/form/Input';
 
 export default function AreaInfo({ data, i }) {
@@ -19,7 +18,6 @@ export default function AreaInfo({ data, i }) {
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
-
 
   return (
     <Grid
@@ -34,7 +32,7 @@ export default function AreaInfo({ data, i }) {
       <Grid item xs={9}>
         <Input
           value={data.name}
-          placeholder={t("name")}
+          placeholder={t('name')}
           onInputChange={(value) => updateArea(data.id, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {
@@ -47,9 +45,9 @@ export default function AreaInfo({ data, i }) {
                 aid: i,
                 undo: editField,
                 redo: { name: e.target.value },
-                message: t("edit_area", {
+                message: t('edit_area', {
                   areaName: e.target.value,
-                  extra: "[name]",
+                  extra: '[name]',
                 }),
               },
             ]);
@@ -67,7 +65,7 @@ export default function AreaInfo({ data, i }) {
           <Popover
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           >
             <div className="popover-theme">
               <ColorPalette
@@ -85,9 +83,9 @@ export default function AreaInfo({ data, i }) {
                       aid: i,
                       undo: { color: data.color },
                       redo: { color: c },
-                      message: t("edit_area", {
+                      message: t('edit_area', {
                         areaName: data.name,
-                        extra: "[color]",
+                        extra: '[color]',
                       }),
                     },
                   ]);
@@ -98,11 +96,10 @@ export default function AreaInfo({ data, i }) {
             </div>
           </Popover>
         </div>
-
       </Grid>
       <Grid item span={1}>
         <Button
-          startIcon={<Iconify icon="typcn:delete"/>}
+          startIcon={<Iconify icon="typcn:delete" />}
           color="error"
           onClick={() => deleteArea(i, true)}
         />
