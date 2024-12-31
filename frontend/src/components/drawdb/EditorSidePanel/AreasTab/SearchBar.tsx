@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-// import { AutoComplete } from "@douyinfe/semi-ui";
 import { Autocomplete, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useAreas } from 'src/containers/Editor/hooks';
+import { useArea } from 'src/containers/Editor/hooks';
 import { Iconify } from '@components/common';
 
 export default function SearchBar() {
-  const { areas } = useAreas();
+  const { areas } = useArea();
   const [searchText, setSearchText] = useState('');
   const { t } = useTranslation();
 

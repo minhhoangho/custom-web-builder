@@ -1,13 +1,14 @@
-import { useState } from "react";
-import { Button, Input, TagInput } from "@douyinfe/semi-ui";
-import { IconDeleteStroked } from "@douyinfe/semi-icons";
-import { useDiagram, useEnums, useUndoRedo } from "../../../hooks";
-import { Action, ObjectType } from "../../../data/constants";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+// import { Button, Input, TagInput } from "@douyinfe/semi-ui";
+import { Button, Input, TagInput } from '@mui/material';
+import { IconDeleteStroked } from '@douyinfe/semi-icons';
+import { useDiagram, useEnum, useUndoRedo } from 'src/containers/Editor/hooks';
+import { Action, ObjectType } from '@constants/editor';
+import { useTranslation } from 'react-i18next';
 
 export default function EnumDetails({ data, i }) {
   const { t } = useTranslation();
-  const { deleteEnum, updateEnum } = useEnums();
+  const { deleteEnum, updateEnum } = useEnum();
   const { tables, updateField } = useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState({});
@@ -15,11 +16,11 @@ export default function EnumDetails({ data, i }) {
   return (
     <>
       <div className="flex justify-center items-center gap-2">
-        <div className="font-semibold">{t("Name")}: </div>
+        <div className="font-semibold">{t('Name')}:</div>
         <Input
           value={data.name}
-          placeholder={t("name")}
-          validateStatus={data.name.trim() === "" ? "error" : "default"}
+          placeholder={t('name')}
+          validateStatus={data.name.trim() === '' ? 'error' : 'default'}
           onChange={(value) => {
             updateEnum(i, { name: value });
             tables.forEach((table, i) => {
@@ -52,9 +53,9 @@ export default function EnumDetails({ data, i }) {
                 undo: editField,
                 redo: { name: e.target.value },
                 updatedFields,
-                message: t("edit_enum", {
+                message: t('edit_enum', {
                   enumName: e.target.value,
-                  extra: "[name]",
+                  extra: '[name]',
                 }),
               },
             ]);
@@ -63,12 +64,12 @@ export default function EnumDetails({ data, i }) {
         />
       </div>
       <TagInput
-        separator={[",", ", ", " ,"]}
+        separator={[',', ', ', ' ,']}
         value={data.values}
         addOnBlur
         className="my-2"
-        placeholder={t("values")}
-        validateStatus={data.values.length === 0 ? "error" : "default"}
+        placeholder={t('values')}
+        validateStatus={data.values.length === 0 ? 'error' : 'default'}
         onChange={(v) => updateEnum(i, { values: v })}
         onFocus={() => setEditField({ values: data.values })}
         onBlur={() => {
@@ -82,9 +83,9 @@ export default function EnumDetails({ data, i }) {
               id: i,
               undo: editField,
               redo: { values: data.values },
-              message: t("edit_enum", {
+              message: t('edit_enum', {
                 enumName: data.name,
-                extra: "[values]",
+                extra: '[values]',
               }),
             },
           ]);
@@ -97,7 +98,7 @@ export default function EnumDetails({ data, i }) {
         type="danger"
         onClick={() => deleteEnum(i, true)}
       >
-        {t("delete")}
+        {t('delete')}
       </Button>
     </>
   );
