@@ -1,10 +1,10 @@
-import { Button, Collapse } from "@douyinfe/semi-ui";
-import { useEnums } from "../../../hooks";
-import { IconPlus } from "@douyinfe/semi-icons";
-import { useTranslation } from "react-i18next";
-import SearchBar from "./SearchBar";
-import EnumDetails from "./EnumDetails";
-import Empty from "../Empty";
+import { Button, Collapse } from '@douyinfe/semi-ui';
+import { IconPlus } from '@douyinfe/semi-icons';
+import { useTranslation } from 'react-i18next';
+import { useEnums } from 'src/containers/Editor/hooks';
+import SearchBar from './SearchBar';
+import EnumDetails from './EnumDetails';
+import Empty from '../Empty';
 
 export default function EnumsTab() {
   const { enums, addEnum } = useEnums();
@@ -16,12 +16,12 @@ export default function EnumsTab() {
         <SearchBar />
         <div>
           <Button icon={<IconPlus />} block onClick={() => addEnum()}>
-            {t("add_enum")}
+            {t('add_enum')}
           </Button>
         </div>
       </div>
       {enums.length <= 0 ? (
-        <Empty title={t("no_enums")} text={t("no_enums_text")} />
+        <Empty title={t('no_enums')} text={t('no_enums_text')} />
       ) : (
         <Collapse accordion>
           {enums.map((e, i) => (

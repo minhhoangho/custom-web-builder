@@ -1,10 +1,9 @@
 import { useState } from 'react';
-// import { Button, Input, TagInput } from "@douyinfe/semi-ui";
-import { Button, Input, TagInput } from '@mui/material';
-import { IconDeleteStroked } from '@douyinfe/semi-icons';
+import { Button, Input } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useDiagram, useEnum, useUndoRedo } from 'src/containers/Editor/hooks';
 import { Action, ObjectType } from '@constants/editor';
-import { useTranslation } from 'react-i18next';
+import { Iconify } from '@components/common';
 
 export default function EnumDetails({ data, i }) {
   const { t } = useTranslation();
@@ -63,7 +62,7 @@ export default function EnumDetails({ data, i }) {
           }}
         />
       </div>
-      <TagInput
+      <Input
         separator={[',', ', ', ' ,']}
         value={data.values}
         addOnBlur
@@ -94,7 +93,7 @@ export default function EnumDetails({ data, i }) {
       />
       <Button
         block
-        icon={<IconDeleteStroked />}
+        startIcon={<Iconify icon="mdi:delete-outline" />}
         type="danger"
         onClick={() => deleteEnum(i, true)}
       >
