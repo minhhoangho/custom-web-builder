@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { Button, Collapse, TextArea, Popover, Input } from "@douyinfe/semi-ui";
-import { IconDeleteStroked, IconCheckboxTick } from "@douyinfe/semi-icons";
-import { noteThemes, Action, ObjectType } from "../../../data/constants";
-import { useNotes, useUndoRedo } from "../../../hooks";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+// import { Button, Collapse, Input, Popover, TextArea } from '@douyinfe/semi-ui';
+// import { IconDeleteStroked, IconCheckboxTick } from '@douyinfe/semi-icons';
+import { useTranslation } from 'react-i18next';
+import { Action, noteThemes, ObjectType } from '@constants/editor';
+import { useNote, useUndoRedo } from 'src/containers/Editor/hooks';
+import { Iconify } from 'src/components/common';
 
 export default function NoteInfo({ data, nid }) {
-  const { updateNote, deleteNote } = useNotes();
+  const { updateNote, deleteNote } = useNote();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState({});
   const { t } = useTranslation();
@@ -22,10 +23,10 @@ export default function NoteInfo({ data, nid }) {
       id={`scroll_note_${data.id}`}
     >
       <div className="flex items-center mb-2">
-        <div className="font-semibold me-2 break-keep">{t("title")}:</div>
+        <div className="font-semibold me-2 break-keep">{t('title')}:</div>
         <Input
           value={data.title}
-          placeholder={t("title")}
+          placeholder={t('title')}
           onChange={(value) => updateNote(data.id, { title: value })}
           onFocus={(e) => setEditField({ title: e.target.value })}
           onBlur={(e) => {
@@ -38,9 +39,9 @@ export default function NoteInfo({ data, nid }) {
                 nid: data.id,
                 undo: editField,
                 redo: { title: e.target.value },
-                message: t("edit_note", {
+                message: t('edit_note', {
                   noteTitle: e.target.value,
-                  extra: "[title]",
+                  extra: '[title]',
                 }),
               },
             ]);
@@ -50,13 +51,13 @@ export default function NoteInfo({ data, nid }) {
       </div>
       <div className="flex justify-between align-top">
         <TextArea
-          placeholder={t("content")}
+          placeholder={t('content')}
           value={data.content}
           autosize
           onChange={(value) => {
             const textarea = document.getElementById(`note_${data.id}`);
-            textarea.style.height = "0";
-            textarea.style.height = textarea.scrollHeight + "px";
+            textarea.style.height = '0';
+            textarea.style.height = textarea.scrollHeight + 'px';
             const newHeight = textarea.scrollHeight + 16 + 20 + 4;
             updateNote(data.id, { height: newHeight, content: value });
           }}
@@ -66,8 +67,8 @@ export default function NoteInfo({ data, nid }) {
           onBlur={(e) => {
             if (e.target.value === editField.content) return;
             const textarea = document.getElementById(`note_${data.id}`);
-            textarea.style.height = "0";
-            textarea.style.height = textarea.scrollHeight + "px";
+            textarea.style.height = '0';
+            textarea.style.height = textarea.scrollHeight + 'px';
             const newHeight = textarea.scrollHeight + 16 + 20 + 4;
             setUndoStack((prev) => [
               ...prev,
@@ -77,9 +78,9 @@ export default function NoteInfo({ data, nid }) {
                 nid: nid,
                 undo: editField,
                 redo: { content: e.target.value, height: newHeight },
-                message: t("edit_note", {
+                message: t('edit_note', {
                   noteTitle: e.target.value,
-                  extra: "[content]",
+                  extra: '[content]',
                 }),
               },
             ]);
@@ -91,7 +92,7 @@ export default function NoteInfo({ data, nid }) {
           <Popover
             content={
               <div className="popover-theme">
-                <div className="font-medium mb-1">{t("theme")}</div>
+                <div className="font-medium mb-1">{t('theme')}</div>
                 <hr />
                 <div className="py-3">
                   {noteThemes.map((c) => (
@@ -108,9 +109,9 @@ export default function NoteInfo({ data, nid }) {
                             nid: nid,
                             undo: { color: data.color },
                             redo: { color: c },
-                            message: t("edit_note", {
+                            message: t('edit_note', {
                               noteTitle: data.title,
-                              extra: "[color]",
+                              extra: '[color]',
                             }),
                           },
                         ]);
@@ -119,9 +120,15 @@ export default function NoteInfo({ data, nid }) {
                       }}
                     >
                       {data.color === c ? (
-                        <IconCheckboxTick style={{ color: "white" }} />
+                        <Iconify
+                          icon="mdi:checkbox-outline"
+                          xs={{ color: 'white' }}
+                        />
                       ) : (
-                        <IconCheckboxTick style={{ color: c }} />
+                        <Iconify
+                          icon="mdi:checkbox-outline"
+                          xs={{ color: c }}
+                        />
                       )}
                     </button>
                   ))}
@@ -138,7 +145,7 @@ export default function NoteInfo({ data, nid }) {
             />
           </Popover>
           <Button
-            icon={<IconDeleteStroked />}
+            icon={<Iconify icon="mdi:delete-outline" />}
             type="danger"
             onClick={() => deleteNote(nid, true)}
           />

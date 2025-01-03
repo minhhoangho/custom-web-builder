@@ -1,13 +1,13 @@
-import { Button, Collapse } from '@douyinfe/semi-ui';
-import { IconPlus } from '@douyinfe/semi-icons';
 import { useTranslation } from 'react-i18next';
-import { useEnums } from 'src/containers/Editor/hooks';
+import { Button, Collapse } from '@mui/material';
+import { useEnum } from 'src/containers/Editor/hooks';
+import { Iconify } from 'src/components/common';
 import SearchBar from './SearchBar';
 import EnumDetails from './EnumDetails';
 import Empty from '../Empty';
 
 export default function EnumsTab() {
-  const { enums, addEnum } = useEnums();
+  const { enums, addEnum } = useEnum();
   const { t } = useTranslation();
 
   return (
@@ -15,7 +15,11 @@ export default function EnumsTab() {
       <div className="flex gap-2">
         <SearchBar />
         <div>
-          <Button icon={<IconPlus />} block onClick={() => addEnum()}>
+          <Button
+            icon={<Iconify icon="mdi:plus" />}
+            block
+            onClick={() => addEnum()}
+          >
             {t('add_enum')}
           </Button>
         </div>
