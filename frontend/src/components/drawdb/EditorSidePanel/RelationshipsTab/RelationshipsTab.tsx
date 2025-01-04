@@ -1,10 +1,10 @@
-import { Collapse } from "@douyinfe/semi-ui";
-import { useSelect, useDiagram } from "../../../hooks";
-import Empty from "../Empty";
-import SearchBar from "./SearchBar";
-import RelationshipInfo from "./RelationshipInfo";
-import { ObjectType } from "../../../data/constants";
-import { useTranslation } from "react-i18next";
+import { Collapse } from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
+import { useSelect, useDiagram } from 'src/containers/Editor/hooks';
+import { ObjectType } from '@constants/editor';
+import SearchBar from './SearchBar';
+import RelationshipInfo from './RelationshipInfo';
+import Empty from '../Empty';
 
 export default function RelationshipsTab() {
   const { relationships } = useDiagram();
@@ -16,8 +16,8 @@ export default function RelationshipsTab() {
       <SearchBar />
       {relationships.length <= 0 ? (
         <Empty
-          title={t("no_relationships")}
-          text={t("no_relationships_text")}
+          title={t('no_relationships')}
+          text={t('no_relationships_text')}
         />
       ) : (
         <Collapse
@@ -25,7 +25,7 @@ export default function RelationshipsTab() {
             selectedElement.open &&
             selectedElement.element === ObjectType.RELATIONSHIP
               ? `${selectedElement.id}`
-              : ""
+              : ''
           }
           keepDOM
           lazyRender
@@ -40,7 +40,7 @@ export default function RelationshipsTab() {
           accordion
         >
           {relationships.map((r) => (
-            <div id={`scroll_ref_${r.id}`} key={"relationship_" + r.id}>
+            <div id={`scroll_ref_${r.id}`} key={'relationship_' + r.id}>
               <Collapse.Panel
                 header={
                   <div className="overflow-hidden text-ellipsis whitespace-nowrap">

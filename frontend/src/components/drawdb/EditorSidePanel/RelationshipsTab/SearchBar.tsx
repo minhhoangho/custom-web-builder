@@ -1,48 +1,45 @@
-import { useState } from "react";
-import { useSelect, useDiagram } from "../../../hooks";
-import { AutoComplete } from "@douyinfe/semi-ui";
-import { IconSearch } from "@douyinfe/semi-icons";
-import { ObjectType } from "../../../data/constants";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState } from 'react';
+// import { IconSearch } from "@douyinfe/semi-icons";
+import { Autocomplete } from '@mui/material';
+import { useNote } from 'src/containers/Editor/hooks';
 
 export default function SearchBar() {
-  const { relationships } = useDiagram();
-  const [searchText, setSearchText] = useState("");
-  const { setSelectedElement } = useSelect();
-  const { t } = useTranslation();
+  const { notes } = useNote();
+  const [searchText, setSearchText] = useState('');
+  // const { t } = useTranslation();
 
   const [filteredResult, setFilteredResult] = useState(
-    relationships.map((t) => t.name),
+    notes.map((t) => t.title),
   );
 
   const handleStringSearch = (value) => {
     setFilteredResult(
-      relationships.map((t) => t.name).filter((i) => i.includes(value)),
+      notes.map((t) => t.title).filter((i) => i.includes(value)),
     );
   };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleStringSearch(searchText);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchText]);
 
   return (
-    <AutoComplete
-      data={filteredResult}
+    <Autocomplete
+      options={filteredResult}
       value={searchText}
       showClear
-      prefix={<IconSearch />}
-      placeholder={t("search")}
-      emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
-      onSearch={(v) => handleStringSearch(v)}
-      onChange={(v) => setSearchText(v)}
-      onSelect={(v) => {
-        const { id } = relationships.find((t) => t.name === v);
-        setSelectedElement((prev) => ({
-          ...prev,
-          id: id,
-          open: true,
-          element: ObjectType.RELATIONSHIP,
-        }));
-        document
-          .getElementById(`scroll_ref_${id}`)
-          .scrollIntoView({ behavior: "smooth" });
-      }}
+      // prefix={<Iconify icon="mdi:search"}/>}
+      // placeholder={t("search")}
+      // emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
+      onInputChange={(v) => setSearchText(v)}
+      // onSelect={(v) => {
+      //   const { id } = notes.find((t) => t.title === v);
+      //   setActiveKey(`${id}`);
+      //   document
+      //     .getElementById(`scroll_note_${id}`)
+      //     .scrollIntoView({ behavior: "smooth" });
+      // }}
       className="w-full"
     />
   );
