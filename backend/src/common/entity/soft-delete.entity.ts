@@ -1,7 +1,7 @@
-import { Constructor } from '@common/entity/types';
 import { Column, DeleteDateColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Constructor } from '@common/entity/types';
 
 export function SoftDeleteEntity<TBase extends Constructor>(Base: TBase) {
   abstract class AbstractBase extends Base {
@@ -15,5 +15,6 @@ export function SoftDeleteEntity<TBase extends Constructor>(Base: TBase) {
     @Column({ name: 'deleted_by', nullable: true })
     public deletedBy: string;
   }
+
   return AbstractBase;
 }

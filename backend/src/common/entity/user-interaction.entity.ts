@@ -1,5 +1,5 @@
-import { Constructor } from '@common/entity/types';
 import { BeforeInsert, Column } from 'typeorm';
+import { Constructor } from '@common/entity/types';
 import { CurrentUserContext } from '@common/context';
 
 export function UserInteractionEntity<TBase extends Constructor>(Base: TBase) {
@@ -20,5 +20,6 @@ export function UserInteractionEntity<TBase extends Constructor>(Base: TBase) {
       }
     }
   }
+
   return AbstractBase;
 }
