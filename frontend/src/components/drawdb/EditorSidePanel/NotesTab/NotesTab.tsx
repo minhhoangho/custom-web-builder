@@ -1,10 +1,9 @@
-import { Button, Collapse } from "@douyinfe/semi-ui";
-import { IconPlus } from "@douyinfe/semi-icons";
-import { useNotes, useSelect } from "../../../hooks";
-import Empty from "../Empty";
-import SearchBar from "./SearchBar";
-import NoteInfo from "./NoteInfo";
-import { useTranslation } from "react-i18next";
+import { Button, Collapse } from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
+import SearchBar from './SearchBar';
+import NoteInfo from './NoteInfo';
+import { useNotes, useSelect } from '../../../hooks';
+import Empty from '../Empty';
 
 export default function NotesTab() {
   const { notes, addNote } = useNotes();
@@ -23,16 +22,20 @@ export default function NotesTab() {
           }
         />
         <div>
-          <Button icon={<IconPlus />} block onClick={() => addNote()}>
-            {t("add_note")}
+          <Button
+            icon={<Iconify icon="mdi:plus" />}
+            block
+            onClick={() => addNote()}
+          >
+            {t('add_note')}
           </Button>
         </div>
       </div>
       {notes.length <= 0 ? (
-        <Empty title={t("no_notes")} text={t("no_notes_text")} />
+        <Empty title={t('no_notes')} text={t('no_notes_text')} />
       ) : (
         <Collapse
-          activeKey={selectedElement.open ? `${selectedElement.id}` : ""}
+          activeKey={selectedElement.open ? `${selectedElement.id}` : ''}
           keepDOM
           lazyRender
           onChange={(activeKey) => {

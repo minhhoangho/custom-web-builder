@@ -1,27 +1,23 @@
-import { Row, Col, Select, Button, Popover, Table } from "@douyinfe/semi-ui";
-import {
-  IconDeleteStroked,
-  IconLoopTextStroked,
-  IconMore,
-} from "@douyinfe/semi-icons";
+import { Row, Col, Select, Button, Popover, Table } from '@douyinfe/semi-ui';
+import { IconLoopTextStroked } from '@douyinfe/semi-icons';
+import { useTranslation } from 'react-i18next';
 import {
   Cardinality,
   Constraint,
   Action,
   ObjectType,
-} from "../../../data/constants";
-import { useDiagram, useUndoRedo } from "../../../hooks";
-import i18n from "../../../i18n/i18n";
-import { useTranslation } from "react-i18next";
+} from '../../../data/constants';
+import { useDiagram, useUndoRedo } from '../../../hooks';
+import i18n from '../../../i18n/i18n';
 
 const columns = [
   {
-    title: i18n.t("primary"),
-    dataIndex: "primary",
+    title: i18n.t('primary'),
+    dataIndex: 'primary',
   },
   {
-    title: i18n.t("foreign"),
-    dataIndex: "foreign",
+    title: i18n.t('foreign'),
+    dataIndex: 'foreign',
   },
 ];
 
@@ -49,9 +45,9 @@ export default function RelationshipInfo({ data }) {
           endTableId: data.startTableId,
           endFieldId: data.startFieldId,
         },
-        message: t("edit_relationship", {
+        message: t('edit_relationship', {
           refName: data.name,
-          extra: "[swap keys]",
+          extra: '[swap keys]',
         }),
       },
     ]);
@@ -83,9 +79,9 @@ export default function RelationshipInfo({ data }) {
         rid: data.id,
         undo: { cardinality: data.cardinality },
         redo: { cardinality: value },
-        message: t("edit_relationship", {
+        message: t('edit_relationship', {
           refName: data.name,
-          extra: "[cardinality]",
+          extra: '[cardinality]',
         }),
       },
     ]);
@@ -107,9 +103,9 @@ export default function RelationshipInfo({ data }) {
         rid: data.id,
         undo: { [undoKey]: data[undoKey] },
         redo: { [undoKey]: value },
-        message: t("edit_relationship", {
+        message: t('edit_relationship', {
           refName: data.name,
-          extra: "[constraint]",
+          extra: '[constraint]',
         }),
       },
     ]);
@@ -123,11 +119,11 @@ export default function RelationshipInfo({ data }) {
     <>
       <div className="flex justify-between items-center mb-3">
         <div className="me-3">
-          <span className="font-semibold">{t("primary")}: </span>
+          <span className="font-semibold">{t('primary')}: </span>
           {tables[data.endTableId].name}
         </div>
         <div className="mx-1">
-          <span className="font-semibold">{t("foreign")}: </span>
+          <span className="font-semibold">{t('foreign')}: </span>
           {tables[data.startTableId].name}
         </div>
         <div className="ms-1">
@@ -138,7 +134,7 @@ export default function RelationshipInfo({ data }) {
                   columns={columns}
                   dataSource={[
                     {
-                      key: "1",
+                      key: '1',
                       foreign: `${tables[data.startTableId]?.name}(${
                         tables[data.startTableId].fields[data.startFieldId]
                           ?.name
@@ -158,7 +154,7 @@ export default function RelationshipInfo({ data }) {
                     block
                     onClick={swapKeys}
                   >
-                    {t("swap")}
+                    {t('swap')}
                   </Button>
                 </div>
               </div>
@@ -167,11 +163,14 @@ export default function RelationshipInfo({ data }) {
             position="rightTop"
             showArrow
           >
-            <Button icon={<IconMore />} type="tertiary" />
+            <Button
+              icon={<Iconify icon="ic:round-more-vert" />}
+              type="tertiary"
+            />
           </Popover>
         </div>
       </div>
-      <div className="font-semibold my-1">{t("cardinality")}:</div>
+      <div className="font-semibold my-1">{t('cardinality')}:</div>
       <Select
         optionList={Object.values(Cardinality).map((v) => ({
           label: t(v),
@@ -183,7 +182,7 @@ export default function RelationshipInfo({ data }) {
       />
       <Row gutter={6} className="my-3">
         <Col span={12}>
-          <div className="font-semibold">{t("on_update")}: </div>
+          <div className="font-semibold">{t('on_update')}: </div>
           <Select
             optionList={Object.values(Constraint).map((v) => ({
               label: v,
@@ -191,11 +190,11 @@ export default function RelationshipInfo({ data }) {
             }))}
             value={data.updateConstraint}
             className="w-full"
-            onChange={(value) => changeConstraint("update", value)}
+            onChange={(value) => changeConstraint('update', value)}
           />
         </Col>
         <Col span={12}>
-          <div className="font-semibold">{t("on_delete")}: </div>
+          <div className="font-semibold">{t('on_delete')}: </div>
           <Select
             optionList={Object.values(Constraint).map((v) => ({
               label: v,
@@ -203,17 +202,17 @@ export default function RelationshipInfo({ data }) {
             }))}
             value={data.deleteConstraint}
             className="w-full"
-            onChange={(value) => changeConstraint("delete", value)}
+            onChange={(value) => changeConstraint('delete', value)}
           />
         </Col>
       </Row>
       <Button
-        icon={<IconDeleteStroked />}
+        icon={<Iconify icon="mdi:delete-outline" />}
         block
         type="danger"
         onClick={() => deleteRelationship(data.id)}
       >
-        {t("delete")}
+        {t('delete')}
       </Button>
     </>
   );

@@ -1,9 +1,8 @@
-import { Action, ObjectType } from "../../../data/constants";
-import { Input, Button, Popover, Checkbox, Select } from "@douyinfe/semi-ui";
-import { IconMore, IconDeleteStroked } from "@douyinfe/semi-icons";
-import { useDiagram, useUndoRedo } from "../../../hooks";
-import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { Input, Button, Popover, Checkbox, Select } from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import { useDiagram, useUndoRedo } from '../../../hooks';
+import { Action, ObjectType } from '../../../data/constants';
 
 export default function IndexDetails({ data, fields, iid, tid }) {
   const { t } = useTranslation();
@@ -14,9 +13,9 @@ export default function IndexDetails({ data, fields, iid, tid }) {
   return (
     <div className="flex justify-between items-center mb-2">
       <Select
-        placeholder={t("select_fields")}
+        placeholder={t('select_fields')}
         multiple
-        validateStatus={data.fields.length === 0 ? "error" : "default"}
+        validateStatus={data.fields.length === 0 ? 'error' : 'default'}
         optionList={fields}
         className="w-full"
         value={data.fields}
@@ -26,7 +25,7 @@ export default function IndexDetails({ data, fields, iid, tid }) {
             {
               action: Action.EDIT,
               element: ObjectType.TABLE,
-              component: "index",
+              component: 'index',
               tid: tid,
               iid: iid,
               undo: {
@@ -35,9 +34,9 @@ export default function IndexDetails({ data, fields, iid, tid }) {
               redo: {
                 fields: [...value],
               },
-              message: t("edit_table", {
+              message: t('edit_table', {
                 tableName: tables[tid].name,
-                extra: "[index field]",
+                extra: '[index field]',
               }),
             },
           ]);
@@ -57,11 +56,11 @@ export default function IndexDetails({ data, fields, iid, tid }) {
       <Popover
         content={
           <div className="px-1 popover-theme">
-            <div className="font-semibold mb-1">{t("name")}: </div>
+            <div className="font-semibold mb-1">{t('name')}: </div>
             <Input
               value={data.name}
-              placeholder={t("name")}
-              validateStatus={data.name.trim() === "" ? "error" : "default"}
+              placeholder={t('name')}
+              validateStatus={data.name.trim() === '' ? 'error' : 'default'}
               onFocus={() =>
                 setEditField({
                   name: data.name,
@@ -86,14 +85,14 @@ export default function IndexDetails({ data, fields, iid, tid }) {
                   {
                     action: Action.EDIT,
                     element: ObjectType.TABLE,
-                    component: "index",
+                    component: 'index',
                     tid: tid,
                     iid: iid,
                     undo: editField,
                     redo: { name: e.target.value },
-                    message: t("edit_table", {
+                    message: t('edit_table', {
                       tableName: tables[tid].name,
-                      extra: "[index]",
+                      extra: '[index]',
                     }),
                   },
                 ]);
@@ -101,7 +100,7 @@ export default function IndexDetails({ data, fields, iid, tid }) {
               }}
             />
             <div className="flex justify-between items-center my-3">
-              <div className="font-medium">{t("unique")}</div>
+              <div className="font-medium">{t('unique')}</div>
               <Checkbox
                 value="unique"
                 checked={data.unique}
@@ -111,7 +110,7 @@ export default function IndexDetails({ data, fields, iid, tid }) {
                     {
                       action: Action.EDIT,
                       element: ObjectType.TABLE,
-                      component: "index",
+                      component: 'index',
                       tid: tid,
                       iid: iid,
                       undo: {
@@ -122,9 +121,9 @@ export default function IndexDetails({ data, fields, iid, tid }) {
                         [checkedValues.target.value]:
                           checkedValues.target.checked,
                       },
-                      message: t("edit_table", {
+                      message: t('edit_table', {
                         tableName: tables[tid].name,
-                        extra: "[index field]",
+                        extra: '[index field]',
                       }),
                     },
                   ]);
@@ -144,7 +143,7 @@ export default function IndexDetails({ data, fields, iid, tid }) {
               ></Checkbox>
             </div>
             <Button
-              icon={<IconDeleteStroked />}
+              icon={<Iconify icon="mdi:delete-outline" />}
               type="danger"
               block
               onClick={() => {
@@ -153,12 +152,12 @@ export default function IndexDetails({ data, fields, iid, tid }) {
                   {
                     action: Action.EDIT,
                     element: ObjectType.TABLE,
-                    component: "index_delete",
+                    component: 'index_delete',
                     tid: tid,
                     data: data,
-                    message: t("edit_table", {
+                    message: t('edit_table', {
                       tableName: tables[tid].name,
-                      extra: "[delete index]",
+                      extra: '[delete index]',
                     }),
                   },
                 ]);
@@ -173,7 +172,7 @@ export default function IndexDetails({ data, fields, iid, tid }) {
                 });
               }}
             >
-              {t("delete")}
+              {t('delete')}
             </Button>
           </div>
         }
@@ -182,9 +181,9 @@ export default function IndexDetails({ data, fields, iid, tid }) {
         showArrow
       >
         <Button
-          icon={<IconMore />}
+          icon={<Iconify icon="ic:round-more-vert" />}
           type="tertiary"
-          style={{ marginLeft: "12px" }}
+          style={{ marginLeft: '12px' }}
         />
       </Popover>
     </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Collapse,
   Input,
@@ -6,19 +6,18 @@ import {
   Button,
   Card,
   Popover,
-} from "@douyinfe/semi-ui";
-import { IconDeleteStroked } from "@douyinfe/semi-icons";
-import { useDiagram, useUndoRedo } from "../../../hooks";
-import { Action, ObjectType, defaultBlue } from "../../../data/constants";
-import ColorPalette from "../../ColorPicker";
-import TableField from "./TableField";
-import IndexDetails from "./IndexDetails";
-import { useTranslation } from "react-i18next";
-import { dbToTypes } from "../../../data/datatypes";
+} from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
+import TableField from './TableField';
+import IndexDetails from './IndexDetails';
+import { useDiagram, useUndoRedo } from '../../../hooks';
+import { Action, ObjectType, defaultBlue } from '../../../data/constants';
+import ColorPalette from '../../ColorPicker';
+import { dbToTypes } from '../../../data/datatypes';
 
 export default function TableInfo({ data }) {
   const { t } = useTranslation();
-  const [indexActiveKey, setIndexActiveKey] = useState("");
+  const [indexActiveKey, setIndexActiveKey] = useState('');
   const { deleteTable, updateTable, updateField, setRelationships, database } =
     useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
@@ -31,11 +30,11 @@ export default function TableInfo({ data }) {
   return (
     <div>
       <div className="flex items-center mb-2.5">
-        <div className="text-md font-semibold break-keep">{t("name")}: </div>
+        <div className="text-md font-semibold break-keep">{t('name')}: </div>
         <Input
           value={data.name}
-          validateStatus={data.name.trim() === "" ? "error" : "default"}
-          placeholder={t("name")}
+          validateStatus={data.name.trim() === '' ? 'error' : 'default'}
+          placeholder={t('name')}
           className="ms-2"
           onChange={(value) => updateTable(data.id, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
@@ -46,13 +45,13 @@ export default function TableInfo({ data }) {
               {
                 action: Action.EDIT,
                 element: ObjectType.TABLE,
-                component: "self",
+                component: 'self',
                 tid: data.id,
                 undo: editField,
                 redo: { name: e.target.value },
-                message: t("edit_table", {
+                message: t('edit_table', {
                   tableName: e.target.value,
-                  extra: "[name]",
+                  extra: '[name]',
                 }),
               },
             ]);
@@ -62,9 +61,9 @@ export default function TableInfo({ data }) {
       </div>
       {data.fields.map((f, j) => (
         <div
-          key={"field_" + j}
-          className={`cursor-pointer ${drag.draggingOverIndexList.includes(j) ? "opacity-25" : ""}`}
-          style={{ direction: "ltr" }}
+          key={'field_' + j}
+          className={`cursor-pointer ${drag.draggingOverIndexList.includes(j) ? 'opacity-25' : ''}`}
+          style={{ direction: 'ltr' }}
           draggable
           onDragStart={() => {
             setDrag((prev) => ({ ...prev, draggingElementIndex: j }));
@@ -109,16 +108,16 @@ export default function TableInfo({ data }) {
 
             updateField(data.id, index, {
               ...b,
-              ...(!dbToTypes[database][b.type].isSized && { size: "" }),
-              ...(!dbToTypes[database][b.type].hasCheck && { check: "" }),
-              ...(dbToTypes[database][b.type].noDefault && { default: "" }),
+              ...(!dbToTypes[database][b.type].isSized && { size: '' }),
+              ...(!dbToTypes[database][b.type].hasCheck && { check: '' }),
+              ...(dbToTypes[database][b.type].noDefault && { default: '' }),
               id: index,
             });
             updateField(data.id, j, {
               ...a,
-              ...(!dbToTypes[database][a.type].isSized && { size: "" }),
-              ...(!dbToTypes[database][a.type].hasCheck && { check: "" }),
-              ...(!dbToTypes[database][a.type].noDefault && { default: "" }),
+              ...(!dbToTypes[database][a.type].isSized && { size: '' }),
+              ...(!dbToTypes[database][a.type].hasCheck && { check: '' }),
+              ...(!dbToTypes[database][a.type].noDefault && { default: '' }),
               id: j,
             });
 
@@ -154,8 +153,8 @@ export default function TableInfo({ data }) {
       ))}
       {data.indices.length > 0 && (
         <Card
-          bodyStyle={{ padding: "4px" }}
-          style={{ marginTop: "12px", marginBottom: "12px" }}
+          bodyStyle={{ padding: '4px' }}
+          style={{ marginTop: '12px', marginBottom: '12px' }}
           headerLine={false}
         >
           <Collapse
@@ -165,10 +164,10 @@ export default function TableInfo({ data }) {
             onChange={(itemKey) => setIndexActiveKey(itemKey)}
             accordion
           >
-            <Collapse.Panel header={t("indices")} itemKey="1">
+            <Collapse.Panel header={t('indices')} itemKey="1">
               {data.indices.map((idx, k) => (
                 <IndexDetails
-                  key={"index_" + k}
+                  key={'index_' + k}
                   data={idx}
                   iid={k}
                   tid={data.id}
@@ -183,17 +182,17 @@ export default function TableInfo({ data }) {
         </Card>
       )}
       <Card
-        bodyStyle={{ padding: "4px" }}
-        style={{ marginTop: "12px", marginBottom: "12px" }}
+        bodyStyle={{ padding: '4px' }}
+        style={{ marginTop: '12px', marginBottom: '12px' }}
         headerLine={false}
       >
         <Collapse keepDOM lazyRender>
-          <Collapse.Panel header={t("comment")} itemKey="1">
+          <Collapse.Panel header={t('comment')} itemKey="1">
             <TextArea
               field="comment"
               value={data.comment}
               autosize
-              placeholder={t("comment")}
+              placeholder={t('comment')}
               rows={1}
               onChange={(value) =>
                 updateTable(data.id, { comment: value }, false)
@@ -206,13 +205,13 @@ export default function TableInfo({ data }) {
                   {
                     action: Action.EDIT,
                     element: ObjectType.TABLE,
-                    component: "self",
+                    component: 'self',
                     tid: data.id,
                     undo: editField,
                     redo: { comment: e.target.value },
-                    message: t("edit_table", {
+                    message: t('edit_table', {
                       tableName: e.target.value,
-                      extra: "[comment]",
+                      extra: '[comment]',
                     }),
                   },
                 ]);
@@ -235,13 +234,13 @@ export default function TableInfo({ data }) {
                       {
                         action: Action.EDIT,
                         element: ObjectType.TABLE,
-                        component: "self",
+                        component: 'self',
                         tid: data.id,
                         undo: { color: data.color },
                         redo: { color: defaultBlue },
-                        message: t("edit_table", {
+                        message: t('edit_table', {
                           tableName: data.name,
-                          extra: "[color]",
+                          extra: '[color]',
                         }),
                       },
                     ]);
@@ -254,13 +253,13 @@ export default function TableInfo({ data }) {
                       {
                         action: Action.EDIT,
                         element: ObjectType.TABLE,
-                        component: "self",
+                        component: 'self',
                         tid: data.id,
                         undo: { color: data.color },
                         redo: { color: c },
-                        message: t("edit_table", {
+                        message: t('edit_table', {
                           tableName: data.name,
-                          extra: "[color]",
+                          extra: '[color]',
                         }),
                       },
                     ]);
@@ -284,17 +283,17 @@ export default function TableInfo({ data }) {
           <Button
             block
             onClick={() => {
-              setIndexActiveKey("1");
+              setIndexActiveKey('1');
               setUndoStack((prev) => [
                 ...prev,
                 {
                   action: Action.EDIT,
                   element: ObjectType.TABLE,
-                  component: "index_add",
+                  component: 'index_add',
                   tid: data.id,
-                  message: t("edit_table", {
+                  message: t('edit_table', {
                     tableName: data.name,
-                    extra: "[add index]",
+                    extra: '[add index]',
                   }),
                 },
               ]);
@@ -312,7 +311,7 @@ export default function TableInfo({ data }) {
               });
             }}
           >
-            {t("add_index")}
+            {t('add_index')}
           </Button>
           <Button
             onClick={() => {
@@ -321,11 +320,11 @@ export default function TableInfo({ data }) {
                 {
                   action: Action.EDIT,
                   element: ObjectType.TABLE,
-                  component: "field_add",
+                  component: 'field_add',
                   tid: data.id,
-                  message: t("edit_table", {
+                  message: t('edit_table', {
                     tableName: data.name,
-                    extra: "[add field]",
+                    extra: '[add field]',
                   }),
                 },
               ]);
@@ -334,15 +333,15 @@ export default function TableInfo({ data }) {
                 fields: [
                   ...data.fields,
                   {
-                    name: "",
-                    type: "",
-                    default: "",
-                    check: "",
+                    name: '',
+                    type: '',
+                    default: '',
+                    check: '',
                     primary: false,
                     unique: false,
                     notNull: false,
                     increment: false,
-                    comment: "",
+                    comment: '',
                     id: data.fields.length,
                   },
                 ],
@@ -350,10 +349,10 @@ export default function TableInfo({ data }) {
             }}
             block
           >
-            {t("add_field")}
+            {t('add_field')}
           </Button>
           <Button
-            icon={<IconDeleteStroked />}
+            icon={<Iconify icon="mdi:delete-outline" />}
             type="danger"
             onClick={() => deleteTable(data.id)}
           />

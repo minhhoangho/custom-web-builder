@@ -35,7 +35,7 @@ export default function SearchBar({ tables }) {
       searchPosition="trigger"
       dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
       treeData={treeData}
-      prefix={<IconSearch />}
+      prefix={<Iconify icon="mdi:search"}/>}
       emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
       filterTreeNode
       placeholder={t("search")}

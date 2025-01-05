@@ -1,16 +1,21 @@
-import { Action, ObjectType } from "../../../data/constants";
-import { Row, Col, Input, Button, Popover, Select } from "@douyinfe/semi-ui";
-import { IconMore, IconKeyStroked } from "@douyinfe/semi-icons";
-import { useEnums, useDiagram, useTypes, useUndoRedo } from "../../../hooks";
-import { useState } from "react";
-import FieldDetails from "./FieldDetails";
-import { useTranslation } from "react-i18next";
-import { dbToTypes } from "../../../data/datatypes";
+import { Button, Col, Input, Popover, Row, Select } from '@douyinfe/semi-ui';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Iconify } from '@components/common';
+import {
+  useDiagram,
+  useEnum,
+  useType,
+  useUndoRedo,
+} from 'src/containers/Editor/hooks';
+import { Action, ObjectType } from '@constants/editor';
+import { dbToTypes } from 'src/data/datatypes';
+import FieldDetails from './FieldDetails';
 
 export default function TableField({ data, tid, index }) {
   const { updateField } = useDiagram();
-  const { types } = useTypes();
-  const { enums } = useEnums();
+  const { types } = useType();
+  const { enums } = useEnum();
   const { tables, database } = useDiagram();
   const { t } = useTranslation();
   const { setUndoStack, setRedoStack } = useUndoRedo();
@@ -22,7 +27,7 @@ export default function TableField({ data, tid, index }) {
         <Input
           id={`scroll_table_${tid}_input_${index}`}
           value={data.name}
-          validateStatus={data.name.trim() === "" ? "error" : "default"}
+          validateStatus={data.name.trim() === '' ? 'error' : 'default'}
           placeholder="Name"
           onChange={(value) => updateField(tid, index, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
@@ -33,14 +38,14 @@ export default function TableField({ data, tid, index }) {
               {
                 action: Action.EDIT,
                 element: ObjectType.TABLE,
-                component: "field",
+                component: 'field',
                 tid: tid,
                 fid: index,
                 undo: editField,
                 redo: { name: e.target.value },
-                message: t("edit_table", {
+                message: t('edit_table', {
                   tableName: tables[tid].name,
-                  extra: "[field]",
+                  extra: '[field]',
                 }),
               },
             ]);
@@ -67,7 +72,7 @@ export default function TableField({ data, tid, index }) {
           ]}
           filter
           value={data.type}
-          validateStatus={data.type === "" ? "error" : "default"}
+          validateStatus={data.type === '' ? 'error' : 'default'}
           placeholder="Type"
           onChange={(value) => {
             if (value === data.type) return;
@@ -76,14 +81,14 @@ export default function TableField({ data, tid, index }) {
               {
                 action: Action.EDIT,
                 element: ObjectType.TABLE,
-                component: "field",
+                component: 'field',
                 tid: tid,
                 fid: index,
                 undo: { type: data.type },
                 redo: { type: value },
-                message: t("edit_table", {
+                message: t('edit_table', {
                   tableName: tables[tid].name,
-                  extra: "[field]",
+                  extra: '[field]',
                 }),
               },
             ]);
@@ -91,10 +96,10 @@ export default function TableField({ data, tid, index }) {
             const incr =
               data.increment && !!dbToTypes[database][value].canIncrement;
 
-            if (value === "ENUM" || value === "SET") {
+            if (value === 'ENUM' || value === 'SET') {
               updateField(tid, index, {
                 type: value,
-                default: "",
+                default: '',
                 values: data.values ? [...data.values] : [],
                 increment: incr,
               });
@@ -111,21 +116,21 @@ export default function TableField({ data, tid, index }) {
               updateField(tid, index, {
                 type: value,
                 increment: incr,
-                default: "",
-                size: "",
+                default: '',
+                size: '',
                 values: [],
               });
             } else if (dbToTypes[database][value].hasCheck) {
               updateField(tid, index, {
                 type: value,
-                check: "",
+                check: '',
                 increment: incr,
               });
             } else {
               updateField(tid, index, {
                 type: value,
                 increment: incr,
-                size: "",
+                size: '',
                 values: [],
               });
             }
@@ -134,23 +139,23 @@ export default function TableField({ data, tid, index }) {
       </Col>
       <Col span={3}>
         <Button
-          type={data.notNull ? "primary" : "tertiary"}
-          title={t("not_null")}
-          theme={data.notNull ? "solid" : "light"}
+          type={data.notNull ? 'primary' : 'tertiary'}
+          title={t('not_null')}
+          theme={data.notNull ? 'solid' : 'light'}
           onClick={() => {
             setUndoStack((prev) => [
               ...prev,
               {
                 action: Action.EDIT,
                 element: ObjectType.TABLE,
-                component: "field",
+                component: 'field',
                 tid: tid,
                 fid: index,
                 undo: { notNull: data.notNull },
                 redo: { notNull: !data.notNull },
-                message: t("edit_table", {
+                message: t('edit_table', {
                   tableName: tables[tid].name,
-                  extra: "[field]",
+                  extra: '[field]',
                 }),
               },
             ]);
@@ -163,30 +168,30 @@ export default function TableField({ data, tid, index }) {
       </Col>
       <Col span={3}>
         <Button
-          type={data.primary ? "primary" : "tertiary"}
-          title={t("primary")}
-          theme={data.primary ? "solid" : "light"}
+          type={data.primary ? 'primary' : 'tertiary'}
+          title={t('primary')}
+          theme={data.primary ? 'solid' : 'light'}
           onClick={() => {
             setUndoStack((prev) => [
               ...prev,
               {
                 action: Action.EDIT,
                 element: ObjectType.TABLE,
-                component: "field",
+                component: 'field',
                 tid: tid,
                 fid: index,
                 undo: { primary: data.primary },
                 redo: { primary: !data.primary },
-                message: t("edit_table", {
+                message: t('edit_table', {
                   tableName: tables[tid].name,
-                  extra: "[field]",
+                  extra: '[field]',
                 }),
               },
             ]);
             setRedoStack([]);
             updateField(tid, index, { primary: !data.primary });
           }}
-          icon={<IconKeyStroked />}
+          icon={<Iconify icon="mdi:key-outline" />}
         />
       </Col>
       <Col span={3}>
@@ -200,7 +205,10 @@ export default function TableField({ data, tid, index }) {
           position="right"
           showArrow
         >
-          <Button type="tertiary" icon={<IconMore />} />
+          <Button
+            type="tertiary"
+            icon={<Iconify icon="ic:round-more-vert" />}
+          />
         </Popover>
       </Col>
     </Row>

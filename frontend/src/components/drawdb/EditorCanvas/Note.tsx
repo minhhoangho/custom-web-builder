@@ -256,7 +256,7 @@ export default function Note({ data, onPointerDown }) {
                       </div>
                       <div className="flex">
                         <Button
-                          // icon={<IconDeleteStroked />}
+                          // icon={<Iconify icon="mdi:delete-outline" />}
                           icon={<Iconify icon="typcn:delete" />}
                           variant="contained"
                           block

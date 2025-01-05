@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Action, ObjectType } from "../../../data/constants";
+import { useState } from 'react';
 import {
   Row,
   Col,
@@ -9,11 +8,12 @@ import {
   TagInput,
   InputNumber,
   Popover,
-} from "@douyinfe/semi-ui";
-import { IconDeleteStroked, IconMore } from "@douyinfe/semi-icons";
-import { useUndoRedo, useTypes, useDiagram, useEnums } from "../../../hooks";
-import { useTranslation } from "react-i18next";
-import { dbToTypes } from "../../../data/datatypes";
+} from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
+import { Iconify } from '@components/common';
+import { useUndoRedo, useTypes, useDiagram, useEnums } from '../../../hooks';
+import { dbToTypes } from '../../../data/datatypes';
+import { Action, ObjectType } from '../../../data/constants';
 
 export default function TypeField({ data, tid, fid }) {
   const { types, updateType } = useTypes();
@@ -28,8 +28,8 @@ export default function TypeField({ data, tid, fid }) {
       <Col span={10}>
         <Input
           value={data.name}
-          validateStatus={data.name === "" ? "error" : "default"}
-          placeholder={t("name")}
+          validateStatus={data.name === '' ? 'error' : 'default'}
+          placeholder={t('name')}
           onChange={(value) =>
             updateType(tid, {
               fields: types[tid].fields.map((e, id) =>
@@ -45,14 +45,14 @@ export default function TypeField({ data, tid, fid }) {
               {
                 action: Action.EDIT,
                 element: ObjectType.TYPE,
-                component: "field",
+                component: 'field',
                 tid: tid,
                 fid: fid,
                 undo: editField,
                 redo: { name: e.target.value },
-                message: t("edit_type", {
+                message: t('edit_type', {
                   typeName: data.name,
-                  extra: "[field]",
+                  extra: '[field]',
                 }),
               },
             ]);
@@ -83,8 +83,8 @@ export default function TypeField({ data, tid, fid }) {
           ]}
           filter
           value={data.type}
-          validateStatus={data.type === "" ? "error" : "default"}
-          placeholder={t("type")}
+          validateStatus={data.type === '' ? 'error' : 'default'}
+          placeholder={t('type')}
           onChange={(value) => {
             if (value === data.type) return;
             setUndoStack((prev) => [
@@ -92,19 +92,19 @@ export default function TypeField({ data, tid, fid }) {
               {
                 action: Action.EDIT,
                 element: ObjectType.TYPE,
-                component: "field",
+                component: 'field',
                 tid: tid,
                 fid: fid,
                 undo: { type: data?.type },
                 redo: { type: value },
-                message: t("edit_type", {
+                message: t('edit_type', {
                   typeName: data.name,
-                  extra: "[field]",
+                  extra: '[field]',
                 }),
               },
             ]);
             setRedoStack([]);
-            if (value === "ENUM" || value === "SET") {
+            if (value === 'ENUM' || value === 'SET') {
               updateType(tid, {
                 fields: types[tid].fields?.map((e, id) =>
                   id === fid
@@ -145,21 +145,21 @@ export default function TypeField({ data, tid, fid }) {
         <Popover
           content={
             <div className="popover-theme w-[240px]">
-              {(data.type === "ENUM" || data.type === "SET") && (
+              {(data.type === 'ENUM' || data.type === 'SET') && (
                 <>
                   <div className="font-semibold mb-1">
-                    {data.type} {t("values")}
+                    {data.type} {t('values')}
                   </div>
                   <TagInput
-                    separator={[",", ", ", " ,"]}
+                    separator={[',', ', ', ' ,']}
                     value={data.values}
                     validateStatus={
                       !data.values || data.values.length === 0
-                        ? "error"
-                        : "default"
+                        ? 'error'
+                        : 'default'
                     }
                     className="my-2"
-                    placeholder={t("use_for_batch_input")}
+                    placeholder={t('use_for_batch_input')}
                     onChange={(v) =>
                       updateType(tid, {
                         fields: types[tid].fields.map((e, id) =>
@@ -179,14 +179,14 @@ export default function TypeField({ data, tid, fid }) {
                         {
                           action: Action.EDIT,
                           element: ObjectType.TYPE,
-                          component: "field",
+                          component: 'field',
                           tid: tid,
                           fid: fid,
                           undo: editField,
                           redo: { values: data.values },
-                          message: t("edit_type", {
+                          message: t('edit_type', {
                             typeName: data.name,
-                            extra: "[field]",
+                            extra: '[field]',
                           }),
                         },
                       ]);
@@ -197,10 +197,10 @@ export default function TypeField({ data, tid, fid }) {
               )}
               {dbToTypes[database][data.type].isSized && (
                 <>
-                  <div className="font-semibold">{t("size")}</div>
+                  <div className="font-semibold">{t('size')}</div>
                   <InputNumber
                     className="my-2 w-full"
-                    placeholder={t("size")}
+                    placeholder={t('size')}
                     value={data.size}
                     onChange={(value) =>
                       updateType(tid, {
@@ -217,14 +217,14 @@ export default function TypeField({ data, tid, fid }) {
                         {
                           action: Action.EDIT,
                           element: ObjectType.TABLE,
-                          component: "field",
+                          component: 'field',
                           tid: tid,
                           fid: fid,
                           undo: editField,
                           redo: { size: e.target.value },
-                          message: t("edit_type", {
+                          message: t('edit_type', {
                             typeName: data.name,
-                            extra: "[field]",
+                            extra: '[field]',
                           }),
                         },
                       ]);
@@ -235,14 +235,14 @@ export default function TypeField({ data, tid, fid }) {
               )}
               {dbToTypes[database][data.type].hasPrecision && (
                 <>
-                  <div className="font-semibold">{t("precision")}</div>
+                  <div className="font-semibold">{t('precision')}</div>
                   <Input
                     className="my-2 w-full"
-                    placeholder={t("set_precision")}
+                    placeholder={t('set_precision')}
                     validateStatus={
                       /^\(\d+,\s*\d+\)$|^$/.test(data.size)
-                        ? "default"
-                        : "error"
+                        ? 'default'
+                        : 'error'
                     }
                     value={data.size}
                     onChange={(value) =>
@@ -260,14 +260,14 @@ export default function TypeField({ data, tid, fid }) {
                         {
                           action: Action.EDIT,
                           element: ObjectType.TABLE,
-                          component: "field",
+                          component: 'field',
                           tid: tid,
                           fid: fid,
                           undo: editField,
                           redo: { size: e.target.value },
-                          message: t("edit_type", {
+                          message: t('edit_type', {
                             typeName: data.name,
-                            extra: "[field]",
+                            extra: '[field]',
                           }),
                         },
                       ]);
@@ -277,7 +277,7 @@ export default function TypeField({ data, tid, fid }) {
                 </>
               )}
               <Button
-                icon={<IconDeleteStroked />}
+                icon={<Iconify icon="mdi:delete-outline" />}
                 block
                 type="danger"
                 onClick={() => {
@@ -286,13 +286,13 @@ export default function TypeField({ data, tid, fid }) {
                     {
                       action: Action.EDIT,
                       element: ObjectType.TYPE,
-                      component: "field_delete",
+                      component: 'field_delete',
                       tid: tid,
                       fid: fid,
                       data: data,
-                      message: t("edit_type", {
+                      message: t('edit_type', {
                         typeName: data.name,
-                        extra: "[delete field]",
+                        extra: '[delete field]',
                       }),
                     },
                   ]);
@@ -301,7 +301,7 @@ export default function TypeField({ data, tid, fid }) {
                   });
                 }}
               >
-                {t("delete")}
+                {t('delete')}
               </Button>
             </div>
           }
@@ -309,7 +309,10 @@ export default function TypeField({ data, tid, fid }) {
           trigger="click"
           position="right"
         >
-          <Button icon={<IconMore />} type="tertiary" />
+          <Button
+            icon={<Iconify icon="ic:round-more-vert" />}
+            type="tertiary"
+          />
         </Popover>
       </Col>
     </Row>

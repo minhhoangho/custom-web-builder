@@ -26,7 +26,7 @@ export default function Searchbar() {
       data={filteredResult}
       value={value}
       showClear
-      prefix={<IconSearch />}
+      prefix={<Iconify icon="mdi:search"}/>}
       placeholder={t("search")}
       onSearch={(v) => handleStringSearch(v)}
       emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}

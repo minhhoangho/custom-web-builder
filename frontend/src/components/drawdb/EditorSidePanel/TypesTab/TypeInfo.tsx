@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Action, ObjectType } from "../../../data/constants";
+import { useState } from 'react';
 import {
   Collapse,
   Row,
@@ -8,14 +7,14 @@ import {
   TextArea,
   Button,
   Card,
-} from "@douyinfe/semi-ui";
-import { IconDeleteStroked, IconPlus } from "@douyinfe/semi-icons";
-import { useUndoRedo, useTypes, useDiagram } from "../../../hooks";
-import TypeField from "./TypeField";
-import { useTranslation } from "react-i18next";
+} from '@douyinfe/semi-ui';
+import { Iconify } from '@components/common';
+import { useUndoRedo, useType, useDiagram } from 'src/containers/Editor/hooks';
+import { Action, ObjectType } from '@constants/editor';
+import TypeField from './TypeField';
 
 export default function TypeInfo({ index, data }) {
-  const { deleteType, updateType } = useTypes();
+  const { deleteType, updateType } = useType();
   const { tables, updateField } = useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState({});
@@ -32,11 +31,11 @@ export default function TypeInfo({ index, data }) {
         itemKey={`${index}`}
       >
         <div className="flex items-center mb-2.5">
-          <div className="text-md font-semibold break-keep">{t("name")}: </div>
+          <div className="text-md font-semibold break-keep">{t('name')}: </div>
           <Input
             value={data.name}
-            validateStatus={data.name === "" ? "error" : "default"}
-            placeholder={t("name")}
+            validateStatus={data.name === '' ? 'error' : 'default'}
+            placeholder={t('name')}
             className="ms-2"
             onChange={(value) => {
               updateType(index, { name: value });
@@ -66,14 +65,14 @@ export default function TypeInfo({ index, data }) {
                 {
                   action: Action.EDIT,
                   element: ObjectType.TYPE,
-                  component: "self",
+                  component: 'self',
                   tid: index,
                   undo: editField,
                   redo: { name: e.target.value },
                   updatedFields,
-                  message: t("edit_type", {
+                  message: t('edit_type', {
                     typeName: data.name,
-                    extra: "[name]",
+                    extra: '[name]',
                   }),
                 },
               ]);
@@ -85,17 +84,17 @@ export default function TypeInfo({ index, data }) {
           <TypeField key={j} data={f} fid={j} tid={index} />
         ))}
         <Card
-          bodyStyle={{ padding: "4px" }}
-          style={{ marginTop: "12px", marginBottom: "12px" }}
+          bodyStyle={{ padding: '4px' }}
+          style={{ marginTop: '12px', marginBottom: '12px' }}
           headerLine={false}
         >
           <Collapse keepDOM lazyRender>
-            <Collapse.Panel header={t("comment")} itemKey="1">
+            <Collapse.Panel header={t('comment')} itemKey="1">
               <TextArea
                 field="comment"
                 value={data.comment}
                 autosize
-                placeholder={t("comment")}
+                placeholder={t('comment')}
                 rows={1}
                 onChange={(value) =>
                   updateType(index, { comment: value }, false)
@@ -108,13 +107,13 @@ export default function TypeInfo({ index, data }) {
                     {
                       action: Action.EDIT,
                       element: ObjectType.TYPE,
-                      component: "self",
+                      component: 'self',
                       tid: index,
                       undo: editField,
                       redo: { comment: e.target.value },
-                      message: t("edit_type", {
+                      message: t('edit_type', {
                         typeName: data.name,
-                        extra: "[comment]",
+                        extra: '[comment]',
                       }),
                     },
                   ]);
@@ -127,18 +126,18 @@ export default function TypeInfo({ index, data }) {
         <Row gutter={6} className="mt-2">
           <Col span={12}>
             <Button
-              icon={<IconPlus />}
+              icon={<Iconify icon="mdi:plus" />}
               onClick={() => {
                 setUndoStack((prev) => [
                   ...prev,
                   {
                     action: Action.EDIT,
                     element: ObjectType.TYPE,
-                    component: "field_add",
+                    component: 'field_add',
                     tid: index,
-                    message: t("edit_type", {
+                    message: t('edit_type', {
                       typeName: data.name,
-                      extra: "[add field]",
+                      extra: '[add field]',
                     }),
                   },
                 ]);
@@ -147,25 +146,25 @@ export default function TypeInfo({ index, data }) {
                   fields: [
                     ...data.fields,
                     {
-                      name: "",
-                      type: "",
+                      name: '',
+                      type: '',
                     },
                   ],
                 });
               }}
               block
             >
-              {t("add_field")}
+              {t('add_field')}
             </Button>
           </Col>
           <Col span={12}>
             <Button
-              icon={<IconDeleteStroked />}
+              icon={<Iconify icon="mdi:delete-outline" />}
               type="danger"
               onClick={() => deleteType(index)}
               block
             >
-              {t("delete")}
+              {t('delete')}
             </Button>
           </Col>
         </Row>

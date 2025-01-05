@@ -1,11 +1,10 @@
-import { Collapse, Button } from "@douyinfe/semi-ui";
-import { IconPlus } from "@douyinfe/semi-icons";
-import { useSelect, useDiagram } from "../../../hooks";
-import { ObjectType } from "../../../data/constants";
-import SearchBar from "./SearchBar";
-import Empty from "../Empty";
-import TableInfo from "./TableInfo";
-import { useTranslation } from "react-i18next";
+import { Collapse, Button } from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
+import SearchBar from './SearchBar';
+import TableInfo from './TableInfo';
+import { useSelect, useDiagram } from '../../../hooks';
+import { ObjectType } from '../../../data/constants';
+import Empty from '../Empty';
 
 export default function TablesTab() {
   const { tables, addTable } = useDiagram();
@@ -17,19 +16,23 @@ export default function TablesTab() {
       <div className="flex gap-2">
         <SearchBar tables={tables} />
         <div>
-          <Button icon={<IconPlus />} block onClick={() => addTable()}>
-            {t("add_table")}
+          <Button
+            icon={<Iconify icon="mdi:plus" />}
+            block
+            onClick={() => addTable()}
+          >
+            {t('add_table')}
           </Button>
         </div>
       </div>
       {tables.length === 0 ? (
-        <Empty title={t("no_tables")} text={t("no_tables_text")} />
+        <Empty title={t('no_tables')} text={t('no_tables_text')} />
       ) : (
         <Collapse
           activeKey={
             selectedElement.open && selectedElement.element === ObjectType.TABLE
               ? `${selectedElement.id}`
-              : ""
+              : ''
           }
           keepDOM
           lazyRender
