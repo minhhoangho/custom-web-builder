@@ -9,6 +9,17 @@ import { useState } from 'react';
 import { saveAs } from 'file-saver';
 import { Parser } from 'node-sql-parser';
 import { useTranslation } from 'react-i18next';
+import { DB, MODAL, STATUS } from '@constants/editor';
+import {
+  useAreas,
+  useEnums,
+  useNotes,
+  useDiagram,
+  useTransform,
+  useTypes,
+  useUndoRedo,
+  useTasks,
+} from 'src/containers/Editor/hooks';
 import Rename from './Rename';
 import Open from './Open';
 import New from './New';
@@ -21,18 +32,7 @@ import {
   getModalWidth,
   getOkText,
 } from '../../../utils/modalData';
-import {
-  useAreas,
-  useEnums,
-  useNotes,
-  useDiagram,
-  useTransform,
-  useTypes,
-  useUndoRedo,
-  useTasks,
-} from '../../../hooks';
 import { db } from '../../../data/db';
-import { DB, MODAL, STATUS } from '../../../data/constants';
 import { importSQL } from '../../../utils/importSQL';
 import { databases } from '../../../data/databases';
 import { isRtl } from '../../../i18n/utils/rtl';

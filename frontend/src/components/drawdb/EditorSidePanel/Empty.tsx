@@ -1,20 +1,22 @@
-import {
-  IllustrationNoContent,
-  IllustrationNoContentDark,
-} from "@douyinfe/semi-illustrations";
-import { Empty as SemiUIEmpty } from "@douyinfe/semi-ui";
+// import {
+//   IllustrationNoContent,
+//   IllustrationNoContentDark,
+// } from "@douyinfe/semi-illustrations";
+// import { Empty as SemiUIEmpty } from "@douyinfe/semi-ui";
+import { Skeleton } from '@mui/material';
 
 export default function Empty({ title, text }) {
   return (
     <div className="select-none mt-2">
-      <SemiUIEmpty
-        image={<IllustrationNoContent style={{ width: 154, height: 154 }} />}
-        darkModeImage={
-          <IllustrationNoContentDark style={{ width: 154, height: 154 }} />
-        }
-        title={title}
-        description={text}
-      />
+      {/*<SemiUIEmpty*/}
+      {/*  image={<IllustrationNoContent style={{ width: 154, height: 154 }} />}*/}
+      {/*  darkModeImage={*/}
+      {/*    <IllustrationNoContentDark style={{ width: 154, height: 154 }} />*/}
+      {/*  }*/}
+      {/*  title={title}*/}
+      {/*  description={text}*/}
+      {/*/>*/}
+      <Skeleton animation={false} />
     </div>
   );
 }

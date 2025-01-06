@@ -8,12 +8,12 @@ import {
   Popover,
 } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
+import { Action, ObjectType, defaultBlue } from '@constants/editor';
+import { dbToTypes } from 'src/data/datatypes';
+import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 import TableField from './TableField';
 import IndexDetails from './IndexDetails';
-import { useDiagram, useUndoRedo } from '../../../hooks';
-import { Action, ObjectType, defaultBlue } from '../../../data/constants';
 import ColorPalette from '../../ColorPicker';
-import { dbToTypes } from '../../../data/datatypes';
 
 export default function TableInfo({ data }) {
   const { t } = useTranslation();

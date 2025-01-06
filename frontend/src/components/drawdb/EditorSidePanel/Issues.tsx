@@ -1,15 +1,20 @@
-import { useState, useEffect } from "react";
-import { Collapse, Badge } from "@douyinfe/semi-ui";
-import { arrayIsEqual } from "../../utils/utils";
-import { getIssues } from "../../utils/issues";
-import { useEnums, useSettings, useDiagram, useTypes } from "../../hooks";
-import { useTranslation } from "react-i18next";
+import { useState, useEffect } from 'react';
+import { Collapse, Badge } from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
+import {
+  useEnum,
+  useSetting,
+  useDiagram,
+  useType,
+} from 'src/containers/Editor/hooks';
+import { arrayIsEqual } from '../../utils/utils';
+import { getIssues } from '../../utils/issues';
 
 export default function Issues() {
-  const { types } = useTypes();
+  const { types } = useType();
   const { t } = useTranslation();
-  const { settings } = useSettings();
-  const { enums } = useEnums();
+  const { settings } = useSetting();
+  const { enums } = useEnum();
   const { tables, relationships, database } = useDiagram();
   const [issues, setIssues] = useState([]);
 
@@ -32,18 +37,18 @@ export default function Issues() {
   }, [tables, relationships, issues, types, database, enums]);
 
   return (
-    <Collapse keepDOM lazyRender style={{ width: "100%" }}>
+    <Collapse keepDOM lazyRender style={{ width: '100%' }}>
       <Collapse.Panel
         header={
           <Badge
-            type={issues.length > 0 ? "danger" : "primary"}
+            type={issues.length > 0 ? 'danger' : 'primary'}
             count={settings.strictMode ? null : issues.length}
             overflowCount={99}
             className="mt-1"
           >
             <div className="pe-3 select-none">
               <i className="fa-solid fa-triangle-exclamation me-2 text-yellow-500" />
-              {t("issues")}
+              {t('issues')}
             </div>
           </Badge>
         }
@@ -51,7 +56,7 @@ export default function Issues() {
       >
         <div className="max-h-[160px] overflow-y-auto">
           {settings.strictMode ? (
-            <div className="mb-1">{t("strict_mode_is_on_no_issues")}</div>
+            <div className="mb-1">{t('strict_mode_is_on_no_issues')}</div>
           ) : issues.length > 0 ? (
             <>
               {issues.map((e, i) => (
@@ -61,7 +66,7 @@ export default function Issues() {
               ))}
             </>
           ) : (
-            <div>{t("no_issues")}</div>
+            <div>{t('no_issues')}</div>
           )}
         </div>
       </Collapse.Panel>

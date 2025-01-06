@@ -1,8 +1,8 @@
 import { Input, Button, Popover, Checkbox, Select } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { useDiagram, useUndoRedo } from '../../../hooks';
-import { Action, ObjectType } from '../../../data/constants';
+import { Action, ObjectType } from '@constants/editor';
+import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 
 export default function IndexDetails({ data, fields, iid, tid }) {
   const { t } = useTranslation();

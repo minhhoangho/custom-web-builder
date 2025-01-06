@@ -11,13 +11,18 @@ import {
 } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
 import { Iconify } from '@components/common';
-import { useUndoRedo, useTypes, useDiagram, useEnums } from '../../../hooks';
-import { dbToTypes } from '../../../data/datatypes';
-import { Action, ObjectType } from '../../../data/constants';
+import { Action, ObjectType } from '@constants/editor';
+import { dbToTypes } from 'src/data/datatypes';
+import {
+  useUndoRedo,
+  useType,
+  useDiagram,
+  useEnum,
+} from 'src/containers/Editor/hooks';
 
 export default function TypeField({ data, tid, fid }) {
-  const { types, updateType } = useTypes();
-  const { enums } = useEnums();
+  const { types, updateType } = useType();
+  const { enums } = useEnum();
   const { database } = useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState({});

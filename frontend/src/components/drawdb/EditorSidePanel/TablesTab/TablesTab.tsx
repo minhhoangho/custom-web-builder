@@ -1,9 +1,9 @@
 import { Collapse, Button } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
+import { ObjectType } from '@constants/editor';
+import { useSelect, useDiagram } from 'src/containers/Editor/hooks';
 import SearchBar from './SearchBar';
 import TableInfo from './TableInfo';
-import { useSelect, useDiagram } from '../../../hooks';
-import { ObjectType } from '../../../data/constants';
 import Empty from '../Empty';
 
 export default function TablesTab() {

@@ -1,8 +1,8 @@
 import { Button, Collapse } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
+import { useNotes, useSelect } from 'src/containers/Editor/hooks';
 import SearchBar from './SearchBar';
 import NoteInfo from './NoteInfo';
-import { useNotes, useSelect } from '../../../hooks';
 import Empty from '../Empty';
 
 export default function NotesTab() {

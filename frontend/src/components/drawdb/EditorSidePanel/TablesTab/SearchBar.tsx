@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useSelect } from "../../../hooks";
+import { useSelect } from "src/containers/Editor/hooks";
 import { TreeSelect } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
-import { ObjectType } from "../../../data/constants";
+import { ObjectType } from "@constants/editor";
 import { useTranslation } from "react-i18next";
 
 export default function SearchBar({ tables }) {

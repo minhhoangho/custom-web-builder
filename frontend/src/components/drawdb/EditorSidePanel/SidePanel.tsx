@@ -1,18 +1,16 @@
-import { Tabs, TabPane } from "@douyinfe/semi-ui";
-import { Tab } from "../../data/constants";
-import { useLayout, useSelect, useDiagram } from "../../hooks";
-import RelationshipsTab from "./RelationshipsTab/RelationshipsTab";
-import TypesTab from "./TypesTab/TypesTab";
-import Issues from "./Issues";
-import AreasTab from "./AreasTab/AreasTab";
-import NotesTab from "./NotesTab/NotesTab";
-import TablesTab from "./TablesTab/TablesTab";
-import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
-import { databases } from "../../data/databases";
-import EnumsTab from "./EnumsTab/EnumsTab";
-import { isRtl } from "../../i18n/utils/rtl";
-import i18n from "../../i18n/i18n";
+import { Tabs, TabPane } from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
+import { databases } from 'src/data/databases';
+import { useLayout, useSelect, useDiagram } from 'src/containers/Editor/hooks';
+import { Tab } from '@constants/editor';
+import RelationshipsTab from './RelationshipsTab/RelationshipsTab';
+import TypesTab from './TypesTab/TypesTab';
+import Issues from './Issues';
+import AreasTab from './AreasTab/AreasTab';
+import NotesTab from './NotesTab/NotesTab';
+import TablesTab from './TablesTab/TablesTab';
+import EnumsTab from './EnumsTab/EnumsTab';
 
 export default function SidePanel({ width, resize, setResize }) {
   const { layout } = useLayout();
@@ -22,19 +20,19 @@ export default function SidePanel({ width, resize, setResize }) {
 
   const tabList = useMemo(() => {
     const tabs = [
-      { tab: t("tables"), itemKey: Tab.TABLES, component: <TablesTab /> },
+      { tab: t('tables'), itemKey: Tab.TABLES, component: <TablesTab /> },
       {
-        tab: t("relationships"),
+        tab: t('relationships'),
         itemKey: Tab.RELATIONSHIPS,
         component: <RelationshipsTab />,
       },
-      { tab: t("subject_areas"), itemKey: Tab.AREAS, component: <AreasTab /> },
-      { tab: t("notes"), itemKey: Tab.NOTES, component: <NotesTab /> },
+      { tab: t('subject_areas'), itemKey: Tab.AREAS, component: <AreasTab /> },
+      { tab: t('notes'), itemKey: Tab.NOTES, component: <NotesTab /> },
     ];
 
     if (databases[database].hasTypes) {
       tabs.push({
-        tab: t("types"),
+        tab: t('types'),
         itemKey: Tab.TYPES,
         component: <TypesTab />,
       });
@@ -42,13 +40,13 @@ export default function SidePanel({ width, resize, setResize }) {
 
     if (databases[database].hasEnums) {
       tabs.push({
-        tab: t("enums"),
+        tab: t('enums'),
         itemKey: Tab.ENUMS,
         component: <EnumsTab />,
       });
     }
 
-    return isRtl(i18n.language) ? tabs.reverse() : tabs;
+    return tabs;
   }, [t, database]);
 
   return (
@@ -66,7 +64,7 @@ export default function SidePanel({ width, resize, setResize }) {
               setSelectedElement((prev) => ({ ...prev, currentTab: key }))
             }
             collapsible
-            tabBarStyle={{ direction: "ltr" }}
+            tabBarStyle={{ direction: 'ltr' }}
           >
             {tabList.length &&
               tabList.map((tab) => (
@@ -84,7 +82,7 @@ export default function SidePanel({ width, resize, setResize }) {
       </div>
       <div
         className={`flex justify-center items-center p-1 h-auto hover-2 cursor-col-resize ${
-          resize && "bg-semi-grey-2"
+          resize && 'bg-semi-grey-2'
         }`}
         onPointerDown={(e) => e.isPrimary && setResize(true)}
       >

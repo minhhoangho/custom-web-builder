@@ -1,13 +1,8 @@
 import { Row, Col, Select, Button, Popover, Table } from '@douyinfe/semi-ui';
 import { IconLoopTextStroked } from '@douyinfe/semi-icons';
 import { useTranslation } from 'react-i18next';
-import {
-  Cardinality,
-  Constraint,
-  Action,
-  ObjectType,
-} from '../../../data/constants';
-import { useDiagram, useUndoRedo } from '../../../hooks';
+import { Cardinality, Constraint, Action, ObjectType } from '@constants/editor';
+import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 import i18n from '../../../i18n/i18n';
 
 const columns = [
