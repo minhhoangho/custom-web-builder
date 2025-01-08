@@ -1,7 +1,7 @@
 import { Tabs, TabPane } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
-import { databases } from 'src/data/databases';
+import { databases } from 'src/data/database';
 import { useLayout, useSelect, useDiagram } from 'src/containers/Editor/hooks';
 import { Tab } from '@constants/editor';
 import RelationshipsTab from './RelationshipsTab/RelationshipsTab';

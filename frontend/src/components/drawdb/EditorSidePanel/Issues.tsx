@@ -7,8 +7,8 @@ import {
   useDiagram,
   useType,
 } from 'src/containers/Editor/hooks';
-import { arrayIsEqual } from '../../utils/utils';
-import { getIssues } from '../../utils/issues';
+import { arrayIsEqual } from 'src/utils/common';
+import { getIssues } from 'src/utils/issues';
 
 export default function Issues() {
   const { types } = useType();

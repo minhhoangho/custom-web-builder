@@ -1,4 +1,4 @@
-import { databases } from 'src/data/databases';
+import { databases } from 'src/data/database';
 import { dbToTypes } from 'src/data/datatypes';
 import { jsonToMermaid } from './mermaid';
 

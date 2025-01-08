@@ -9,17 +9,17 @@ import { useState } from 'react';
 import { saveAs } from 'file-saver';
 import { Parser } from 'node-sql-parser';
 import { useTranslation } from 'react-i18next';
+import { getModalTitle, getModalWidth, getOkText } from 'src/utils/modalData';
 import { DB, MODAL, STATUS } from '@constants/editor';
 import {
-  useAreas,
-  useEnums,
-  useNotes,
   useDiagram,
   useTransform,
-  useTypes,
   useUndoRedo,
   useTasks,
 } from 'src/containers/Editor/hooks';
+import { db } from 'src/data/db';
+import { importSQL } from 'src/utils/imports/import-sql';
+import { databases } from 'src/data/database';
 import Rename from './Rename';
 import Open from './Open';
 import New from './New';
@@ -27,15 +27,7 @@ import ImportDiagram from './ImportDiagram';
 import ImportSource from './ImportSource';
 import SetTableWidth from './SetTableWidth';
 import Code from './Code';
-import {
-  getModalTitle,
-  getModalWidth,
-  getOkText,
-} from '../../../utils/modalData';
-import { db } from '../../../data/db';
-import { importSQL } from '../../../utils/importSQL';
-import { databases } from '../../../data/databases';
-import { isRtl } from '../../../i18n/utils/rtl';
+// import { isRtl } from '../../../i18n/utils/rtl';
 
 export default function Modal({
   modal,

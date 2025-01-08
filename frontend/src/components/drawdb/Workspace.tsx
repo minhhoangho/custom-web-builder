@@ -22,7 +22,7 @@ import {
   useSaveState,
   useEnums,
 } from '../hooks';
-import { databases } from '../data/databases';
+import { databases } from '../data/database';
 import { isRtl } from '../i18n/utils/rtl';
 import { octokit } from '../data/octokit';
 
