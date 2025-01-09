@@ -353,7 +353,7 @@ export default function TableInfo({ data }) {
           </Button>
           <Button
             icon={<Iconify icon="mdi:delete-outline" />}
-            type="danger"
+            color="error"
             onClick={() => deleteTable(data.id)}
           />
         </div>

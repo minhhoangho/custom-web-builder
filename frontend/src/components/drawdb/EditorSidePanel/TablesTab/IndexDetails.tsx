@@ -144,7 +144,7 @@ export default function IndexDetails({ data, fields, iid, tid }) {
             </div>
             <Button
               icon={<Iconify icon="mdi:delete-outline" />}
-              type="danger"
+              color="error"
               block
               onClick={() => {
                 setUndoStack((prev) => [

@@ -55,7 +55,7 @@ export default function FieldDetails({ data, tid, index }) {
       {(data.type === 'ENUM' || data.type === 'SET') && (
         <>
           <div className="font-semibold mb-1">
-            {data.type} {t('values')}
+            {data.type} Value
           </div>
           <TagInput
             separator={[',', ', ', ' ,']}
@@ -369,7 +369,7 @@ export default function FieldDetails({ data, tid, index }) {
       />
       <Button
         icon={<Iconify icon="mdi:delete-outline" />}
-        type="danger"
+        color="error"
         block
         onClick={() => deleteField(data, tid)}
       >

@@ -146,7 +146,7 @@ export default function NoteInfo({ data, nid }) {
           </Popover>
           <Button
             icon={<Iconify icon="mdi:delete-outline" />}
-            type="danger"
+            color="error"
             onClick={() => deleteNote(nid, true)}
           />
         </div>

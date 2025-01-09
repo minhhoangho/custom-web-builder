@@ -271,7 +271,7 @@ function EditPopoverContent({ data }) {
       <div className="flex">
         <Button
           icon={<Iconify icon="typcn:delete" />}
-          type="danger"
+          color="error"
           block
           onClick={() => deleteArea(data.id, true)}
         >

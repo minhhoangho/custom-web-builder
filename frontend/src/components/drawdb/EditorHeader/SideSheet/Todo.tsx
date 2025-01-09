@@ -222,7 +222,7 @@ export default function Todo() {
                             </RadioGroup>
                             <Button
                               icon={<Iconify icon="mdi:delete-outline"}/>}
-                              type="danger"
+                              color="error"
                               block
                               style={{marginTop: "12px"}}
                               onClick={() => {

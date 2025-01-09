@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 // import { IconSearch } from "@douyinfe/semi-icons";
 import { Autocomplete } from '@mui/material';
-import { useNote } from 'src/containers/Editor/hooks';
+import { useDiagram, useNote } from 'src/containers/Editor/hooks';
 
 export default function SearchBar() {
-  const { notes } = useNote();
+  const { relationships } = useDiagram();
   const [searchText, setSearchText] = useState('');
   // const { t } = useTranslation();
 
   const [filteredResult, setFilteredResult] = useState(
-    notes.map((t) => t.title),
+    relationships.map((t) => t.name),
   );
 
   const handleStringSearch = (value) => {
     setFilteredResult(
-      notes.map((t) => t.title).filter((i) => i.includes(value)),
+      relationships.map((t) => t.title).filter((i) => i.includes(value)),
     );
   };
   useEffect(() => {

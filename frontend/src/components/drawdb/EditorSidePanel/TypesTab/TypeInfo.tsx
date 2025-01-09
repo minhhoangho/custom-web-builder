@@ -70,10 +70,11 @@ export default function TypeInfo({ index, data }) {
                   undo: editField,
                   redo: { name: e.target.value },
                   updatedFields,
-                  message: t('edit_type', {
-                    typeName: data.name,
-                    extra: '[name]',
-                  }),
+                  message: 'Error edit_type'
+                  // message: t('edit_type', {
+                  //   typeName: data.name,
+                  //   extra: '[name]',
+                  // }),
                 },
               ]);
               setRedoStack([]);
@@ -111,10 +112,11 @@ export default function TypeInfo({ index, data }) {
                       tid: index,
                       undo: editField,
                       redo: { comment: e.target.value },
-                      message: t('edit_type', {
-                        typeName: data.name,
-                        extra: '[comment]',
-                      }),
+                      message: 'Error edit_type'
+                      // message: t('edit_type', {
+                      //   typeName: data.name,
+                      //   extra: '[comment]',
+                      // }),
                     },
                   ]);
                   setRedoStack([]);
@@ -135,10 +137,11 @@ export default function TypeInfo({ index, data }) {
                     element: ObjectType.TYPE,
                     component: 'field_add',
                     tid: index,
-                    message: t('edit_type', {
-                      typeName: data.name,
-                      extra: '[add field]',
-                    }),
+                    message: 'Error edit_type'
+                    // message: t('edit_type', {
+                    //   typeName: data.name,
+                    //   extra: '[add field]',
+                    // }),
                   },
                 ]);
                 setRedoStack([]);
@@ -160,7 +163,7 @@ export default function TypeInfo({ index, data }) {
           <Col span={12}>
             <Button
               icon={<Iconify icon="mdi:delete-outline" />}
-              type="danger"
+              color="error"
               onClick={() => deleteType(index)}
               block
             >

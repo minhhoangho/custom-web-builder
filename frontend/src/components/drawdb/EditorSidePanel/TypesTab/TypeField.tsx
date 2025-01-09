@@ -1,16 +1,6 @@
 import { useState } from 'react';
-import {
-  Row,
-  Col,
-  Input,
-  Button,
-  Select,
-  TagInput,
-  InputNumber,
-  Popover,
-} from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
-import { Iconify } from '@components/common';
+import { Iconify, SelectField } from '@components/common';
 import { Action, ObjectType } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import {
@@ -19,6 +9,9 @@ import {
   useDiagram,
   useEnum,
 } from 'src/containers/Editor/hooks';
+import { Button, Grid, Select } from "@mui/material";
+import { Input, TagInput } from "@components/form/Input";
+import { Popover } from "@components/common/Popover";
 
 export default function TypeField({ data, tid, fid }) {
   const { types, updateType } = useType();
@@ -29,13 +22,13 @@ export default function TypeField({ data, tid, fid }) {
   const { t } = useTranslation();
 
   return (
-    <Row gutter={6} className="hover-1 my-2">
-      <Col span={10}>
+    <Grid container gutter={6} className="hover-1 my-2">
+      <Grid item xs={5}>
         <Input
           value={data.name}
-          validateStatus={data.name === '' ? 'error' : 'default'}
-          placeholder={t('name')}
-          onChange={(value) =>
+          // validateStatus={data.name === '' ? 'error' : 'default'}
+          placeholder="name"
+          onInputChange={(value) =>
             updateType(tid, {
               fields: types[tid].fields.map((e, id) =>
                 id === fid ? { ...data, name: value } : e,
@@ -44,7 +37,7 @@ export default function TypeField({ data, tid, fid }) {
           }
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {
-            if (e.target.value === editField.name) return;
+            if (e.target.value === editField["name"]) return;
             setUndoStack((prev) => [
               ...prev,
               {
@@ -55,20 +48,22 @@ export default function TypeField({ data, tid, fid }) {
                 fid: fid,
                 undo: editField,
                 redo: { name: e.target.value },
-                message: t('edit_type', {
-                  typeName: data.name,
-                  extra: '[field]',
-                }),
+                message: 'Error edit_type'
+                // message: t('edit_type', {
+                //   typeName: data.name,
+                //   extra: '[field]',
+                // }),
               },
             ]);
             setRedoStack([]);
           }}
         />
-      </Col>
-      <Col span={11}>
-        <Select
+      </Grid>
+      <Grid item span={5}>
+        <SelectField
+          name="type_field"
           className="w-full"
-          optionList={[
+          options={[
             ...Object.keys(dbToTypes[database]).map((value) => ({
               label: value,
               value: value,
@@ -86,11 +81,9 @@ export default function TypeField({ data, tid, fid }) {
               value: type.name.toUpperCase(),
             })),
           ]}
-          filter
           value={data.type}
-          validateStatus={data.type === '' ? 'error' : 'default'}
-          placeholder={t('type')}
-          onChange={(value) => {
+          label="type"
+          onSelectChange={(value) => {
             if (value === data.type) return;
             setUndoStack((prev) => [
               ...prev,
@@ -102,10 +95,11 @@ export default function TypeField({ data, tid, fid }) {
                 fid: fid,
                 undo: { type: data?.type },
                 redo: { type: value },
-                message: t('edit_type', {
-                  typeName: data.name,
-                  extra: '[field]',
-                }),
+                message: 'Error edit_type'
+                // message: t('edit_type', {
+                //   typeName: data.name,
+                //   extra: '[field]',
+                // }),
               },
             ]);
             setRedoStack([]);
@@ -114,10 +108,10 @@ export default function TypeField({ data, tid, fid }) {
                 fields: types[tid].fields?.map((e, id) =>
                   id === fid
                     ? {
-                        ...data,
-                        type: value,
-                        values: data.values ? [...data.values] : [],
-                      }
+                      ...data,
+                      type: value,
+                      values: data.values ? [...data.values] : [],
+                    }
                     : e,
                 ),
               });
@@ -129,10 +123,10 @@ export default function TypeField({ data, tid, fid }) {
                 fields: types[tid].fields.map((e, id) =>
                   id === fid
                     ? {
-                        ...data,
-                        type: value,
-                        size: dbToTypes[database][value].defaultSize,
-                      }
+                      ...data,
+                      type: value,
+                      size: dbToTypes[database][value].defaultSize,
+                    }
                     : e,
                 ),
               });
@@ -145,181 +139,184 @@ export default function TypeField({ data, tid, fid }) {
             }
           }}
         />
-      </Col>
-      <Col span={3}>
+      </Grid>
+      <Grid item span={2}>
         <Popover
-          content={
-            <div className="popover-theme w-[240px]">
-              {(data.type === 'ENUM' || data.type === 'SET') && (
-                <>
-                  <div className="font-semibold mb-1">
-                    {data.type} {t('values')}
-                  </div>
-                  <TagInput
-                    separator={[',', ', ', ' ,']}
-                    value={data.values}
-                    validateStatus={
-                      !data.values || data.values.length === 0
-                        ? 'error'
-                        : 'default'
-                    }
-                    className="my-2"
-                    placeholder={t('use_for_batch_input')}
-                    onChange={(v) =>
-                      updateType(tid, {
-                        fields: types[tid].fields.map((e, id) =>
-                          id === fid ? { ...data, values: v } : e,
-                        ),
-                      })
-                    }
-                    onFocus={() => setEditField({ values: data.values })}
-                    onBlur={() => {
-                      if (
-                        JSON.stringify(editField.values) ===
-                        JSON.stringify(data.values)
-                      )
-                        return;
-                      setUndoStack((prev) => [
-                        ...prev,
-                        {
-                          action: Action.EDIT,
-                          element: ObjectType.TYPE,
-                          component: 'field',
-                          tid: tid,
-                          fid: fid,
-                          undo: editField,
-                          redo: { values: data.values },
-                          message: t('edit_type', {
-                            typeName: data.name,
-                            extra: '[field]',
-                          }),
-                        },
-                      ]);
-                      setRedoStack([]);
-                    }}
-                  />
-                </>
-              )}
-              {dbToTypes[database][data.type].isSized && (
-                <>
-                  <div className="font-semibold">{t('size')}</div>
-                  <InputNumber
-                    className="my-2 w-full"
-                    placeholder={t('size')}
-                    value={data.size}
-                    onChange={(value) =>
-                      updateType(tid, {
-                        fields: types[tid].fields.map((e, id) =>
-                          id === fid ? { ...data, size: value } : e,
-                        ),
-                      })
-                    }
-                    onFocus={(e) => setEditField({ size: e.target.value })}
-                    onBlur={(e) => {
-                      if (e.target.value === editField.size) return;
-                      setUndoStack((prev) => [
-                        ...prev,
-                        {
-                          action: Action.EDIT,
-                          element: ObjectType.TABLE,
-                          component: 'field',
-                          tid: tid,
-                          fid: fid,
-                          undo: editField,
-                          redo: { size: e.target.value },
-                          message: t('edit_type', {
-                            typeName: data.name,
-                            extra: '[field]',
-                          }),
-                        },
-                      ]);
-                      setRedoStack([]);
-                    }}
-                  />
-                </>
-              )}
-              {dbToTypes[database][data.type].hasPrecision && (
-                <>
-                  <div className="font-semibold">{t('precision')}</div>
-                  <Input
-                    className="my-2 w-full"
-                    placeholder={t('set_precision')}
-                    validateStatus={
-                      /^\(\d+,\s*\d+\)$|^$/.test(data.size)
-                        ? 'default'
-                        : 'error'
-                    }
-                    value={data.size}
-                    onChange={(value) =>
-                      updateType(tid, {
-                        fields: types[tid].fields.map((e, id) =>
-                          id === fid ? { ...data, size: value } : e,
-                        ),
-                      })
-                    }
-                    onFocus={(e) => setEditField({ size: e.target.value })}
-                    onBlur={(e) => {
-                      if (e.target.value === editField.size) return;
-                      setUndoStack((prev) => [
-                        ...prev,
-                        {
-                          action: Action.EDIT,
-                          element: ObjectType.TABLE,
-                          component: 'field',
-                          tid: tid,
-                          fid: fid,
-                          undo: editField,
-                          redo: { size: e.target.value },
-                          message: t('edit_type', {
-                            typeName: data.name,
-                            extra: '[field]',
-                          }),
-                        },
-                      ]);
-                      setRedoStack([]);
-                    }}
-                  />
-                </>
-              )}
-              <Button
-                icon={<Iconify icon="mdi:delete-outline" />}
-                block
-                type="danger"
-                onClick={() => {
-                  setUndoStack((prev) => [
-                    ...prev,
-                    {
-                      action: Action.EDIT,
-                      element: ObjectType.TYPE,
-                      component: 'field_delete',
-                      tid: tid,
-                      fid: fid,
-                      data: data,
-                      message: t('edit_type', {
-                        typeName: data.name,
-                        extra: '[delete field]',
-                      }),
-                    },
-                  ]);
-                  updateType(tid, {
-                    fields: types[tid].fields.filter((_, k) => k !== fid),
-                  });
-                }}
-              >
-                {t('delete')}
-              </Button>
-            </div>
-          }
-          showArrow
-          trigger="click"
+          buttonElement={<Button
+            icon={<Iconify icon="ic:round-more-vert"/>}
+            type="tertiary"
+          />}
+          origin='bottomRight'
           position="right"
         >
-          <Button
-            icon={<Iconify icon="ic:round-more-vert" />}
-            type="tertiary"
-          />
+          <div className="popover-theme w-[240px]">
+            {(data.type === 'ENUM' || data.type === 'SET') && (
+              <>
+                <div className="font-semibold mb-1">
+                  {data.type} Value
+                </div>
+                <TagInput
+                  separator=","
+                  value={data.values}
+                  // validateStatus={
+                  //   !data.values || data.values.length === 0
+                  //     ? 'error'
+                  //     : 'default'
+                  // }
+                  className="my-2"
+                  placeholder={t('use_for_batch_input')}
+                  onInputChange={(v) =>
+                    updateType(tid, {
+                      fields: types[tid].fields.map((e, id) =>
+                        id === fid ? { ...data, values: v } : e,
+                      ),
+                    })
+                  }
+                  onFocus={() => setEditField({ values: data.values })}
+                  onBlur={() => {
+                    if (
+                      JSON.stringify(editField.values) ===
+                      JSON.stringify(data.values)
+                    )
+                      return;
+                    setUndoStack((prev) => [
+                      ...prev,
+                      {
+                        action: Action.EDIT,
+                        element: ObjectType.TYPE,
+                        component: 'field',
+                        tid: tid,
+                        fid: fid,
+                        undo: editField,
+                        redo: { values: data.values },
+                        message: 'Error edit_type'
+                        // message: t('edit_type', {
+                        //   typeName: data.name,
+                        //   extra: '[field]',
+                        // }),
+                      },
+                    ]);
+                    setRedoStack([]);
+                  }}
+                />
+              </>
+            )}
+            {dbToTypes[database][data.type].isSized && (
+              <>
+                <div className="font-semibold">{t('size')}</div>
+                <Input
+                  type="number"
+                  className="my-2 w-full"
+                  placeholder="Size"
+                  value={data.size}
+                  onInputChange={(value) =>
+                    updateType(tid, {
+                      fields: types[tid].fields.map((e, id) =>
+                        id === fid ? { ...data, size: value } : e,
+                      ),
+                    })
+                  }
+                  onFocus={(e) => setEditField({ size: e.target.value })}
+                  onBlur={(e) => {
+                    if (e.target.value === editField.size) return;
+                    setUndoStack((prev) => [
+                      ...prev,
+                      {
+                        action: Action.EDIT,
+                        element: ObjectType.TABLE,
+                        component: 'field',
+                        tid: tid,
+                        fid: fid,
+                        undo: editField,
+                        redo: { size: e.target.value },
+                        message: 'Error edit_type'
+                        // message: t('edit_type', {
+                        //   typeName: data.name,
+                        //   extra: '[field]',
+                        // }),
+                      },
+                    ]);
+                    setRedoStack([]);
+                  }}
+                />
+              </>
+            )}
+            {dbToTypes[database][data.type].hasPrecision && (
+              <>
+                <div className="font-semibold">{t('precision')}</div>
+                <Input
+                  className="my-2 w-full"
+                  placeholder={t('set_precision')}
+                  // validateStatus={
+                  //   /^\(\d+,\s*\d+\)$|^$/.test(data.size)
+                  //     ? 'default'
+                  //     : 'error'
+                  // }
+                  value={data.size}
+                  onInputChange={(value) =>
+                    updateType(tid, {
+                      fields: types[tid].fields.map((e, id) =>
+                        id === fid ? { ...data, size: value } : e,
+                      ),
+                    })
+                  }
+                  onFocus={(e) => setEditField({ size: e.target.value })}
+                  onBlur={(e) => {
+                    if (e.target.value === editField.size) return;
+                    setUndoStack((prev) => [
+                      ...prev,
+                      {
+                        action: Action.EDIT,
+                        element: ObjectType.TABLE,
+                        component: 'field',
+                        tid: tid,
+                        fid: fid,
+                        undo: editField,
+                        redo: { size: e.target.value },
+                        message: 'Error edit_type'
+                        // message: t('edit_type', {
+                        //   typeName: data.name,
+                        //   extra: '[field]',
+                        // }),
+                      },
+                    ]);
+                    setRedoStack([]);
+                  }}
+                />
+              </>
+            )}
+            <Button
+              icon={<Iconify icon="mdi:delete-outline"/>}
+              block
+              color="error"
+              onClick={() => {
+                setUndoStack((prev) => [
+                  ...prev,
+                  {
+                    action: Action.EDIT,
+                    element: ObjectType.TYPE,
+                    component: 'field_delete',
+                    tid: tid,
+                    fid: fid,
+                    data: data,
+                    message: 'Error edit_type'
+                    // message: t('edit_type', {
+                    //   typeName: data.name,
+                    //   extra: '[delete field]',
+                    // }),
+                  },
+                ]);
+                updateType(tid, {
+                  fields: types[tid].fields.filter((_, k) => k !== fid),
+                });
+              }}
+            >
+              Delete
+            </Button>
+          </div>
+
         </Popover>
-      </Col>
-    </Row>
+      </Grid>
+    </Grid>
   );
 }

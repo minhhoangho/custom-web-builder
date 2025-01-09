@@ -166,7 +166,7 @@ export default function Table(props) {
                       </div>
                       <Button
                         icon={<Iconify icon="typcn:delete" />}
-                        type="danger"
+                        color="error"
                         block
                         style={{ marginTop: '8px' }}
                         onClick={() => deleteTable(tableData.id)}

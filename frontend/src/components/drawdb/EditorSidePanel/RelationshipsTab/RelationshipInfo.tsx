@@ -204,7 +204,7 @@ export default function RelationshipInfo({ data }) {
       <Button
         icon={<Iconify icon="mdi:delete-outline" />}
         block
-        type="danger"
+        color="error"
         onClick={() => deleteRelationship(data.id)}
       >
         {t('delete')}
