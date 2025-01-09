@@ -7,24 +7,24 @@ import ControlPanel from './EditorHeader/ControlPanel';
 import Canvas from './EditorCanvas/Canvas';
 import SidePanel from './EditorSidePanel/SidePanel';
 import FloatingControls from './FloatingControls';
-import { CanvasContextProvider } from '../context/CanvasContext';
-import { DB, State } from '../data/constants';
+import { CanvasContextProvider } from 'src/containers/Editor/context/CanvasContext';
+import { DB, State } from '@constants/editor';
 import {
   useLayout,
-  useSettings,
+  useSetting,
   useTransform,
   useDiagram,
   useUndoRedo,
-  useAreas,
-  useNotes,
-  useTypes,
+  useArea,
+  useNote,
+  useType,
   useTasks,
   useSaveState,
-  useEnums,
-} from '../hooks';
-import { databases } from '../data/database';
-import { isRtl } from '../i18n/utils/rtl';
-import { octokit } from '../data/octokit';
+  useEnum,
+} from 'src/containers/Editor/hooks';
+import { databases } from 'src/data/database';
+import { isRtl } from 'src/i18n/utils/rtl';
+import { octokit } from 'src/data/octokit';
 
 export const IdContext = createContext({ gistId: '' });
 
@@ -39,14 +39,14 @@ export default function WorkSpace() {
   const [showSelectDbModal, setShowSelectDbModal] = useState(false);
   const [selectedDb, setSelectedDb] = useState('');
   const { layout } = useLayout();
-  const { settings } = useSettings();
-  const { types, setTypes } = useTypes();
-  const { areas, setAreas } = useAreas();
+  const { settings } = useSetting();
+  const { types, setTypes } = useType();
+  const { areas, setAreas } = useArea();
   const { tasks, setTasks } = useTasks();
-  const { notes, setNotes } = useNotes();
+  const { notes, setNotes } = useNote();
   const { saveState, setSaveState } = useSaveState();
   const { transform, setTransform } = useTransform();
-  const { enums, setEnums } = useEnums();
+  const { enums, setEnums } = useEnum();
   const {
     tables,
     relationships,
