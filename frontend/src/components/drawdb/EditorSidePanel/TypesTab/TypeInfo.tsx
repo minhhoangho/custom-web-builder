@@ -12,6 +12,7 @@ import { Iconify } from '@components/common';
 import { useUndoRedo, useType, useDiagram } from 'src/containers/Editor/hooks';
 import { Action, ObjectType } from '@constants/editor';
 import TypeField from './TypeField';
+import { useTranslation } from 'react-i18next';
 
 export default function TypeInfo({ index, data }) {
   const { deleteType, updateType } = useType();
