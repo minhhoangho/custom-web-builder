@@ -1383,7 +1383,7 @@ export default function ControlPanel({
                 color="primary"
                 className="text-base me-2 pe-6 ps-5 py-[18px] rounded-md"
                 size="medium"
-                icon={<Iconify icon="mdi:share-outline"/>}
+                startIcon={<Iconify icon="mdi:share-outline"/>}
                 onClick={() => setModal(MODAL.SHARE)}
               >
                 {t('share')}

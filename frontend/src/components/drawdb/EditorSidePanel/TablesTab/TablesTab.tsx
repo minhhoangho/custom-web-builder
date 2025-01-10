@@ -17,7 +17,7 @@ export default function TablesTab() {
         <SearchBar tables={tables} />
         <div>
           <Button
-            icon={<Iconify icon="mdi:plus" />}
+            startIcon={<Iconify icon="mdi:plus" />}
             block
             onClick={() => addTable()}
           >

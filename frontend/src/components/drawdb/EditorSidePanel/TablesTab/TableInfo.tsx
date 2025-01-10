@@ -352,7 +352,7 @@ export default function TableInfo({ data }) {
             {t('add_field')}
           </Button>
           <Button
-            icon={<Iconify icon="mdi:delete-outline" />}
+            startIcon={<Iconify icon="mdi:delete-outline" />}
             color="error"
             onClick={() => deleteTable(data.id)}
           />

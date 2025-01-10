@@ -18,7 +18,7 @@ export default function TypesTab() {
         <Searchbar />
         <div>
           <Button
-            icon={<Iconify icon="mdi:plus" />}
+            startIcon={<Iconify icon="mdi:plus" />}
             block
             onClick={() => addType()}
           >
@@ -39,7 +39,7 @@ export default function TypesTab() {
             showArrow
             position="rightTop"
           >
-            <Button theme="borderless" icon={<Iconify icon="ci:info" />} />
+            <Button theme="borderless" startIcon={<Iconify icon="ci:info" />} />
           </Popover>
         )}
       </div>

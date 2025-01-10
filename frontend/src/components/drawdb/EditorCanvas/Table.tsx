@@ -109,7 +109,7 @@ export default function Table(props) {
             <div className="hidden group-hover:block">
               <div className="flex justify-end items-center mx-2">
                 <Button
-                  icon={<Iconify icon="lucide:edit" />}
+                  startIcon={<Iconify icon="lucide:edit" />}
                   size="small"
                   theme="solid"
                   style={{
@@ -165,9 +165,8 @@ export default function Table(props) {
                         )}
                       </div>
                       <Button
-                        icon={<Iconify icon="typcn:delete" />}
+                        startIcon={<Iconify icon="typcn:delete" />}
                         color="error"
-                        block
                         style={{ marginTop: '8px' }}
                         onClick={() => deleteTable(tableData.id)}
                       >
@@ -181,7 +180,7 @@ export default function Table(props) {
                   style={{ width: '200px', wordBreak: 'break-word' }}
                 >
                   <Button
-                    icon={<Iconify icon="ic:round-more-vert" />}
+                    startIcon={<Iconify icon="ic:round-more-vert" />}
                     type="tertiary"
                     size="small"
                     style={{
@@ -358,7 +357,7 @@ export default function Table(props) {
               style={{
                 backgroundColor: '#d42020b3',
               }}
-              icon={<Iconify icon="ic:baseline-minus" />}
+              startIcon={<Iconify icon="ic:baseline-minus" />}
               onClick={() => deleteField(fieldData, tableData.id)}
             />
           ) : (

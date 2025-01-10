@@ -221,7 +221,7 @@ export default function Todo() {
                               </Radio>
                             </RadioGroup>
                             <Button
-                              icon={<Iconify icon="mdi:delete-outline"}/>}
+                              startIcon={<Iconify icon="mdi:delete-outline"}/>}
                               color="error"
                               block
                               style={{marginTop: "12px"}}
@@ -240,7 +240,7 @@ export default function Todo() {
                         showArrow
                         className="w-[180px]"
                       >
-                        <Button icon={<Iconify icon="proicons:more"/>} type="tertiary"/>
+                        <Button startIcon={<Iconify icon="proicons:more"/>} variant="contained"/>
                       </Popover>
                     </Grid>
                   </Grid>

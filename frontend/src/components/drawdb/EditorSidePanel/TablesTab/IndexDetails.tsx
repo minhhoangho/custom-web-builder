@@ -143,7 +143,7 @@ export default function IndexDetails({ data, fields, iid, tid }) {
               ></Checkbox>
             </div>
             <Button
-              icon={<Iconify icon="mdi:delete-outline" />}
+              startIcon={<Iconify icon="mdi:delete-outline" />}
               color="error"
               block
               onClick={() => {
@@ -181,7 +181,7 @@ export default function IndexDetails({ data, fields, iid, tid }) {
         showArrow
       >
         <Button
-          icon={<Iconify icon="ic:round-more-vert" />}
+          startIcon={<Iconify icon="ic:round-more-vert" />}
           type="tertiary"
           style={{ marginLeft: '12px' }}
         />

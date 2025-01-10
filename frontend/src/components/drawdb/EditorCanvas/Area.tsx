@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHover } from 'usehooks-ts';
-import Popover from '@mui/material/Popover';
 import { Button } from '@mui/material';
-import { Iconify } from '@components/common';
-import { Action, ObjectType, State, Tab } from '@constants/editor';
+import { ColorPalette, Iconify } from '@components/common';
+import { Action, defaultBlue, ObjectType, State, Tab } from '@constants/editor';
 import {
   useArea,
   useCanvas,
@@ -14,6 +13,8 @@ import {
   useSetting,
   useUndoRedo,
 } from 'src/containers/Editor/hooks';
+import { Popover } from '@components/common/Popover';
+import { Input } from '@components/form/Input';
 
 export default function Area({
   data,
@@ -118,23 +119,24 @@ export default function Area({
               </div>
               {(isHovered || (areaIsSelected() && !layout.sidebar)) && (
                 <Popover
+                  buttonElement={
+                    <Button
+                      startIcon={<Iconify icon="lucide:edit" />}
+                      variant="contained"
+                      style={{
+                        backgroundColor: '#2F68ADB3',
+                      }}
+                      onClick={edit}
+                    />
+                  }
                   visible={areaIsSelected() && !layout.sidebar}
                   onClickOutSide={onClickOutSide}
-                  stopPropagation
-                  content={<EditPopoverContent data={data} />}
-                  trigger="custom"
-                  position="rightTop"
-                  showArrow
+                  // stopPropagation
+                  // trigger="custom"
+                  position="topRight"
+                  // showArrow
                 >
-                  <Button
-                    icon={<Iconify icon="lucide:edit" />}
-                    size="small"
-                    theme="solid"
-                    style={{
-                      backgroundColor: '#2F68ADB3',
-                    }}
-                    onClick={edit}
-                  />
+                  <EditPopoverContent data={data} />
                 </Popover>
               )}
             </div>
@@ -204,7 +206,7 @@ function EditPopoverContent({ data }) {
           value={data.name}
           placeholder={t('name')}
           className="me-2"
-          onChange={(value) => updateArea(data.id, { name: value })}
+          onInputChange={(value) => updateArea(data.id, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {
             if (e.target.value === editField.name) return;
@@ -225,54 +227,53 @@ function EditPopoverContent({ data }) {
             setRedoStack([]);
           }}
         />
-        {/*<Popover*/}
-        {/*  children={*/}
-        {/*    <div className="popover-theme">*/}
-        {/*      <ColorPalette*/}
-        {/*        currentColor={data.color}*/}
-        {/*        onPickColor={(c) => {*/}
-        {/*          setUndoStack((prev) => [*/}
-        {/*            ...prev,*/}
-        {/*            {*/}
-        {/*              action: Action.EDIT,*/}
-        {/*              element: ObjectType.AREA,*/}
-        {/*              aid: data.id,*/}
-        {/*              undo: { color: data.color },*/}
-        {/*              redo: { color: c },*/}
-        {/*              message: t('edit_area', {*/}
-        {/*                areaName: data.name,*/}
-        {/*                extra: '[color]',*/}
-        {/*              }),*/}
-        {/*            },*/}
-        {/*          ]);*/}
-        {/*          setRedoStack([]);*/}
-        {/*          updateArea(data.id, {*/}
-        {/*            color: c,*/}
-        {/*          });*/}
-        {/*        }}*/}
-        {/*        onClearColor={() => {*/}
-        {/*          updateArea(data.id, {*/}
-        {/*            color: defaultBlue,*/}
-        {/*          });*/}
-        {/*          setSaveState(State.SAVING);*/}
-        {/*        }}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*  }*/}
-        {/*  position="rightTop"*/}
-        {/*  showArrow*/}
-        {/*>*/}
-        {/*  <div*/}
-        {/*    className="h-[32px] w-[32px] rounded"*/}
-        {/*    style={{ backgroundColor: data.color }}*/}
-        {/*  />*/}
-        {/*</Popover>*/}
+        <Popover
+          buttonElement={
+            <div
+              className="h-[32px] w-[32px] rounded"
+              style={{ backgroundColor: data.color }}
+            />
+          }
+          position="topRight"
+          // showArrow
+        >
+          <div className="popover-theme">
+            <ColorPalette
+              currentColor={data.color}
+              onPickColor={(c: string) => {
+                setUndoStack((prev) => [
+                  ...prev,
+                  {
+                    action: Action.EDIT,
+                    element: ObjectType.AREA,
+                    aid: data.id,
+                    undo: { color: data.color },
+                    redo: { color: c },
+                    message: t('edit_area', {
+                      areaName: data.name,
+                      extra: '[color]',
+                    }),
+                  },
+                ]);
+                setRedoStack([]);
+                updateArea(data.id, {
+                  color: c,
+                });
+              }}
+              onClearColor={() => {
+                updateArea(data.id, {
+                  color: defaultBlue,
+                });
+                setSaveState(State.SAVING);
+              }}
+            />
+          </div>
+        </Popover>
       </div>
       <div className="flex">
         <Button
-          icon={<Iconify icon="typcn:delete" />}
+          startIcon={<Iconify icon="typcn:delete" />}
           color="error"
-          block
           onClick={() => deleteArea(data.id, true)}
         >
           {t('delete')}

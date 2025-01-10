@@ -191,7 +191,7 @@ export default function TableField({ data, tid, index }) {
             setRedoStack([]);
             updateField(tid, index, { primary: !data.primary });
           }}
-          icon={<Iconify icon="mdi:key-outline" />}
+          startIcon={<Iconify icon="mdi:key-outline" />}
         />
       </Col>
       <Col span={3}>
@@ -207,7 +207,7 @@ export default function TableField({ data, tid, index }) {
         >
           <Button
             type="tertiary"
-            icon={<Iconify icon="ic:round-more-vert" />}
+            startIcon={<Iconify icon="ic:round-more-vert" />}
           />
         </Popover>
       </Col>

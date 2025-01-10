@@ -8,11 +8,11 @@ import {
   Button,
   Card,
 } from '@douyinfe/semi-ui';
+import { useTranslation } from 'react-i18next';
 import { Iconify } from '@components/common';
 import { useUndoRedo, useType, useDiagram } from 'src/containers/Editor/hooks';
 import { Action, ObjectType } from '@constants/editor';
 import TypeField from './TypeField';
-import { useTranslation } from 'react-i18next';
 
 export default function TypeInfo({ index, data }) {
   const { deleteType, updateType } = useType();
@@ -71,7 +71,7 @@ export default function TypeInfo({ index, data }) {
                   undo: editField,
                   redo: { name: e.target.value },
                   updatedFields,
-                  message: 'Error edit_type'
+                  message: 'Error edit_type',
                   // message: t('edit_type', {
                   //   typeName: data.name,
                   //   extra: '[name]',
@@ -113,7 +113,7 @@ export default function TypeInfo({ index, data }) {
                       tid: index,
                       undo: editField,
                       redo: { comment: e.target.value },
-                      message: 'Error edit_type'
+                      message: 'Error edit_type',
                       // message: t('edit_type', {
                       //   typeName: data.name,
                       //   extra: '[comment]',
@@ -129,7 +129,7 @@ export default function TypeInfo({ index, data }) {
         <Row gutter={6} className="mt-2">
           <Col span={12}>
             <Button
-              icon={<Iconify icon="mdi:plus" />}
+              startIcon={<Iconify icon="mdi:plus" />}
               onClick={() => {
                 setUndoStack((prev) => [
                   ...prev,
@@ -138,7 +138,7 @@ export default function TypeInfo({ index, data }) {
                     element: ObjectType.TYPE,
                     component: 'field_add',
                     tid: index,
-                    message: 'Error edit_type'
+                    message: 'Error edit_type',
                     // message: t('edit_type', {
                     //   typeName: data.name,
                     //   extra: '[add field]',
@@ -163,7 +163,7 @@ export default function TypeInfo({ index, data }) {
           </Col>
           <Col span={12}>
             <Button
-              icon={<Iconify icon="mdi:delete-outline" />}
+              startIcon={<Iconify icon="mdi:delete-outline" />}
               color="error"
               onClick={() => deleteType(index)}
               block

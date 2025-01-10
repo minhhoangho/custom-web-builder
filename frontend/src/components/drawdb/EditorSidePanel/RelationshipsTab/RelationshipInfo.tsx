@@ -159,7 +159,7 @@ export default function RelationshipInfo({ data }) {
             showArrow
           >
             <Button
-              icon={<Iconify icon="ic:round-more-vert" />}
+              startIcon={<Iconify icon="ic:round-more-vert" />}
               type="tertiary"
             />
           </Popover>
@@ -202,7 +202,7 @@ export default function RelationshipInfo({ data }) {
         </Col>
       </Row>
       <Button
-        icon={<Iconify icon="mdi:delete-outline" />}
+        startIcon={<Iconify icon="mdi:delete-outline" />}
         block
         color="error"
         onClick={() => deleteRelationship(data.id)}

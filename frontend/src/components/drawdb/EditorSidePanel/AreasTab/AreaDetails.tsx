@@ -97,7 +97,7 @@ export default function AreaInfo({ data, i }) {
           </Popover>
         </div>
       </Grid>
-      <Grid item span={1}>
+      <Grid item xs={1}>
         <Button
           startIcon={<Iconify icon="typcn:delete" />}
           color="error"

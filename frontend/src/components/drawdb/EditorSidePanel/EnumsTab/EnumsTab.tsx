@@ -16,8 +16,7 @@ export default function EnumsTab() {
         <SearchBar />
         <div>
           <Button
-            icon={<Iconify icon="mdi:plus" />}
-            block
+            startIcon={<Iconify icon="mdi:plus" />}
             onClick={() => addEnum()}
           >
             {t('add_enum')}

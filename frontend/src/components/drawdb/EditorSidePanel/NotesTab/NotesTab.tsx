@@ -23,7 +23,7 @@ export default function NotesTab() {
         />
         <div>
           <Button
-            icon={<Iconify icon="mdi:plus" />}
+            startIcon={<Iconify icon="mdi:plus" />}
             block
             onClick={() => addNote()}
           >

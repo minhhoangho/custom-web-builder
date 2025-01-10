@@ -1,37 +1,34 @@
 import { useState } from 'react';
-import { Button, Input, Popover } from '@mui/material'; // import {
+import { Button, Input } from '@mui/material';
+// import {
 import { useTranslation } from 'react-i18next';
-import { Action, noteThemes, ObjectType, State, Tab } from '@constants/editor'; //   IconDeleteStroked,
+import { Action, noteThemes, ObjectType, Tab } from '@constants/editor'; //   IconDeleteStroked,
 //   IconCheckboxTick,
 // } from "@douyinfe/semi-icons";
 import { Iconify } from '@components/common';
-import {
-  useLayout,
-  useNotes,
-  useSaveState,
-  useSelect,
-  useUndoRedo,
-} from '../../hooks';
+import { useLayout, useNote, useSaveState, useSelect, useUndoRedo, } from 'src/containers/Editor/hooks';
+import { Popover } from '@components/common/Popover';
 
-export default function Note({ data, onPointerDown }) {
+
+export default function Note({data, onPointerDown}) {
   const w = 180;
   const r = 3;
   const fold = 24;
   const [editField, setEditField] = useState({});
   const [hovered, setHovered] = useState(false);
-  const { layout } = useLayout();
-  const { t } = useTranslation();
-  const { setSaveState } = useSaveState();
-  const { updateNote, deleteNote } = useNotes();
-  const { setUndoStack, setRedoStack } = useUndoRedo();
-  const { selectedElement, setSelectedElement } = useSelect();
+  const {layout} = useLayout();
+  const {t} = useTranslation();
+  const {setSaveState} = useSaveState();
+  const {updateNote, deleteNote} = useNote();
+  const {setUndoStack, setRedoStack} = useUndoRedo();
+  const {selectedElement, setSelectedElement} = useSelect();
 
   const handleChange = (e) => {
     const textarea = document.getElementById(`note_${data.id}`);
     textarea.style.height = '0';
     textarea.style.height = textarea.scrollHeight + 'px';
     const newHeight = textarea.scrollHeight + 42;
-    updateNote(data.id, { content: e.target.value, height: newHeight });
+    updateNote(data.id, {content: e.target.value, height: newHeight});
   };
 
   const handleBlur = (e) => {
@@ -47,7 +44,7 @@ export default function Note({ data, onPointerDown }) {
         element: ObjectType.NOTE,
         nid: data.id,
         undo: editField,
-        redo: { content: e.target.value, height: newHeight },
+        redo: {content: e.target.value, height: newHeight},
         message: t('edit_note', {
           noteTitle: e.target.value,
           extra: '[content]',
@@ -60,8 +57,8 @@ export default function Note({ data, onPointerDown }) {
   const edit = () => {
     setSelectedElement((prev) => ({
       ...prev,
-      ...(layout.sidebar && { currentTab: Tab.NOTES }),
-      ...(!layout.sidebar && { element: ObjectType.NOTE }),
+      ...(layout.sidebar && {currentTab: Tab.NOTES}),
+      ...(!layout.sidebar && {element: ObjectType.NOTE}),
       id: data.id,
       open: true,
     }));
@@ -69,7 +66,7 @@ export default function Note({ data, onPointerDown }) {
     if (layout.sidebar && selectedElement.currentTab === Tab.NOTES) {
       document
         .getElementById(`scroll_note_${data.id}`)
-        .scrollIntoView({ behavior: 'smooth' });
+        .scrollIntoView({behavior: 'smooth'});
     }
   };
 
@@ -98,7 +95,7 @@ export default function Note({ data, onPointerDown }) {
           hovered
             ? 'rgb(59 130 246)'
             : selectedElement.element === ObjectType.NOTE &&
-                selectedElement.id === data.id
+            selectedElement.id === data.id
               ? 'rgb(59 130 246)'
               : 'rgb(168 162 158)'
         }
@@ -117,7 +114,7 @@ export default function Note({ data, onPointerDown }) {
           hovered
             ? 'rgb(59 130 246)'
             : selectedElement.element === ObjectType.NOTE &&
-                selectedElement.id === data.id
+            selectedElement.id === data.id
               ? 'rgb(59 130 246)'
               : 'rgb(168 162 158)'
         }
@@ -147,139 +144,142 @@ export default function Note({ data, onPointerDown }) {
                 !layout.sidebar)) && (
               <div>
                 <Popover
-                  visible={
-                    selectedElement.element === ObjectType.NOTE &&
-                    selectedElement.id === data.id &&
-                    selectedElement.open &&
-                    !layout.sidebar
+                  buttonElement={
+                    <Button
+                      variant="outlined"
+                      startIcon={<Iconify icon="lucide:edit"/>}
+                      size="small"
+                      style={{
+                        backgroundColor: '#2F68ADB3',
+                      }}
+                      onClick={edit}
+                    />
                   }
-                  onClickOutSide={() => {
-                    if (selectedElement.editFromToolbar) {
-                      setSelectedElement((prev) => ({
-                        ...prev,
-                        editFromToolbar: false,
-                      }));
-                      return;
-                    }
-                    setSelectedElement((prev) => ({
-                      ...prev,
-                      open: false,
-                    }));
-                    setSaveState(State.SAVING);
-                  }}
-                  stopPropagation
-                  content={
-                    <div className="popover-theme">
-                      <div className="font-semibold mb-2 ms-1">{t('edit')}</div>
-                      <div className="w-[280px] flex items-center mb-2">
-                        <Input
-                          value={data.title}
-                          placeholder={t('title')}
-                          className="me-2"
-                          onChange={(value) =>
-                            updateNote(data.id, { title: value })
-                          }
-                          onFocus={(e) =>
-                            setEditField({ title: e.target.value })
-                          }
-                          onBlur={(e) => {
-                            if (e.target.value === editField.title) return;
-                            setUndoStack((prev) => [
-                              ...prev,
-                              {
-                                action: Action.EDIT,
-                                element: ObjectType.NOTE,
-                                nid: data.id,
-                                undo: editField,
-                                redo: { title: e.target.value },
-                                message: t('edit_note', {
-                                  noteTitle: e.target.value,
-                                  extra: '[title]',
-                                }),
-                              },
-                            ]);
-                            setRedoStack([]);
-                          }}
-                        />
-                        <Popover
-                          content={
-                            <div className="popover-theme">
-                              <div className="font-medium mb-1">
-                                {t('theme')}
-                              </div>
-                              <hr />
-                              <div className="py-3">
-                                {noteThemes.map((c) => (
-                                  <button
-                                    key={c}
-                                    style={{ backgroundColor: c }}
-                                    className="p-3 rounded-full mx-1"
-                                    onClick={() => {
-                                      setUndoStack((prev) => [
-                                        ...prev,
-                                        {
-                                          action: Action.EDIT,
-                                          element: ObjectType.NOTE,
-                                          nid: data.id,
-                                          undo: { color: data.color },
-                                          redo: { color: c },
-                                          message: t('edit_note', {
-                                            noteTitle: data.title,
-                                            extra: '[color]',
-                                          }),
-                                        },
-                                      ]);
-                                      setRedoStack([]);
-                                      updateNote(data.id, { color: c });
-                                    }}
-                                  >
-                                    {data.color === c ? (
-                                      <IconCheckboxTick
-                                        style={{ color: 'white' }}
-                                      />
-                                    ) : (
-                                      <IconCheckboxTick style={{ color: c }} />
-                                    )}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          }
-                          position="rightTop"
-                          showArrow
-                        >
+                  // visible={
+                  //   selectedElement.element === ObjectType.NOTE &&
+                  //   selectedElement.id === data.id &&
+                  //   selectedElement.open &&
+                  //   !layout.sidebar
+                  // }
+                  // onClickOutSide={() => {
+                  //   if (selectedElement.editFromToolbar) {
+                  //     setSelectedElement((prev) => ({
+                  //       ...prev,
+                  //       editFromToolbar: false,
+                  //     }));
+                  //     return;
+                  //   }
+                  //   setSelectedElement((prev) => ({
+                  //     ...prev,
+                  //     open: false,
+                  //   }));
+                  //   setSaveState(State.SAVING);
+                  // }}
+                  // stopPropagation
+                  // trigger="custom"
+                  position="topRight"
+                  // showArrow
+                >
+                  <div className="popover-theme">
+                    <div className="font-semibold mb-2 ms-1">{t('edit')}</div>
+                    <div className="w-[280px] flex items-center mb-2">
+                      <Input
+                        value={data.title}
+                        placeholder={t('title')}
+                        className="me-2"
+                        onChange={(value) =>
+                          updateNote(data.id, {title: value})
+                        }
+                        onFocus={(e) => setEditField({title: e.target.value})}
+                        onBlur={(e) => {
+                          if (e.target.value === editField.title) return;
+                          setUndoStack((prev) => [
+                            ...prev,
+                            {
+                              action: Action.EDIT,
+                              element: ObjectType.NOTE,
+                              nid: data.id,
+                              undo: editField,
+                              redo: {title: e.target.value},
+                              message: t('edit_note', {
+                                noteTitle: e.target.value,
+                                extra: '[title]',
+                              }),
+                            },
+                          ]);
+                          setRedoStack([]);
+                        }}
+                      />
+                      <Popover
+                        buttonElement={
                           <div
                             className="h-[32px] w-[32px] rounded"
-                            style={{ backgroundColor: data.color }}
+                            style={{backgroundColor: data.color}}
                           />
-                        </Popover>
-                      </div>
-                      <div className="flex">
-                        <Button
-                          // icon={<Iconify icon="mdi:delete-outline" />}
-                          icon={<Iconify icon="typcn:delete" />}
-                          variant="contained"
-                          block
-                          onClick={() => deleteNote(data.id, true)}
-                        >
-                          {t('delete')}
-                        </Button>
-                      </div>
+                        }
+                        position={{
+                          top: 0,
+                          left:,
+                        }}
+                        showArrow
+                      >
+                        <div className="popover-theme">
+                          <div className="font-medium mb-1">{t('theme')}</div>
+                          <hr/>
+                          <div className="py-3">
+                            {noteThemes.map((c) => (
+                              <button
+                                key={c}
+                                style={{backgroundColor: c}}
+                                className="p-3 rounded-full mx-1"
+                                onClick={() => {
+                                  setUndoStack((prev) => [
+                                    ...prev,
+                                    {
+                                      action: Action.EDIT,
+                                      element: ObjectType.NOTE,
+                                      nid: data.id,
+                                      undo: {color: data.color},
+                                      redo: {color: c},
+                                      message: t('edit_note', {
+                                        noteTitle: data.title,
+                                        extra: '[color]',
+                                      }),
+                                    },
+                                  ]);
+                                  setRedoStack([]);
+                                  updateNote(data.id, {color: c});
+                                }}
+                              >
+                                {data.color === c ? (
+                                  <Iconify
+                                    icon="mdi:checkbox-outline"
+                                    sx={{color: 'white'}}
+                                  />
+                                ) : (
+                                  <Iconify
+                                    icon="mdi:checkbox-outline"
+                                    sx={{color: c}}
+                                  />
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                      </Popover>
                     </div>
-                  }
-                  trigger="custom"
-                  position="rightTop"
-                  showArrow
-                >
-                  <Button
-                    variant="outlined"
-                    icon={<Iconify icon="lucide:edit" />}
-                    size="small"
-                    style={{
-                      backgroundColor: '#2F68ADB3',
-                    }}
-                    onClick={edit}
-                  />
+                    <div className="flex">
+                      <Button
+                        // startIcon={<Iconify icon="mdi:delete-outline" />}
+                        startIcon={<Iconify icon="typcn:delete"/>}
+                        variant="contained"
+                        onClick={() => deleteNote(data.id, true)}
+                      >
+                        {t('delete')}
+                      </Button>
+                    </div>
+                  </div>
                 </Popover>
               </div>
             )}
@@ -296,7 +296,7 @@ export default function Note({ data, onPointerDown }) {
             }
             onBlur={handleBlur}
             className="w-full resize-none outline-none overflow-y-hidden border-none select-none"
-            style={{ backgroundColor: data.color }}
+            style={{backgroundColor: data.color}}
           />
         </div>
       </foreignObject>

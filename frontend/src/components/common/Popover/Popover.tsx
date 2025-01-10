@@ -1,103 +1,130 @@
-import { Popover as MuiPopover, PopoverOrigin } from '@mui/material'
+import { Popover as MuiPopover, PopoverOrigin } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 
 type PopoverProps = {
-  buttonElement: React.ReactNode
-  children: React.ReactNode
-  origin: 'top' | 'bottom' | 'left' | 'right' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'center'
-  position: { top: number, left: number }
-}
+  visible?: boolean;
+  buttonElement: React.ReactNode;
+  children: React.ReactNode;
+  position:
+    | 'top'
+    | 'bottom'
+    | 'left'
+    | 'right'
+    | 'topLeft'
+    | 'topRight'
+    | 'bottomLeft'
+    | 'bottomRight';
+  // position: { top: number | string; left: number | string };
+  onClickOutSide?: () => void;
+};
 
-const mapOriginToAnchorOrigin = (position: PopoverProps['position']): PopoverOrigin => {
+const mapPositionToAnchorOrigin = (
+  position: PopoverProps['position'],
+): PopoverOrigin => {
   let result: PopoverOrigin;
   switch (position) {
-    case "bottomLeft":
+    case 'bottomLeft':
       result = {
         vertical: 'bottom',
         horizontal: 'left',
-      }
-      break
-    case "bottomRight":
+      };
+      break;
+    case 'bottomRight':
       result = {
         vertical: 'bottom',
         horizontal: 'right',
-      }
-      break
-    case "topLeft":
+      };
+      break;
+    case 'topLeft':
       result = {
         vertical: 'top',
         horizontal: 'left',
-      }
-      break
-    case "topRight":
+      };
+      break;
+    case 'topRight':
       result = {
         vertical: 'top',
         horizontal: 'right',
-      }
-      break
-    case "left":
+      };
+      break;
+    case 'left':
       result = {
         vertical: 'center',
         horizontal: 'left',
-      }
-      break
-    case "right":
+      };
+      break;
+    case 'right':
       result = {
         vertical: 'center',
         horizontal: 'right',
-      }
-      break
-    case "top":
+      };
+      break;
+    case 'top':
       result = {
         vertical: 'top',
         horizontal: 'center',
-      }
-      break
-    case "bottom":
+      };
+      break;
+    case 'bottom':
       result = {
         vertical: 'bottom',
         horizontal: 'center',
-      }
-      break
-    case "center":
-      result = {
-        vertical: 'center',
-        horizontal: 'center',
-      }
-      break
+      };
+      break;
     default:
       result = {
-        vertical: 'center',
+        vertical: 'bottom',
         horizontal: 'center',
-      }
+      };
   }
-  return result
-}
+  return result;
+};
 
 export function Popover({
-                          children, origin, position, buttonElement
-                        }: PopoverProps) {
+  children,
+  position,
+  buttonElement,
+  visible,
+  onClickOutSide,
+}: PopoverProps) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
-  }
+  };
   const open = Boolean(anchorEl);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        onClickOutSide?.();
+        handleClose();
+      }
+    };
 
-  return <div>
-    <div onClick={handleClick}>
-      {buttonElement}
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClickOutSide]);
+
+  return (
+    <div ref={popoverRef}>
+      <div onClick={handleClick}>{buttonElement}</div>
+      <MuiPopover
+        open={visible ?? open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={mapPositionToAnchorOrigin(position)}
+      >
+        {children}
+      </MuiPopover>
     </div>
-    <MuiPopover
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handleClose}
-      anchorOrigin={mapOriginToAnchorOrigin(origin)}
-      anchorPosition={position}
-    >
-      {children}
-    </MuiPopover>
-  </div>
+  );
 }

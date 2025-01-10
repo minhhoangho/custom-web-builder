@@ -67,7 +67,7 @@ export default function EnumDetails({ data, i }) {
         value={data.values}
         addOnBlur
         className="my-2"
-        placeholder='Value'
+        placeholder="Value"
         validateStatus={data.values.length === 0 ? 'error' : 'default'}
         onChange={(v) => updateEnum(i, { values: v })}
         onFocus={() => setEditField({ values: data.values })}
@@ -92,7 +92,6 @@ export default function EnumDetails({ data, i }) {
         }}
       />
       <Button
-        block
         startIcon={<Iconify icon="mdi:delete-outline" />}
         color="error"
         onClick={() => deleteEnum(i, true)}

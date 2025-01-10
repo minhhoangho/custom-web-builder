@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button, Grid } from '@mui/material';
 import { Iconify, SelectField } from '@components/common';
 import { Action, ObjectType } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import {
-  useUndoRedo,
-  useType,
   useDiagram,
   useEnum,
+  useType,
+  useUndoRedo,
 } from 'src/containers/Editor/hooks';
-import { Button, Grid, Select } from "@mui/material";
-import { Input, TagInput } from "@components/form/Input";
-import { Popover } from "@components/common/Popover";
+import { Input, TagInput } from '@components/form/Input';
+import { Popover } from '@components/common/Popover';
 
 export default function TypeField({ data, tid, fid }) {
   const { types, updateType } = useType();
@@ -22,7 +22,7 @@ export default function TypeField({ data, tid, fid }) {
   const { t } = useTranslation();
 
   return (
-    <Grid container gutter={6} className="hover-1 my-2">
+    <Grid container spacing={3} className="hover-1 my-2">
       <Grid item xs={5}>
         <Input
           value={data.name}
@@ -37,7 +37,7 @@ export default function TypeField({ data, tid, fid }) {
           }
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {
-            if (e.target.value === editField["name"]) return;
+            if (e.target.value === editField['name']) return;
             setUndoStack((prev) => [
               ...prev,
               {
@@ -48,7 +48,7 @@ export default function TypeField({ data, tid, fid }) {
                 fid: fid,
                 undo: editField,
                 redo: { name: e.target.value },
-                message: 'Error edit_type'
+                message: 'Error edit_type',
                 // message: t('edit_type', {
                 //   typeName: data.name,
                 //   extra: '[field]',
@@ -59,7 +59,7 @@ export default function TypeField({ data, tid, fid }) {
           }}
         />
       </Grid>
-      <Grid item span={5}>
+      <Grid item xs={5}>
         <SelectField
           name="type_field"
           className="w-full"
@@ -95,7 +95,7 @@ export default function TypeField({ data, tid, fid }) {
                 fid: fid,
                 undo: { type: data?.type },
                 redo: { type: value },
-                message: 'Error edit_type'
+                message: 'Error edit_type',
                 // message: t('edit_type', {
                 //   typeName: data.name,
                 //   extra: '[field]',
@@ -108,10 +108,10 @@ export default function TypeField({ data, tid, fid }) {
                 fields: types[tid].fields?.map((e, id) =>
                   id === fid
                     ? {
-                      ...data,
-                      type: value,
-                      values: data.values ? [...data.values] : [],
-                    }
+                        ...data,
+                        type: value,
+                        values: data.values ? [...data.values] : [],
+                      }
                     : e,
                 ),
               });
@@ -123,10 +123,10 @@ export default function TypeField({ data, tid, fid }) {
                 fields: types[tid].fields.map((e, id) =>
                   id === fid
                     ? {
-                      ...data,
-                      type: value,
-                      size: dbToTypes[database][value].defaultSize,
-                    }
+                        ...data,
+                        type: value,
+                        size: dbToTypes[database][value].defaultSize,
+                      }
                     : e,
                 ),
               });
@@ -140,21 +140,22 @@ export default function TypeField({ data, tid, fid }) {
           }}
         />
       </Grid>
-      <Grid item span={2}>
+      <Grid item xs={2}>
         <Popover
-          buttonElement={<Button
-            icon={<Iconify icon="ic:round-more-vert"/>}
-            type="tertiary"
-          />}
-          origin='bottomRight'
-          position="right"
+          buttonElement={
+            <Button
+              startIcon={<Iconify icon="ic:round-more-vert" />}
+              color="secondary"
+              variant="contained"
+              // type="tertiary"
+            />
+          }
+          position="bottomRight"
         >
           <div className="popover-theme w-[240px]">
             {(data.type === 'ENUM' || data.type === 'SET') && (
               <>
-                <div className="font-semibold mb-1">
-                  {data.type} Value
-                </div>
+                <div className="font-semibold mb-1">{data.type} Value</div>
                 <TagInput
                   separator=","
                   value={data.values}
@@ -189,7 +190,7 @@ export default function TypeField({ data, tid, fid }) {
                         fid: fid,
                         undo: editField,
                         redo: { values: data.values },
-                        message: 'Error edit_type'
+                        message: 'Error edit_type',
                         // message: t('edit_type', {
                         //   typeName: data.name,
                         //   extra: '[field]',
@@ -229,7 +230,7 @@ export default function TypeField({ data, tid, fid }) {
                         fid: fid,
                         undo: editField,
                         redo: { size: e.target.value },
-                        message: 'Error edit_type'
+                        message: 'Error edit_type',
                         // message: t('edit_type', {
                         //   typeName: data.name,
                         //   extra: '[field]',
@@ -273,7 +274,7 @@ export default function TypeField({ data, tid, fid }) {
                         fid: fid,
                         undo: editField,
                         redo: { size: e.target.value },
-                        message: 'Error edit_type'
+                        message: 'Error edit_type',
                         // message: t('edit_type', {
                         //   typeName: data.name,
                         //   extra: '[field]',
@@ -286,8 +287,7 @@ export default function TypeField({ data, tid, fid }) {
               </>
             )}
             <Button
-              icon={<Iconify icon="mdi:delete-outline"/>}
-              block
+              startIcon={<Iconify icon="mdi:delete-outline" />}
               color="error"
               onClick={() => {
                 setUndoStack((prev) => [
@@ -299,7 +299,7 @@ export default function TypeField({ data, tid, fid }) {
                     tid: tid,
                     fid: fid,
                     data: data,
-                    message: 'Error edit_type'
+                    message: 'Error edit_type',
                     // message: t('edit_type', {
                     //   typeName: data.name,
                     //   extra: '[delete field]',
@@ -314,7 +314,6 @@ export default function TypeField({ data, tid, fid }) {
               Delete
             </Button>
           </div>
-
         </Popover>
       </Grid>
     </Grid>

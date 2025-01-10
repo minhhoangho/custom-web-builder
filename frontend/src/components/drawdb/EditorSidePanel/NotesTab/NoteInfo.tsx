@@ -2,6 +2,7 @@ import { useState } from 'react';
 // import { Button, Collapse, Input, Popover, TextArea } from '@douyinfe/semi-ui';
 // import { IconDeleteStroked, IconCheckboxTick } from '@douyinfe/semi-icons';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@mui/material';
 import { Action, noteThemes, ObjectType } from '@constants/editor';
 import { useNote, useUndoRedo } from 'src/containers/Editor/hooks';
 import { Iconify } from 'src/components/common';
@@ -122,12 +123,12 @@ export default function NoteInfo({ data, nid }) {
                       {data.color === c ? (
                         <Iconify
                           icon="mdi:checkbox-outline"
-                          xs={{ color: 'white' }}
+                          sx={{ color: 'white' }}
                         />
                       ) : (
                         <Iconify
                           icon="mdi:checkbox-outline"
-                          xs={{ color: c }}
+                          sx={{ color: c }}
                         />
                       )}
                     </button>
@@ -145,7 +146,7 @@ export default function NoteInfo({ data, nid }) {
             />
           </Popover>
           <Button
-            icon={<Iconify icon="mdi:delete-outline" />}
+            startIcon={<Iconify icon="mdi:delete-outline" />}
             color="error"
             onClick={() => deleteNote(nid, true)}
           />
