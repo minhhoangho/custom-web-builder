@@ -5,9 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Action, noteThemes, ObjectType, Tab } from '@constants/editor'; //   IconDeleteStroked,
 //   IconCheckboxTick,
 // } from "@douyinfe/semi-icons";
-import { Iconify } from '@components/common';
+import { Iconify, Popover } from '@components/common';
 import { useLayout, useNote, useSaveState, useSelect, useUndoRedo, } from 'src/containers/Editor/hooks';
-import { Popover } from '@components/common/Popover';
 
 
 export default function Note({data, onPointerDown}) {

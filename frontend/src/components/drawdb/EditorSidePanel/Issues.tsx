@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
-import { Collapse, Badge } from '@douyinfe/semi-ui';
+import { useEffect, useState } from 'react';
+// import { Collapse, Badge } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
+import { Badge } from '@mui/material';
 import {
+  useDiagram,
   useEnum,
   useSetting,
-  useDiagram,
   useType,
 } from 'src/containers/Editor/hooks';
 import { arrayIsEqual } from 'src/utils/common';
 import { getIssues } from 'src/utils/issues';
+import { Collapse } from '@components/common';
 
 export default function Issues() {
   const { types } = useType();
@@ -37,13 +39,17 @@ export default function Issues() {
   }, [tables, relationships, issues, types, database, enums]);
 
   return (
-    <Collapse keepDOM lazyRender style={{ width: '100%' }}>
+    <Collapse
+      // keepDOM lazyRender
+
+      style={{ width: '100%' }}
+    >
       <Collapse.Panel
         header={
           <Badge
-            type={issues.length > 0 ? 'danger' : 'primary'}
-            count={settings.strictMode ? null : issues.length}
-            overflowCount={99}
+            // type={issues.length > 0 ? 'danger' : 'primary'}
+            badgeContent={settings.strictMode ? null : issues.length}
+            max={99}
             className="mt-1"
           >
             <div className="pe-3 select-none">

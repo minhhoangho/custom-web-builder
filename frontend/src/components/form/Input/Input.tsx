@@ -19,7 +19,10 @@ export type InputProps = {
   autoComplete?: string;
 };
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+export const [Input = React.forwardRef<
+  HTMLInputElement | HTMLTextAreaElement,
+  InputProps
+>(
   (
     {
       label,
@@ -35,7 +38,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       isTextarea,
       autoComplete,
       ...rest
-    }: InputProps,
+    }: InputProps &
+      React.TextareaHTMLAttributes<HTMLTextAreaElement> &
+      React.InputHTMLAttributes<HTMLInputElement>,
     ref,
   ): React.ReactElement => (
     <div className={classNames('relative w-full ', className)}>
@@ -65,7 +70,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <div className="position-relative w-full">
           <input
             {...rest}
-            ref={ref}
+            ref={ref as React.RefObject<HTMLInputElement>}
             style={{ border: '1px solid #e0e0e0' }}
             className={classNames(
               'border-1 px-3 py-3 placeholder-blueGray-300 rounded-xl text-sm shadow-sm focus:outline-none focus:ring focus:border-0 w-full ease-linear transition-all duration-150',

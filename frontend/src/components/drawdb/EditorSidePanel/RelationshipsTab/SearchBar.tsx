@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 // import { IconSearch } from "@douyinfe/semi-icons";
 import { Autocomplete } from '@mui/material';
-import { useDiagram, useNote } from 'src/containers/Editor/hooks';
+import { useDiagram } from 'src/containers/Editor/hooks';
 
 export default function SearchBar() {
   const { relationships } = useDiagram();
@@ -12,7 +12,7 @@ export default function SearchBar() {
     relationships.map((t) => t.name),
   );
 
-  const handleStringSearch = (value) => {
+  const handleStringSearch = (value: string) => {
     setFilteredResult(
       relationships.map((t) => t.title).filter((i) => i.includes(value)),
     );
@@ -28,7 +28,7 @@ export default function SearchBar() {
     <Autocomplete
       options={filteredResult}
       value={searchText}
-      showClear
+      // showClear
       // prefix={<Iconify icon="mdi:search"}/>}
       // placeholder={t("search")}
       // emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}

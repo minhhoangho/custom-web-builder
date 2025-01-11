@@ -1,17 +1,10 @@
 import { useState } from 'react';
-import {
-  Collapse,
-  Row,
-  Col,
-  Input,
-  TextArea,
-  Button,
-  Card,
-} from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
-import { Iconify } from '@components/common';
-import { useUndoRedo, useType, useDiagram } from 'src/containers/Editor/hooks';
+import { Button, Card, Grid } from '@mui/material';
+import { Collapse, Iconify } from '@components/common';
+import { useDiagram, useType, useUndoRedo } from 'src/containers/Editor/hooks';
 import { Action, ObjectType } from '@constants/editor';
+import { Input } from '@components/form/Input';
 import TypeField from './TypeField';
 
 export default function TypeInfo({ index, data }) {
@@ -32,13 +25,13 @@ export default function TypeInfo({ index, data }) {
         itemKey={`${index}`}
       >
         <div className="flex items-center mb-2.5">
-          <div className="text-md font-semibold break-keep">{t('name')}: </div>
+          <div className="text-md font-semibold break-keep">{t('name')}:</div>
           <Input
             value={data.name}
-            validateStatus={data.name === '' ? 'error' : 'default'}
+            // validateStatus={data.name === '' ? 'error' : 'default'}
             placeholder={t('name')}
             className="ms-2"
-            onChange={(value) => {
+            onInputChange={(value) => {
               updateType(index, { name: value });
               tables.forEach((table, i) => {
                 table.fields.forEach((field, j) => {
@@ -86,16 +79,19 @@ export default function TypeInfo({ index, data }) {
           <TypeField key={j} data={f} fid={j} tid={index} />
         ))}
         <Card
-          bodyStyle={{ padding: '4px' }}
-          style={{ marginTop: '12px', marginBottom: '12px' }}
-          headerLine={false}
+          // sx={{ padding: '4px' }}
+          sx={{ marginTop: '12px', marginBottom: '12px' }}
+          // headerLine={false}
         >
-          <Collapse keepDOM lazyRender>
+          <Collapse
+          // keepDOM lazyRender
+          >
             <Collapse.Panel header={t('comment')} itemKey="1">
-              <TextArea
-                field="comment"
+              <Input
+                isTextarea
+                name="comment"
                 value={data.comment}
-                autosize
+                // autosize
                 placeholder={t('comment')}
                 rows={1}
                 onChange={(value) =>
@@ -126,8 +122,8 @@ export default function TypeInfo({ index, data }) {
             </Collapse.Panel>
           </Collapse>
         </Card>
-        <Row gutter={6} className="mt-2">
-          <Col span={12}>
+        <Grid container spacing={6} className="mt-2">
+          <Grid item xs={6}>
             <Button
               startIcon={<Iconify icon="mdi:plus" />}
               onClick={() => {
@@ -156,22 +152,21 @@ export default function TypeInfo({ index, data }) {
                   ],
                 });
               }}
-              block
             >
               {t('add_field')}
             </Button>
-          </Col>
-          <Col span={12}>
+          </Grid>
+          <Grid item xs={6}>
             <Button
               startIcon={<Iconify icon="mdi:delete-outline" />}
               color="error"
               onClick={() => deleteType(index)}
-              block
+              // block
             >
               {t('delete')}
             </Button>
-          </Col>
-        </Row>
+          </Grid>
+        </Grid>
       </Collapse.Panel>
     </div>
   );

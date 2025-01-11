@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSelect } from "src/containers/Editor/hooks";
 import { TreeSelect } from "@douyinfe/semi-ui";
-import { IconSearch } from "@douyinfe/semi-icons";
+// import { IconSearch } from "@douyinfe/semi-icons";
 import { ObjectType } from "@constants/editor";
 import { useTranslation } from "react-i18next";
 

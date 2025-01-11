@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Button, Collapse } from '@mui/material';
+import { Button } from '@mui/material';
 import { useEnum } from 'src/containers/Editor/hooks';
-import { Iconify } from 'src/components/common';
+import { Collapse, Iconify } from 'src/components/common';
 import SearchBar from './SearchBar';
 import EnumDetails from './EnumDetails';
 import Empty from '../Empty';
@@ -26,7 +26,7 @@ export default function EnumsTab() {
       {enums.length <= 0 ? (
         <Empty title={t('no_enums')} text={t('no_enums_text')} />
       ) : (
-        <Collapse accordion>
+        <Collapse>
           {enums.map((e, i) => (
             <Collapse.Panel
               key={`enum_${i}`}

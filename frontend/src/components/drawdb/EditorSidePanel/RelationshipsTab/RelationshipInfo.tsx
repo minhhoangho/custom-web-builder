@@ -3,7 +3,7 @@ import { IconLoopTextStroked } from '@douyinfe/semi-icons';
 import { useTranslation } from 'react-i18next';
 import { Cardinality, Constraint, Action, ObjectType } from '@constants/editor';
 import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
-import i18n from '../../../i18n/i18n';
+import i18n from 'src/i18n/i18n';
 
 const columns = [
   {

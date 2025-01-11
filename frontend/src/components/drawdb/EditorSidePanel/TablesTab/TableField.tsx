@@ -1,7 +1,9 @@
-import { Button, Col, Input, Popover, Row, Select } from '@douyinfe/semi-ui';
+// import { Button, Popover, Select } from '@douyinfe/semi-ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Iconify } from '@components/common';
+import { Grid, Button } from '@mui/material';
+import { Iconify, Popover, SelectField as Select } from '@components/common';
+import { Input } from '@components/form/Input';
 import {
   useDiagram,
   useEnum,
@@ -22,17 +24,17 @@ export default function TableField({ data, tid, index }) {
   const [editField, setEditField] = useState({});
 
   return (
-    <Row gutter={6} className="hover-1 my-2">
-      <Col span={7}>
+    <Grid container spacing={3} className="hover-1 my-2">
+      <Grid item xs={2}>
         <Input
-          id={`scroll_table_${tid}_input_${index}`}
+          // id={`scroll_table_${tid}_input_${index}`}
           value={data.name}
-          validateStatus={data.name.trim() === '' ? 'error' : 'default'}
+          // validateStatus={data.name.trim() === '' ? 'error' : 'default'}
           placeholder="Name"
-          onChange={(value) => updateField(tid, index, { name: value })}
+          onInputChange={(value) => updateField(tid, index, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {
-            if (e.target.value === editField.name) return;
+            if (e.target.value === editField['name']) return;
             setUndoStack((prev) => [
               ...prev,
               {
@@ -52,11 +54,11 @@ export default function TableField({ data, tid, index }) {
             setRedoStack([]);
           }}
         />
-      </Col>
-      <Col span={8}>
+      </Grid>
+      <Grid item xs={4}>
         <Select
           className="w-full"
-          optionList={[
+          options={[
             ...Object.keys(dbToTypes[database]).map((value) => ({
               label: value,
               value: value,
@@ -70,11 +72,11 @@ export default function TableField({ data, tid, index }) {
               value: type.name.toUpperCase(),
             })),
           ]}
-          filter
+          // filter
           value={data.type}
-          validateStatus={data.type === '' ? 'error' : 'default'}
+          // validateStatus={data.type === '' ? 'error' : 'default'}
           placeholder="Type"
-          onChange={(value) => {
+          onSelectChange={(value) => {
             if (value === data.type) return;
             setUndoStack((prev) => [
               ...prev,
@@ -136,12 +138,11 @@ export default function TableField({ data, tid, index }) {
             }
           }}
         />
-      </Col>
-      <Col span={3}>
+      </Grid>
+      <Grid item xs={2}>
         <Button
-          type={data.notNull ? 'primary' : 'tertiary'}
-          title={t('not_null')}
-          theme={data.notNull ? 'solid' : 'light'}
+          color={data.notNull ? 'primary' : 'info'}
+          // theme={data.notNull ? 'solid' : 'light'}
           onClick={() => {
             setUndoStack((prev) => [
               ...prev,
@@ -163,10 +164,10 @@ export default function TableField({ data, tid, index }) {
             updateField(tid, index, { notNull: !data.notNull });
           }}
         >
-          ?
+          Not null ?
         </Button>
-      </Col>
-      <Col span={3}>
+      </Grid>
+      <Grid item xs={2}>
         <Button
           type={data.primary ? 'primary' : 'tertiary'}
           title={t('primary')}
@@ -193,8 +194,8 @@ export default function TableField({ data, tid, index }) {
           }}
           startIcon={<Iconify icon="mdi:key-outline" />}
         />
-      </Col>
-      <Col span={3}>
+      </Grid>
+      <Grid item xs={2}>
         <Popover
           content={
             <div className="px-1 w-[240px] popover-theme">
@@ -210,7 +211,7 @@ export default function TableField({ data, tid, index }) {
             startIcon={<Iconify icon="ic:round-more-vert" />}
           />
         </Popover>
-      </Col>
-    </Row>
+      </Grid>
+    </Grid>
   );
 }

@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 import { Action, noteThemes, ObjectType } from '@constants/editor';
 import { useNote, useUndoRedo } from 'src/containers/Editor/hooks';
-import { Iconify } from 'src/components/common';
+import { Collapse, Iconify, Popover } from 'src/components/common';
+import { Input } from '@components/form/Input';
 
 export default function NoteInfo({ data, nid }) {
   const { updateNote, deleteNote } = useNote();
@@ -28,7 +29,7 @@ export default function NoteInfo({ data, nid }) {
         <Input
           value={data.title}
           placeholder={t('title')}
-          onChange={(value) => updateNote(data.id, { title: value })}
+          onInputChange={(value) => updateNote(data.id, { title: value })}
           onFocus={(e) => setEditField({ title: e.target.value })}
           onBlur={(e) => {
             if (e.target.value === editField.title) return;
@@ -51,11 +52,12 @@ export default function NoteInfo({ data, nid }) {
         />
       </div>
       <div className="flex justify-between align-top">
-        <TextArea
+        <Input
+          isTextarea
           placeholder={t('content')}
           value={data.content}
           autosize
-          onChange={(value) => {
+          onInputChange={(value) => {
             const textarea = document.getElementById(`note_${data.id}`);
             textarea.style.height = '0';
             textarea.style.height = textarea.scrollHeight + 'px';
@@ -91,59 +93,59 @@ export default function NoteInfo({ data, nid }) {
         />
         <div className="ms-2">
           <Popover
-            content={
-              <div className="popover-theme">
-                <div className="font-medium mb-1">{t('theme')}</div>
-                <hr />
-                <div className="py-3">
-                  {noteThemes.map((c) => (
-                    <button
-                      key={c}
-                      style={{ backgroundColor: c }}
-                      className="w-10 h-10 p-3 rounded-full mx-1"
-                      onClick={() => {
-                        setUndoStack((prev) => [
-                          ...prev,
-                          {
-                            action: Action.EDIT,
-                            element: ObjectType.NOTE,
-                            nid: nid,
-                            undo: { color: data.color },
-                            redo: { color: c },
-                            message: t('edit_note', {
-                              noteTitle: data.title,
-                              extra: '[color]',
-                            }),
-                          },
-                        ]);
-                        setRedoStack([]);
-                        updateNote(nid, { color: c });
-                      }}
-                    >
-                      {data.color === c ? (
-                        <Iconify
-                          icon="mdi:checkbox-outline"
-                          sx={{ color: 'white' }}
-                        />
-                      ) : (
-                        <Iconify
-                          icon="mdi:checkbox-outline"
-                          sx={{ color: c }}
-                        />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            buttonElement={
+              <div
+                className="h-[32px] w-[32px] rounded mb-2"
+                style={{ backgroundColor: data.color }}
+              />
             }
-            trigger="click"
-            position="rightTop"
-            showArrow
+            // content={
+            //
+            // }
+            // trigger="click"
+            position="topRight"
+            // showArrow
           >
-            <div
-              className="h-[32px] w-[32px] rounded mb-2"
-              style={{ backgroundColor: data.color }}
-            />
+            <div className="popover-theme">
+              <div className="font-medium mb-1">{t('theme')}</div>
+              <hr />
+              <div className="py-3">
+                {noteThemes.map((c) => (
+                  <button
+                    key={c}
+                    style={{ backgroundColor: c }}
+                    className="w-10 h-10 p-3 rounded-full mx-1"
+                    onClick={() => {
+                      setUndoStack((prev) => [
+                        ...prev,
+                        {
+                          action: Action.EDIT,
+                          element: ObjectType.NOTE,
+                          nid: nid,
+                          undo: { color: data.color },
+                          redo: { color: c },
+                          message: t('edit_note', {
+                            noteTitle: data.title,
+                            extra: '[color]',
+                          }),
+                        },
+                      ]);
+                      setRedoStack([]);
+                      updateNote(nid, { color: c });
+                    }}
+                  >
+                    {data.color === c ? (
+                      <Iconify
+                        icon="mdi:checkbox-outline"
+                        sx={{ color: 'white' }}
+                      />
+                    ) : (
+                      <Iconify icon="mdi:checkbox-outline" sx={{ color: c }} />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
           </Popover>
           <Button
             startIcon={<Iconify icon="mdi:delete-outline" />}

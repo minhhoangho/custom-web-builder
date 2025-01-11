@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, createContext } from 'react';
-import { Modal } from '@douyinfe/semi-ui';
+// import { Modal } from '@douyinfe/semi-ui';
+import { Button, Modal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
+// import { octokit } from 'src/data/octokit';
+import { Box } from '@mui/system';
+import * as React from 'react';
 import { db } from 'src/data/db';
-import ControlPanel from './EditorHeader/ControlPanel';
-import Canvas from './EditorCanvas/Canvas';
-import SidePanel from './EditorSidePanel/SidePanel';
-import FloatingControls from './FloatingControls';
 import { CanvasContextProvider } from 'src/containers/Editor/context/CanvasContext';
 import { DB, State } from '@constants/editor';
 import {
@@ -24,7 +24,10 @@ import {
 } from 'src/containers/Editor/hooks';
 import { databases } from 'src/data/database';
 import { isRtl } from 'src/i18n/utils/rtl';
-import { octokit } from 'src/data/octokit';
+import FloatingControls from './FloatingControls';
+import SidePanel from './EditorSidePanel/SidePanel';
+import Canvas from './EditorCanvas/Canvas';
+import ControlPanel from './EditorHeader/ControlPanel';
 
 export const IdContext = createContext({ gistId: '' });
 
@@ -284,35 +287,7 @@ export default function WorkSpace() {
     };
 
     const loadFromGist = async (shareId) => {
-      try {
-        const res = await octokit.request(`GET /gists/${shareId}`, {
-          gist_id: shareId,
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
-          },
-        });
-        const diagramSrc = res.data.files['share.json'].content;
-        const d = JSON.parse(diagramSrc);
-        setUndoStack([]);
-        setRedoStack([]);
-        setLoadedFromGistId(shareId);
-        setDatabase(d.database);
-        setTitle(d.title);
-        setTables(d.tables);
-        setRelationships(d.relationships);
-        setNotes(d.notes);
-        setAreas(d.subjectAreas);
-        setTransform(d.transform);
-        if (databases[d.database].hasTypes) {
-          setTypes(d.types ?? []);
-        }
-        if (databases[d.database].hasEnums) {
-          setEnums(d.enums ?? []);
-        }
-      } catch (e) {
-        console.log(e);
-        setSaveState(State.FAILED_TO_LOAD);
-      }
+      console.log('This function is not supported');
     };
 
     const shareId = searchParams.get('shareId');
@@ -448,46 +423,57 @@ export default function WorkSpace() {
         </div>
       </div>
       <Modal
-        centered
-        size="medium"
-        closable={false}
-        hasCancel={false}
-        title={t('pick_db')}
-        okText={t('confirm')}
-        visible={showSelectDbModal}
-        onOk={() => {
-          if (selectedDb === '') return;
-          setDatabase(selectedDb);
-          setShowSelectDbModal(false);
-        }}
-        okButtonProps={{ disabled: selectedDb === '' }}
+        // centered
+        // size="medium"
+        // closable={false}
+        // hasCancel={false}
+        // title={t('pick_db')}
+        // okText={t('confirm')}
+        open={showSelectDbModal}
+        // onOk={}
+        // okButtonProps={{ disabled: selectedDb === '' }}
       >
-        <div className="grid grid-cols-3 gap-4 place-content-center">
-          {Object.values(databases).map((x) => (
-            <div
-              key={x.name}
-              onClick={() => setSelectedDb(x.label)}
-              className={`space-y-3 py-3 px-4 rounded-md border-2 select-none ${
-                settings.mode === 'dark'
-                  ? 'bg-zinc-700 hover:bg-zinc-600'
-                  : 'bg-zinc-100 hover:bg-zinc-200'
-              } ${selectedDb === x.label ? 'border-zinc-400' : 'border-transparent'}`}
-            >
-              <div className="font-semibold">{x.name}</div>
-              {x.image && (
-                <img
-                  src={x.image}
-                  className="h-10"
-                  style={{
-                    filter:
-                      'opacity(0.4) drop-shadow(0 0 0 white) drop-shadow(0 0 0 white)',
-                  }}
-                />
-              )}
-              <div className="text-xs">{x.description}</div>
-            </div>
-          ))}
-        </div>
+        <Box>
+          <div>Pick Database</div>
+          <div className="grid grid-cols-3 gap-4 place-content-center">
+            {Object.values(databases).map((x) => (
+              <div
+                key={x.name}
+                onClick={() => setSelectedDb(x.label)}
+                className={`space-y-3 py-3 px-4 rounded-md border-2 select-none ${
+                  settings.mode === 'dark'
+                    ? 'bg-zinc-700 hover:bg-zinc-600'
+                    : 'bg-zinc-100 hover:bg-zinc-200'
+                } ${selectedDb === x.label ? 'border-zinc-400' : 'border-transparent'}`}
+              >
+                <div className="font-semibold">{x.name}</div>
+                {x.image && (
+                  <img
+                    src={x.image}
+                    className="h-10"
+                    style={{
+                      filter:
+                        'opacity(0.4) drop-shadow(0 0 0 white) drop-shadow(0 0 0 white)',
+                    }}
+                  />
+                )}
+                <div className="text-xs">{x.description}</div>
+              </div>
+            ))}
+          </div>
+          <Button
+            className="btn wd-140 btn-sm btn-outline-light"
+            // type="submit"
+            onClick={() => {
+              if (selectedDb === '') return;
+              setDatabase(selectedDb);
+              setShowSelectDbModal(false);
+            }}
+            disabled={selectedDb === ''}
+          >
+            Confirm
+          </Button>
+        </Box>
       </Modal>
     </div>
   );

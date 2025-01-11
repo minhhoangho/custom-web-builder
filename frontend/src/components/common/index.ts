@@ -12,3 +12,5 @@ export * from './Select';
 export * from './Spinner';
 export * from './Text';
 export * from './Toast';
+export * from './Collapse';
+export * from './Popover';

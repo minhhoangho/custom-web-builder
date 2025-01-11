@@ -1,7 +1,8 @@
-import { Button, Collapse, Popover } from '@douyinfe/semi-ui';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDiagram, useSelect, useType } from 'src/containers/Editor/hooks';
 import { DB, ObjectType } from '@constants/editor';
+import { Collapse, Iconify, Popover } from '@components/common';
 import Searchbar from './SearchBar';
 import TypeInfo from './TypeInfo';
 import Empty from '../Empty';
@@ -19,7 +20,7 @@ export default function TypesTab() {
         <div>
           <Button
             startIcon={<Iconify icon="mdi:plus" />}
-            block
+            // block
             onClick={() => addType()}
           >
             {t('add_type')}
@@ -27,19 +28,23 @@ export default function TypesTab() {
         </div>
         {database === DB.GENERIC && (
           <Popover
-            content={
-              <div className="w-[240px] text-sm space-y-2 popover-theme">
-                {t('types_info')
-                  .split('\n')
-                  .map((line, index) => (
-                    <div key={index}>{line}</div>
-                  ))}
-              </div>
+            buttonElement={
+              <Button
+                // theme="borderless"
+                variant="outlined"
+                startIcon={<Iconify icon="ci:info" />}
+              />
             }
-            showArrow
-            position="rightTop"
+            // showArrow
+            position="topRight"
           >
-            <Button theme="borderless" startIcon={<Iconify icon="ci:info" />} />
+            <div className="w-[240px] text-sm space-y-2 popover-theme">
+              {t('types_info')
+                .split('\n')
+                .map((line, index) => (
+                  <div key={index}>{line}</div>
+                ))}
+            </div>
           </Popover>
         )}
       </div>
@@ -52,8 +57,8 @@ export default function TypesTab() {
               ? `${selectedElement.id}`
               : ''
           }
-          keepDOM
-          lazyRender
+          // keepDOM
+          // lazyRender
           onChange={(id) =>
             setSelectedElement((prev) => ({
               ...prev,
@@ -62,7 +67,7 @@ export default function TypesTab() {
               element: ObjectType.TYPE,
             }))
           }
-          accordion
+          // accordion
         >
           {types.map((t, i) => (
             <TypeInfo data={t} key={i} index={i} />

@@ -1,12 +1,13 @@
-import { Button, Collapse } from '@douyinfe/semi-ui';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useNotes, useSelect } from 'src/containers/Editor/hooks';
+import { useNote, useSelect } from 'src/containers/Editor/hooks';
+import { Collapse, Iconify } from '@components/common';
 import SearchBar from './SearchBar';
 import NoteInfo from './NoteInfo';
 import Empty from '../Empty';
 
 export default function NotesTab() {
-  const { notes, addNote } = useNotes();
+  const { notes, addNote } = useNote();
   const { selectedElement, setSelectedElement } = useSelect();
   const { t } = useTranslation();
 
@@ -24,7 +25,7 @@ export default function NotesTab() {
         <div>
           <Button
             startIcon={<Iconify icon="mdi:plus" />}
-            block
+            // block
             onClick={() => addNote()}
           >
             {t('add_note')}
@@ -36,8 +37,8 @@ export default function NotesTab() {
       ) : (
         <Collapse
           activeKey={selectedElement.open ? `${selectedElement.id}` : ''}
-          keepDOM
-          lazyRender
+          // keepDOM
+          // lazyRender
           onChange={(activeKey) => {
             setSelectedElement((prev) => ({
               ...prev,

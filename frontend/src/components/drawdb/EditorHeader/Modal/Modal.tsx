@@ -1,25 +1,34 @@
-import {
-  Spin,
-  Input,
-  Image,
-  Toast,
-  Modal as SemiUIModal,
-} from '@douyinfe/semi-ui';
+// import {
+//   Spin,
+//   Input,
+//   Image,
+//   Toast,
+//   Modal as SemiUIModal,
+// } from '@douyinfe/semi-ui';
+import { Button, Modal as MuiModal } from '@mui/material';
+import Image from 'next/image';
+import * as React from 'react'; // import { isRtl } from '../../../i18n/utils/rtl';
 import { useState } from 'react';
 import { saveAs } from 'file-saver';
 import { Parser } from 'node-sql-parser';
 import { useTranslation } from 'react-i18next';
-import { getModalTitle, getModalWidth, getOkText } from 'src/utils/modalData';
+import { getModalTitle, getOkText } from 'src/utils/model';
+import { Input } from '@components/form/Input'; // import { isRtl } from '../../../i18n/utils/rtl';
 import { DB, MODAL, STATUS } from '@constants/editor';
 import {
+  useArea,
   useDiagram,
-  useTransform,
-  useUndoRedo,
+  useEnum,
+  useNote,
   useTasks,
+  useTransform,
+  useType,
+  useUndoRedo,
 } from 'src/containers/Editor/hooks';
 import { db } from 'src/data/db';
 import { importSQL } from 'src/utils/imports/import-sql';
 import { databases } from 'src/data/database';
+import { Spinner } from '@components/common';
 import Rename from './Rename';
 import Open from './Open';
 import New from './New';
@@ -27,7 +36,6 @@ import ImportDiagram from './ImportDiagram';
 import ImportSource from './ImportSource';
 import SetTableWidth from './SetTableWidth';
 import Code from './Code';
-// import { isRtl } from '../../../i18n/utils/rtl';
 
 export default function Modal({
   modal,
@@ -41,10 +49,10 @@ export default function Modal({
 }) {
   const { t, i18n } = useTranslation();
   const { setTables, setRelationships, database, setDatabase } = useDiagram();
-  const { setNotes } = useNotes();
-  const { setAreas } = useAreas();
-  const { setTypes } = useTypes();
-  const { setEnums } = useEnums();
+  const { setNotes } = useNote();
+  const { setAreas } = useArea();
+  const { setTypes } = useType();
+  const { setEnums } = useEnum();
   const { setTasks } = useTasks();
   const { setTransform } = useTransform();
   const { setUndoStack, setRedoStack } = useUndoRedo();
@@ -288,8 +296,8 @@ export default function Modal({
               <Input
                 value={exportData.filename}
                 placeholder={t('filename')}
-                suffix={<div className="p-2">{`.${exportData.extension}`}</div>}
-                onChange={(value) =>
+                label={`.${exportData.extension}`}
+                onInputChange={(value) =>
                   setExportData((prev) => ({ ...prev, filename: value }))
                 }
                 field="filename"
@@ -299,7 +307,8 @@ export default function Modal({
         } else {
           return (
             <div className="text-center my-3 text-sky-600">
-              <Spin tip={t('loading')} size="large" />
+              {/*<Spin tip={t('loading')} size="large" />*/}
+              <Spinner />
             </div>
           );
         }
@@ -314,13 +323,48 @@ export default function Modal({
     }
   };
 
+  const getModelAction = () => {
+    const isDisable =
+      (error && error?.type === STATUS.ERROR) ||
+      (modal === MODAL.IMPORT &&
+        (error.type === STATUS.ERROR || !importData)) ||
+      (modal === MODAL.RENAME && title === '') ||
+      ((modal === MODAL.IMG || modal === MODAL.CODE) && !exportData.data) ||
+      (modal === MODAL.SAVEAS && saveAsTitle === '') ||
+      (modal === MODAL.IMPORT_SRC && importSource.src === '');
+    return (
+      <div>
+        <Button
+          className="btn wd-140 btn-sm btn-outline-light"
+          // type="submit"
+          disabled={isDisable}
+          onClick={getModalOnOk}
+        >
+          {getOkText(modal)}
+        </Button>
+        {modal !== MODAL.SHARE && (
+          <Button
+            className="btn wd-140 btn-sm btn-outline-light"
+            // type="submit"
+            disabled={isDisable}
+            onClick={() => {
+              if (modal === MODAL.RENAME) setUncontrolledTitle(title);
+              setModal(MODAL.NONE);
+            }}
+          >
+            Cancel
+          </Button>
+        )}
+      </div>
+    );
+  };
   return (
-    <SemiUIModal
-      style={isRtl(i18n.language) ? { direction: 'rtl' } : {}}
+    <MuiModal
+      style={{ direction: 'rtl' }}
       title={getModalTitle(modal)}
-      visible={modal !== MODAL.NONE}
-      onOk={getModalOnOk}
-      afterClose={() => {
+      open={modal !== MODAL.NONE}
+      // onOk={getModalOnOk}
+      onClose={() => {
         setExportData(() => ({
           data: '',
           extension: '',
@@ -336,28 +380,8 @@ export default function Modal({
           overwrite: true,
         });
       }}
-      onCancel={() => {
-        if (modal === MODAL.RENAME) setUncontrolledTitle(title);
-        setModal(MODAL.NONE);
-      }}
       centered
-      closeOnEsc={true}
-      okText={getOkText(modal)}
-      okButtonProps={{
-        disabled:
-          (error && error?.type === STATUS.ERROR) ||
-          (modal === MODAL.IMPORT &&
-            (error.type === STATUS.ERROR || !importData)) ||
-          (modal === MODAL.RENAME && title === '') ||
-          ((modal === MODAL.IMG || modal === MODAL.CODE) && !exportData.data) ||
-          (modal === MODAL.SAVEAS && saveAsTitle === '') ||
-          (modal === MODAL.IMPORT_SRC && importSource.src === ''),
-        hidden: modal === MODAL.SHARE,
-      }}
-      hasCancel={modal !== MODAL.SHARE}
-      cancelText={t('cancel')}
-      width={getModalWidth(modal)}
-      bodyStyle={{
+      xs={{
         maxHeight: window.innerHeight - 280,
         overflow:
           modal === MODAL.CODE || modal === MODAL.IMG ? 'hidden' : 'auto',
@@ -365,6 +389,7 @@ export default function Modal({
       }}
     >
       {getModalBody()}
-    </SemiUIModal>
+      {getModelAction()}
+    </MuiModal>
   );
 }

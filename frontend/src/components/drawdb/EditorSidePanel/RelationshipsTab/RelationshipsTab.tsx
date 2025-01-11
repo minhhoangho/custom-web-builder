@@ -1,6 +1,6 @@
-import { Collapse } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
-import { useSelect, useDiagram } from 'src/containers/Editor/hooks';
+import { Collapse } from '@components/common';
+import { useDiagram, useSelect } from 'src/containers/Editor/hooks';
 import { ObjectType } from '@constants/editor';
 import SearchBar from './SearchBar';
 import RelationshipInfo from './RelationshipInfo';
@@ -27,8 +27,8 @@ export default function RelationshipsTab() {
               ? `${selectedElement.id}`
               : ''
           }
-          keepDOM
-          lazyRender
+          // keepDOM
+          // lazyRender
           onChange={(k) =>
             setSelectedElement((prev) => ({
               ...prev,
@@ -37,7 +37,7 @@ export default function RelationshipsTab() {
               element: ObjectType.RELATIONSHIP,
             }))
           }
-          accordion
+          // accordion
         >
           {relationships.map((r) => (
             <div id={`scroll_ref_${r.id}`} key={'relationship_' + r.id}>
