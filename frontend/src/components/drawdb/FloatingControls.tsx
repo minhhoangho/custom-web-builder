@@ -1,6 +1,6 @@
-import { Divider, Tooltip } from "@douyinfe/semi-ui";
-import { useTransform, useLayout } from "src/containers/Editor/hooks";
-import { useTranslation } from "react-i18next";
+import { Divider } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { useTransform, useLayout } from 'src/containers/Editor/hooks';
 
 export default function FloatingControls() {
   const { transform, setTransform } = useTransform();
@@ -21,9 +21,9 @@ export default function FloatingControls() {
         >
           <i className="bi bi-dash-lg" />
         </button>
-        <Divider align="center" layout="vertical" />
+        <Divider textAlign="center" orientation="vertical" />
         <div className="px-3 py-2">{parseInt(transform.zoom * 100)}%</div>
-        <Divider align="center" layout="vertical" />
+        <Divider textAlign="center" orientation="vertical" />
         <button
           className="px-3 py-2"
           onClick={() =>
@@ -36,6 +36,22 @@ export default function FloatingControls() {
           <i className="bi bi-plus-lg" />
         </button>
       </div>
+      {/*<Tooltip content={t("exit")}>*/}
+      {/*  <button*/}
+      {/*    className="px-3 py-2 rounded-lg popover-theme"*/}
+      {/*    onClick={() => {*/}
+      {/*      setLayout((prev) => ({*/}
+      {/*        ...prev,*/}
+      {/*        sidebar: true,*/}
+      {/*        toolbar: true,*/}
+      {/*        header: true,*/}
+      {/*      }));*/}
+      {/*      exitFullscreen();*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    <i className="bi bi-fullscreen-exit" />*/}
+      {/*  </button>*/}
+      {/*</Tooltip>*/}
     </div>
   );
 }

@@ -10,7 +10,7 @@ export type OptionProps = {
 };
 
 export type SelectProps = {
-  name: string;
+  name?: string;
   options: OptionProps[];
   multiple?: boolean;
   label?: string;

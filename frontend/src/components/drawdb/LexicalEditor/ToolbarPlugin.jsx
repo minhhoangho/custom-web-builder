@@ -2,70 +2,73 @@
  * See https://codesandbox.io/p/sandbox/vigilant-kate-5tncvy?file=%2Fsrc%2Fplugins%2FToolbarPlugin.js
  */
 
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { MenuButton } from '@mui/base/MenuButton';
+import { Menu } from '@mui/base/Menu';
+import { MenuItem } from '@mui/base/MenuItem';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  CAN_REDO_COMMAND,
-  CAN_UNDO_COMMAND,
-  REDO_COMMAND,
-  UNDO_COMMAND,
-  SELECTION_CHANGE_COMMAND,
-  FORMAT_TEXT_COMMAND,
-  FORMAT_ELEMENT_COMMAND,
-  $getSelection,
-  $isRangeSelection,
   $createParagraphNode,
   $getNodeByKey,
-} from "lexical";
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+  $getSelection,
+  $isRangeSelection,
+  CAN_REDO_COMMAND,
+  CAN_UNDO_COMMAND,
+  FORMAT_ELEMENT_COMMAND,
+  FORMAT_TEXT_COMMAND,
+  REDO_COMMAND,
+  SELECTION_CHANGE_COMMAND,
+  UNDO_COMMAND,
+} from 'lexical';
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import {
+  $isAtNodeEnd,
   $isParentElementRTL,
   $wrapNodes,
-  $isAtNodeEnd,
-} from "@lexical/selection";
-import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
+} from '@lexical/selection';
+import { $getNearestNodeOfType, mergeRegister } from '@lexical/utils';
 import {
+  $isListNode,
   INSERT_ORDERED_LIST_COMMAND,
   INSERT_UNORDERED_LIST_COMMAND,
-  REMOVE_LIST_COMMAND,
-  $isListNode,
   ListNode,
-} from "@lexical/list";
-import { createPortal } from "react-dom";
+  REMOVE_LIST_COMMAND,
+} from '@lexical/list';
+import { createPortal } from 'react-dom';
 import {
   $createHeadingNode,
   $createQuoteNode,
   $isHeadingNode,
-} from "@lexical/rich-text";
+} from '@lexical/rich-text';
 import {
   $createCodeNode,
   $isCodeNode,
-  getDefaultCodeLanguage,
   getCodeLanguages,
-} from "@lexical/code";
-import { Dropdown } from "@douyinfe/semi-ui";
-import "./styles/index.css";
+  getDefaultCodeLanguage,
+} from '@lexical/code';
+import { Dropdown } from '@mui/material';
+import './styles/index.css';
 
 const LowPriority = 1;
 
 const blockTypeToIcon = {
-  code: "bi-code-slash",
-  h1: "bi-type-h1",
-  h2: "bi-type-h2",
-  ol: "bi-list-ol",
-  paragraph: "bi-text-paragraph",
-  quote: "bi-chat-square-quote",
-  ul: "bi-list-ul",
+  code: 'bi-code-slash',
+  h1: 'bi-type-h1',
+  h2: 'bi-type-h2',
+  ol: 'bi-list-ol',
+  paragraph: 'bi-text-paragraph',
+  quote: 'bi-chat-square-quote',
+  ul: 'bi-list-ul',
 };
 
 const blockTypeToBlockName = {
-  paragraph: "Paragraph",
-  h1: "Large Heading",
-  h2: "Small Heading",
-  ul: "Bulleted List",
-  ol: "Numbered List",
-  code: "Code Block",
-  quote: "Quote",
+  paragraph: 'Paragraph',
+  h1: 'Large Heading',
+  h2: 'Small Heading',
+  ul: 'Bulleted List',
+  ol: 'Numbered List',
+  code: 'Code Block',
+  quote: 'Quote',
 };
 
 function Divider() {
@@ -74,11 +77,11 @@ function Divider() {
 
 function positionEditorElement(editor, rect) {
   if (rect === null) {
-    editor.style.opacity = "0";
-    editor.style.top = "-1000px";
-    editor.style.left = "-1000px";
+    editor.style.opacity = '0';
+    editor.style.top = '-1000px';
+    editor.style.left = '-1000px';
   } else {
-    editor.style.opacity = "1";
+    editor.style.opacity = '1';
     editor.style.top = `${rect.top + rect.height + window.pageYOffset + 10}px`;
     editor.style.left = `${
       rect.left + window.pageXOffset - editor.offsetWidth / 2 + rect.width / 2
@@ -89,7 +92,7 @@ function positionEditorElement(editor, rect) {
 function FloatingLinkEditor({ editor }) {
   const editorRef = useRef(null);
   const inputRef = useRef(null);
-  const [linkUrl, setLinkUrl] = useState("");
+  const [linkUrl, setLinkUrl] = useState('');
   const [isEditMode, setEditMode] = useState(false);
   const [lastSelection, setLastSelection] = useState(null);
 
@@ -103,7 +106,7 @@ function FloatingLinkEditor({ editor }) {
       } else if ($isLinkNode(node)) {
         setLinkUrl(node.getURL());
       } else {
-        setLinkUrl("");
+        setLinkUrl('');
       }
     }
     const editorElem = editorRef.current;
@@ -135,11 +138,11 @@ function FloatingLinkEditor({ editor }) {
 
       positionEditorElement(editorElem, rect);
       setLastSelection(selection);
-    } else if (!activeElement || activeElement.className !== "link-input") {
+    } else if (!activeElement || activeElement.className !== 'link-input') {
       positionEditorElement(editorElem, null);
       setLastSelection(null);
       setEditMode(false);
-      setLinkUrl("");
+      setLinkUrl('');
     }
 
     return true;
@@ -159,8 +162,8 @@ function FloatingLinkEditor({ editor }) {
           updateLinkEditor();
           return true;
         },
-        LowPriority
-      )
+        LowPriority,
+      ),
     );
   }, [editor, updateLinkEditor]);
 
@@ -187,15 +190,15 @@ function FloatingLinkEditor({ editor }) {
             setLinkUrl(event.target.value);
           }}
           onKeyDown={(event) => {
-            if (event.key === "Enter") {
+            if (event.key === 'Enter') {
               event.preventDefault();
               if (lastSelection !== null) {
-                if (linkUrl !== "") {
+                if (linkUrl !== '') {
                   editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkUrl);
                 }
                 setEditMode(false);
               }
-            } else if (event.key === "Escape") {
+            } else if (event.key === 'Escape') {
               event.preventDefault();
               setEditMode(false);
             }
@@ -245,7 +248,7 @@ function getSelectedNode(selection) {
 
 function BlockOptionsDropdownList({ editor, blockType }) {
   const formatParagraph = () => {
-    if (blockType !== "paragraph") {
+    if (blockType !== 'paragraph') {
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -256,29 +259,29 @@ function BlockOptionsDropdownList({ editor, blockType }) {
   };
 
   const formatLargeHeading = () => {
-    if (blockType !== "h1") {
+    if (blockType !== 'h1') {
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
-          $wrapNodes(selection, () => $createHeadingNode("h1"));
+          $wrapNodes(selection, () => $createHeadingNode('h1'));
         }
       });
     }
   };
 
   const formatSmallHeading = () => {
-    if (blockType !== "h2") {
+    if (blockType !== 'h2') {
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
-          $wrapNodes(selection, () => $createHeadingNode("h2"));
+          $wrapNodes(selection, () => $createHeadingNode('h2'));
         }
       });
     }
   };
 
   const formatBulletList = () => {
-    if (blockType !== "ul") {
+    if (blockType !== 'ul') {
       editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND);
     } else {
       editor.dispatchCommand(REMOVE_LIST_COMMAND);
@@ -286,7 +289,7 @@ function BlockOptionsDropdownList({ editor, blockType }) {
   };
 
   const formatNumberedList = () => {
-    if (blockType !== "ol") {
+    if (blockType !== 'ol') {
       editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND);
     } else {
       editor.dispatchCommand(REMOVE_LIST_COMMAND);
@@ -294,7 +297,7 @@ function BlockOptionsDropdownList({ editor, blockType }) {
   };
 
   const formatQuote = () => {
-    if (blockType !== "quote") {
+    if (blockType !== 'quote') {
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -305,7 +308,7 @@ function BlockOptionsDropdownList({ editor, blockType }) {
   };
 
   const formatCode = () => {
-    if (blockType !== "code") {
+    if (blockType !== 'code') {
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -316,64 +319,59 @@ function BlockOptionsDropdownList({ editor, blockType }) {
   };
 
   return (
-    <Dropdown
-      trigger="click"
-      clickToHide
-      render={
-        <Dropdown.Menu>
-          <Dropdown.Item
-            onClick={formatParagraph}
-            icon={<i className={`bi ${blockTypeToIcon.paragraph}`} />}
-          >
-            Paragraph
-          </Dropdown.Item>
-          <Dropdown.Item
-            onClick={formatLargeHeading}
-            icon={<i className={`bi ${blockTypeToIcon.h1}`} />}
-          >
-            Large Heading
-          </Dropdown.Item>
-          <Dropdown.Item
-            onClick={formatSmallHeading}
-            icon={<i className={`bi ${blockTypeToIcon.h2}`} />}
-          >
-            Small Heading
-          </Dropdown.Item>
-          <Dropdown.Item
-            onClick={formatBulletList}
-            icon={<i className={`bi ${blockTypeToIcon.ul}`} />}
-          >
-            Bullet List
-          </Dropdown.Item>
-          <Dropdown.Item
-            onClick={formatNumberedList}
-            icon={<i className={`bi ${blockTypeToIcon.ol}`} />}
-          >
-            Numbered List
-          </Dropdown.Item>
-          <Dropdown.Item
-            onClick={formatQuote}
-            icon={<i className={`bi ${blockTypeToIcon.quote}`} />}
-          >
-            Quote
-          </Dropdown.Item>
-          <Dropdown.Item
-            onClick={formatCode}
-            icon={<i className={`bi ${blockTypeToIcon.code}`} />}
-          >
-            Code Block
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      }
-    >
-      <button
+    <Dropdown>
+      <MenuButton
         className="flex mx-2 justify-center items-center"
         aria-label="Formatting Options"
       >
         <i className={`bi ${blockTypeToIcon[blockType]} me-3`} />
         <span className="me-3 text-sm">{blockTypeToBlockName[blockType]}</span>
         <i className="bi bi-chevron-down" />
-      </button>
+      </MenuButton>
+      <Menu>
+        <MenuItem
+          onClick={formatParagraph}
+          icon={<i className={`bi ${blockTypeToIcon.paragraph}`} />}
+        >
+          Paragraph
+        </MenuItem>
+        <MenuItem
+          onClick={formatLargeHeading}
+          icon={<i className={`bi ${blockTypeToIcon.h1}`} />}
+        >
+          Large Heading
+        </MenuItem>
+        <MenuItem
+          onClick={formatSmallHeading}
+          icon={<i className={`bi ${blockTypeToIcon.h2}`} />}
+        >
+          Small Heading
+        </MenuItem>
+        <MenuItem
+          onClick={formatBulletList}
+          icon={<i className={`bi ${blockTypeToIcon.ul}`} />}
+        >
+          Bullet List
+        </MenuItem>
+        <MenuItem
+          onClick={formatNumberedList}
+          icon={<i className={`bi ${blockTypeToIcon.ol}`} />}
+        >
+          Numbered List
+        </MenuItem>
+        <MenuItem
+          onClick={formatQuote}
+          icon={<i className={`bi ${blockTypeToIcon.quote}`} />}
+        >
+          Quote
+        </MenuItem>
+        <MenuItem
+          onClick={formatCode}
+          icon={<i className={`bi ${blockTypeToIcon.code}`} />}
+        >
+          Code Block
+        </MenuItem>
+      </Menu>
     </Dropdown>
   );
 }
@@ -383,9 +381,9 @@ export default function ToolbarPlugin() {
   const toolbarRef = useRef(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
-  const [blockType, setBlockType] = useState("paragraph");
+  const [blockType, setBlockType] = useState('paragraph');
   const [selectedElementKey, setSelectedElementKey] = useState(null);
-  const [codeLanguage, setCodeLanguage] = useState("");
+  const [codeLanguage, setCodeLanguage] = useState('');
   const [, setIsRTL] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);
@@ -399,7 +397,7 @@ export default function ToolbarPlugin() {
     if ($isRangeSelection(selection)) {
       const anchorNode = selection.anchor.getNode();
       const element =
-        anchorNode.getKey() === "root"
+        anchorNode.getKey() === 'root'
           ? anchorNode
           : anchorNode.getTopLevelElementOrThrow();
       const elementKey = element.getKey();
@@ -421,11 +419,11 @@ export default function ToolbarPlugin() {
         }
       }
 
-      setIsBold(selection.hasFormat("bold"));
-      setIsItalic(selection.hasFormat("italic"));
-      setIsUnderline(selection.hasFormat("underline"));
-      setIsStrikethrough(selection.hasFormat("strikethrough"));
-      setIsCode(selection.hasFormat("code"));
+      setIsBold(selection.hasFormat('bold'));
+      setIsItalic(selection.hasFormat('italic'));
+      setIsUnderline(selection.hasFormat('underline'));
+      setIsStrikethrough(selection.hasFormat('strikethrough'));
+      setIsCode(selection.hasFormat('code'));
       setIsRTL($isParentElementRTL(selection));
 
       const node = getSelectedNode(selection);
@@ -451,7 +449,7 @@ export default function ToolbarPlugin() {
           updateToolbar();
           return false;
         },
-        LowPriority
+        LowPriority,
       ),
       editor.registerCommand(
         CAN_UNDO_COMMAND,
@@ -459,7 +457,7 @@ export default function ToolbarPlugin() {
           setCanUndo(payload);
           return false;
         },
-        LowPriority
+        LowPriority,
       ),
       editor.registerCommand(
         CAN_REDO_COMMAND,
@@ -467,8 +465,8 @@ export default function ToolbarPlugin() {
           setCanRedo(payload);
           return false;
         },
-        LowPriority
-      )
+        LowPriority,
+      ),
     );
   }, [editor, updateToolbar]);
 
@@ -484,12 +482,12 @@ export default function ToolbarPlugin() {
         }
       });
     },
-    [editor, selectedElementKey]
+    [editor, selectedElementKey],
   );
 
   const insertLink = useCallback(() => {
     if (!isLink) {
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, "https://");
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
     } else {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     }
@@ -505,7 +503,7 @@ export default function ToolbarPlugin() {
       >
         <i
           className={`bi bi-arrow-counterclockwise ${
-            canUndo ? "" : "opacity-30"
+            canUndo ? '' : 'opacity-30'
           }`}
         />
       </button>
@@ -515,12 +513,12 @@ export default function ToolbarPlugin() {
         className="toolbar-item"
         aria-label="Redo"
       >
-        <i className={`bi bi-arrow-clockwise ${canRedo ? "" : "opacity-30"}`} />
+        <i className={`bi bi-arrow-clockwise ${canRedo ? '' : 'opacity-30'}`} />
       </button>
       <Divider />
       <BlockOptionsDropdownList editor={editor} blockType={blockType} />
       <Divider />
-      {blockType === "code" ? (
+      {blockType === 'code' ? (
         <div className="flex items-center">
           <Select
             className="toolbar-item code-language"
@@ -533,64 +531,61 @@ export default function ToolbarPlugin() {
       ) : (
         <>
           <button
-            onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
-            className={"toolbar-item spaced " + (isBold ? "active" : "")}
+            onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
+            className={'toolbar-item spaced ' + (isBold ? 'active' : '')}
             aria-label="Format Bold"
           >
             <i className="bi bi-type-bold" />
           </button>
           <button
             onClick={() =>
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")
+              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')
             }
-            className={"toolbar-item spaced " + (isItalic ? "active" : "")}
+            className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
             aria-label="Format Italics"
           >
             <i className="bi bi-type-italic" />
           </button>
           <button
             onClick={() =>
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")
+              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline')
             }
-            className={"toolbar-item spaced " + (isUnderline ? "active" : "")}
+            className={'toolbar-item spaced ' + (isUnderline ? 'active' : '')}
             aria-label="Format Underline"
           >
             <i className="bi bi-type-underline" />
           </button>
           <button
             onClick={() =>
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")
+              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough')
             }
             className={
-              "toolbar-item spaced " + (isStrikethrough ? "active" : "")
+              'toolbar-item spaced ' + (isStrikethrough ? 'active' : '')
             }
             aria-label="Format Strikethrough"
           >
             <i className="bi bi-type-strikethrough" />
           </button>
           <button
-            onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code")}
-            className={"toolbar-item spaced " + (isCode ? "active" : "")}
+            onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code')}
+            className={'toolbar-item spaced ' + (isCode ? 'active' : '')}
             aria-label="Insert Code"
           >
             <i className="bi bi-code-slash" />
           </button>
           <button
             onClick={insertLink}
-            className={"toolbar-item spaced " + (isLink ? "active" : "")}
+            className={'toolbar-item spaced ' + (isLink ? 'active' : '')}
             aria-label="Insert Link"
           >
             <i className="bi bi-link" />
           </button>
           {isLink &&
-            createPortal(
-              <FloatingLinkEditor editor={editor} />,
-              document.body
-            )}
+            createPortal(<FloatingLinkEditor editor={editor} />, document.body)}
           <Divider />
           <button
             onClick={() =>
-              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left")
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left')
             }
             className="toolbar-item spaced"
             aria-label="Left Align"
@@ -599,7 +594,7 @@ export default function ToolbarPlugin() {
           </button>
           <button
             onClick={() =>
-              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center")
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center')
             }
             className="toolbar-item spaced"
             aria-label="Center Align"
@@ -608,7 +603,7 @@ export default function ToolbarPlugin() {
           </button>
           <button
             onClick={() => {
-              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
             }}
             className="toolbar-item spaced"
             aria-label="Right Align"
@@ -617,7 +612,7 @@ export default function ToolbarPlugin() {
           </button>
           <button
             onClick={() => {
-              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
             }}
             className="toolbar-item"
             aria-label="Justify Align"

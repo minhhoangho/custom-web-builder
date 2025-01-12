@@ -1,8 +1,9 @@
-import { Tabs, TabPane } from '@douyinfe/semi-ui';
+import { Tab as TabHeader } from '@mui/base/Tab';
+import { TabPanel, Tabs, TabsList } from '@mui/base';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import { databases } from 'src/data/database';
-import { useLayout, useSelect, useDiagram } from 'src/containers/Editor/hooks';
+import { useDiagram, useLayout, useSelect } from 'src/containers/Editor/hooks';
 import { Tab } from '@constants/editor';
 import RelationshipsTab from './RelationshipsTab/RelationshipsTab';
 import TypesTab from './TypesTab/TypesTab';
@@ -66,11 +67,23 @@ export default function SidePanel({ width, resize, setResize }) {
             collapsible
             tabBarStyle={{ direction: 'ltr' }}
           >
+            {/*{tabList.length &&*/}
+            {/*  tabList.map((tab) => (*/}
+            {/*    <TabPane tab={tab.tab} itemKey={tab.itemKey} key={tab.itemKey}>*/}
+            {/*      <div className="p-2">{tab.component}</div>*/}
+            {/*    </TabPane>*/}
+            {/*  ))}*/}
+            <TabsList>
+              {tabList.length &&
+                tabList.map((tab) => (
+                  <TabHeader value={tab.itemKey}> {tab.tab}</TabHeader>
+                ))}
+            </TabsList>
             {tabList.length &&
               tabList.map((tab) => (
-                <TabPane tab={tab.tab} itemKey={tab.itemKey} key={tab.itemKey}>
+                <TabPanel key={tab.itemKey} value={tab.itemKey}>
                   <div className="p-2">{tab.component}</div>
-                </TabPane>
+                </TabPanel>
               ))}
           </Tabs>
         </div>

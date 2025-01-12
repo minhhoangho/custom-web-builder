@@ -1,7 +1,8 @@
-import { Collapse, Button } from '@douyinfe/semi-ui';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Collapse, Iconify } from '@components/common';
 import { ObjectType } from '@constants/editor';
-import { useSelect, useDiagram } from 'src/containers/Editor/hooks';
+import { useDiagram, useSelect } from 'src/containers/Editor/hooks';
 import SearchBar from './SearchBar';
 import TableInfo from './TableInfo';
 import Empty from '../Empty';
@@ -18,7 +19,7 @@ export default function TablesTab() {
         <div>
           <Button
             startIcon={<Iconify icon="mdi:plus" />}
-            block
+            // block
             onClick={() => addTable()}
           >
             {t('add_table')}

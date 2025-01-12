@@ -1,18 +1,12 @@
 import { useState } from 'react';
-import {
-  Button,
-  Checkbox,
-  Input,
-  InputNumber,
-  TagInput,
-  TextArea,
-} from '@douyinfe/semi-ui';
+import { Button, Checkbox } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 import { databases } from 'src/data/database';
 import { dbToTypes } from 'src/data/datatypes';
 import { Action, ObjectType } from '@constants/editor';
 import { Iconify } from '@components/common';
+import { Input, TagInput } from '@components/form/Input';
 
 export default function FieldDetails({ data, tid, index }) {
   const { t } = useTranslation();
@@ -29,7 +23,7 @@ export default function FieldDetails({ data, tid, index }) {
         placeholder={t('default_value')}
         value={data.default}
         disabled={dbToTypes[database][data.type].noDefault || data.increment}
-        onChange={(value) => updateField(tid, index, { default: value })}
+        onInputChange={(value) => updateField(tid, index, { default: value })}
         onFocus={(e) => setEditField({ default: e.target.value })}
         onBlur={(e) => {
           if (e.target.value === editField.default) return;
@@ -56,12 +50,12 @@ export default function FieldDetails({ data, tid, index }) {
         <>
           <div className="font-semibold mb-1">{data.type} Value</div>
           <TagInput
-            separator={[',', ', ', ' ,']}
+            separator={','}
             value={data.values}
-            validateStatus={
-              !data.values || data.values.length === 0 ? 'error' : 'default'
-            }
-            addOnBlur
+            // validateStatus={
+            //   !data.values || data.values.length === 0 ? 'error' : 'default'
+            // }
+            // addOnBlur
             className="my-2"
             placeholder={t('use_for_batch_input')}
             onChange={(v) => updateField(tid, index, { values: v })}
@@ -95,11 +89,12 @@ export default function FieldDetails({ data, tid, index }) {
       {dbToTypes[database][data.type].isSized && (
         <>
           <div className="font-semibold">{t('size')}</div>
-          <InputNumber
+          <Input
+            type="number"
             className="my-2 w-full"
             placeholder={t('size')}
             value={data.size}
-            onChange={(value) => updateField(tid, index, { size: value })}
+            onInputChange={(value) => updateField(tid, index, { size: value })}
             onFocus={(e) => setEditField({ size: e.target.value })}
             onBlur={(e) => {
               if (e.target.value === editField.size) return;
@@ -130,13 +125,13 @@ export default function FieldDetails({ data, tid, index }) {
           <Input
             className="my-2 w-full"
             placeholder={t('set_precision')}
-            validateStatus={
-              !data.size || /^\d+,\s*\d+$|^$/.test(data.size)
-                ? 'default'
-                : 'error'
-            }
+            // validateStatus={
+            //   !data.size || /^\d+,\s*\d+$|^$/.test(data.size)
+            //     ? 'default'
+            //     : 'error'
+            // }
             value={data.size}
-            onChange={(value) => updateField(tid, index, { size: value })}
+            onInputChange={(value) => updateField(tid, index, { size: value })}
             onFocus={(e) => setEditField({ size: e.target.value })}
             onBlur={(e) => {
               if (e.target.value === editField.size) return;
@@ -169,7 +164,7 @@ export default function FieldDetails({ data, tid, index }) {
             placeholder={t('check')}
             value={data.check}
             disabled={data.increment}
-            onChange={(value) => updateField(tid, index, { check: value })}
+            onInputChange={(value) => updateField(tid, index, { check: value })}
             onFocus={(e) => setEditField({ check: e.target.value })}
             onBlur={(e) => {
               if (e.target.value === editField.check) return;
@@ -336,13 +331,14 @@ export default function FieldDetails({ data, tid, index }) {
           </div>
         )}
       <div className="font-semibold">{t('comment')}</div>
-      <TextArea
+      <Input
+        isTextarea
         className="my-2"
         placeholder={t('comment')}
         value={data.comment}
-        autosize
+        // autosize
         rows={2}
-        onChange={(value) => updateField(tid, index, { comment: value })}
+        onInputChange={(value) => updateField(tid, index, { comment: value })}
         onFocus={(e) => setEditField({ comment: e.target.value })}
         onBlur={(e) => {
           if (e.target.value === editField.comment) return;
@@ -368,7 +364,7 @@ export default function FieldDetails({ data, tid, index }) {
       <Button
         startIcon={<Iconify icon="mdi:delete-outline" />}
         color="error"
-        block
+        // block
         onClick={() => deleteField(data, tid)}
       >
         {t('delete')}

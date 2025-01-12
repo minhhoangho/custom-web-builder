@@ -1,13 +1,19 @@
-import { useMemo } from "react";
-import { useSelect } from "src/containers/Editor/hooks";
-import { TreeSelect } from "@douyinfe/semi-ui";
+import { useMemo } from 'react';
+import { TreeItem, TreeView } from '@mui/x-tree-view';
+import { useSelect } from 'src/containers/Editor/hooks';
+// import { TreeSelect } from "@douyinfe/semi-ui";
 // import { IconSearch } from "@douyinfe/semi-icons";
-import { ObjectType } from "@constants/editor";
-import { useTranslation } from "react-i18next";
+import { ObjectType } from '@constants/editor';
+
+interface RenderTree {
+  id: string;
+  label: string;
+  children?: readonly RenderTree[];
+}
 
 export default function SearchBar({ tables }) {
   const { setSelectedElement } = useSelect();
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const treeData = useMemo(() => {
     return tables.map(({ id, name: parentName, fields }, i) => {
@@ -30,16 +36,24 @@ export default function SearchBar({ tables }) {
     });
   }, [tables]);
 
+  const renderTree = (nodes: RenderTree) => (
+    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.label}>
+      {Array.isArray(nodes.children)
+        ? nodes.children.map((node) => renderTree(node))
+        : null}
+    </TreeItem>
+  );
+
   return (
-    <TreeSelect
-      searchPosition="trigger"
-      dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-      treeData={treeData}
-      prefix={<Iconify icon="mdi:search"}/>}
-      emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
-      filterTreeNode
-      placeholder={t("search")}
-      onChange={(node) => {
+    <TreeView
+      // searchPosition="trigger"
+      sx={{ maxHeight: 400, overflow: 'auto' }}
+      // treeData={treeData}
+      // prefix={<Iconify icon="mdi:search"}/>}
+      // emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
+      // filterTreeNode
+      // placeholder={t("search")}
+      onNodeSelect={(node) => {
         const { tableId, id, children } = node;
 
         setSelectedElement((prev) => ({
@@ -50,7 +64,7 @@ export default function SearchBar({ tables }) {
         }));
         document
           .getElementById(`scroll_table_${tableId}`)
-          .scrollIntoView({ behavior: "smooth" });
+          .scrollIntoView({ behavior: 'smooth' });
 
         if (!children) {
           document
@@ -58,8 +72,10 @@ export default function SearchBar({ tables }) {
             .focus();
         }
       }}
-      onChangeWithObject
+      // onChangeWithObject
       className="w-full"
-    />
+    >
+      {treeData.map((node: RenderTree) => renderTree(node))}
+    </TreeView>
   );
 }

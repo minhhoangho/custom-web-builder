@@ -7,6 +7,7 @@ export type InputProps = {
   type?: string;
   placeholder: string;
   isRequired?: boolean;
+  disabled?: boolean;
   className?: string;
   inputElementClassName?: string;
   value?: string;
@@ -19,7 +20,7 @@ export type InputProps = {
   autoComplete?: string;
 };
 
-export const [Input = React.forwardRef<
+export const Input = React.forwardRef<
   HTMLInputElement | HTMLTextAreaElement,
   InputProps
 >(

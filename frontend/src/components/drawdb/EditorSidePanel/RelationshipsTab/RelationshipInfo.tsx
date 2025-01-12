@@ -1,18 +1,19 @@
-import { Row, Col, Select, Button, Popover, Table } from '@douyinfe/semi-ui';
-import { IconLoopTextStroked } from '@douyinfe/semi-icons';
+import { Button, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Cardinality, Constraint, Action, ObjectType } from '@constants/editor';
+import { DataGrid } from '@mui/x-data-grid';
+import { Action, Cardinality, Constraint, ObjectType } from '@constants/editor';
 import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 import i18n from 'src/i18n/i18n';
+import { Iconify, Popover, SelectField as Select } from '@components/common';
 
 const columns = [
   {
-    title: i18n.t('primary'),
-    dataIndex: 'primary',
+    headerName: i18n.t('primary'),
+    field: 'primary',
   },
   {
-    title: i18n.t('foreign'),
-    dataIndex: 'foreign',
+    headerName: i18n.t('foreign'),
+    field: 'foreign',
   },
 ];
 
@@ -123,87 +124,89 @@ export default function RelationshipInfo({ data }) {
         </div>
         <div className="ms-1">
           <Popover
-            content={
-              <div className="p-2 popover-theme">
-                <Table
-                  columns={columns}
-                  dataSource={[
-                    {
-                      key: '1',
-                      foreign: `${tables[data.startTableId]?.name}(${
-                        tables[data.startTableId].fields[data.startFieldId]
-                          ?.name
-                      })`,
-                      primary: `${tables[data.endTableId]?.name}(${
-                        tables[data.endTableId].fields[data.endFieldId]?.name
-                      })`,
-                    },
-                  ]}
-                  pagination={false}
-                  size="small"
-                  bordered
-                />
-                <div className="mt-2">
-                  <Button
-                    icon={<IconLoopTextStroked />}
-                    block
-                    onClick={swapKeys}
-                  >
-                    {t('swap')}
-                  </Button>
-                </div>
-              </div>
+            buttonElement={
+              <Button
+                startIcon={<Iconify icon="ic:round-more-vert" />}
+                variant="outlined"
+                // type="tertiary"
+              />
             }
-            trigger="click"
-            position="rightTop"
-            showArrow
+            // content={}
+            // trigger="click"
+            position="topRight"
+            // showArrow
           >
-            <Button
-              startIcon={<Iconify icon="ic:round-more-vert" />}
-              type="tertiary"
-            />
+            <div className="p-2 popover-theme">
+              <DataGrid
+                columns={columns}
+                rows={[
+                  {
+                    key: '1',
+                    foreign: `${tables[data.startTableId]?.name}(${
+                      tables[data.startTableId].fields[data.startFieldId]?.name
+                    })`,
+                    primary: `${tables[data.endTableId]?.name}(${
+                      tables[data.endTableId].fields[data.endFieldId]?.name
+                    })`,
+                  },
+                ]}
+                // pagination={false}
+                // size="small"
+                // bordered
+              />
+              <div className="mt-2">
+                <Button
+                  // icon={<IconLoopTextStroked />}
+                  startIcon={<Iconify icon="mdi:swap-horizontal" />}
+                  // block
+                  onClick={swapKeys}
+                >
+                  {t('swap')}
+                </Button>
+              </div>
+            </div>
           </Popover>
         </div>
       </div>
       <div className="font-semibold my-1">{t('cardinality')}:</div>
       <Select
-        optionList={Object.values(Cardinality).map((v) => ({
+        options={Object.values(Cardinality).map((v) => ({
           label: t(v),
           value: v,
         }))}
         value={data.cardinality}
         className="w-full"
-        onChange={changeCardinality}
+        onSelectChange={changeCardinality}
       />
-      <Row gutter={6} className="my-3">
-        <Col span={12}>
-          <div className="font-semibold">{t('on_update')}: </div>
+      <Grid container spacing={6} className="my-3">
+        <Grid item xs={6}>
+          <div className="font-semibold">{t('on_update')}:</div>
           <Select
-            optionList={Object.values(Constraint).map((v) => ({
+            options={Object.values(Constraint).map((v) => ({
               label: v,
               value: v,
             }))}
             value={data.updateConstraint}
             className="w-full"
-            onChange={(value) => changeConstraint('update', value)}
+            onSelectChange={(value) => changeConstraint('update', value)}
           />
-        </Col>
-        <Col span={12}>
-          <div className="font-semibold">{t('on_delete')}: </div>
+        </Grid>
+        <Grid item xs={6}>
+          <div className="font-semibold">{t('on_delete')}:</div>
           <Select
-            optionList={Object.values(Constraint).map((v) => ({
+            options={Object.values(Constraint).map((v) => ({
               label: v,
               value: v,
             }))}
             value={data.deleteConstraint}
             className="w-full"
-            onChange={(value) => changeConstraint('delete', value)}
+            onSelectChange={(value) => changeConstraint('delete', value)}
           />
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
       <Button
         startIcon={<Iconify icon="mdi:delete-outline" />}
-        block
+        // block
         color="error"
         onClick={() => deleteRelationship(data.id)}
       >

@@ -9,6 +9,7 @@ import { CollapseContext } from './context';
 
 type CollapsePanelProps = {
   id?: string;
+  className?: string;
   itemKey: string;
   header: React.ReactNode | string | HTMLElement;
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export function CollapsePanel({
   children,
   header,
   itemKey,
+  className,
 }: CollapsePanelProps) {
   const collapseContext = React.useContext(CollapseContext);
 
@@ -27,7 +29,11 @@ export function CollapsePanel({
     }
   };
   return (
-    <Accordion key={itemKey} onClick={(e) => handleClick(itemKey, e)}>
+    <Accordion
+      key={itemKey}
+      onClick={(e) => handleClick(itemKey, e)}
+      className={className}
+    >
       <AccordionSummary>
         <Typography component="span">{header}</Typography>
       </AccordionSummary>
