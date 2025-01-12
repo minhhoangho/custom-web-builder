@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
-import { Action, defaultNoteTheme, ObjectType } from '../data/constants';
+import { Action, defaultNoteTheme, ObjectType } from '@constants/editor';
 import { useSelect, useTransform, useUndoRedo } from '../hooks';
 
 export const NotesContext = createContext(null);

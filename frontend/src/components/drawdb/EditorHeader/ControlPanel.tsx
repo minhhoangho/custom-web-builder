@@ -18,7 +18,15 @@ import {
   jsonToSQLite,
   jsonToSQLServer,
 } from 'src/utils/exports/export-sql/generic';
-import { Action, DB, MODAL, ObjectType, SIDESHEET, State, Tab, } from '@constants/editor';
+import {
+  Action,
+  DB,
+  MODAL,
+  ObjectType,
+  SIDESHEET,
+  State,
+  Tab,
+} from '@constants/editor';
 import {
   useArea,
   useDiagram,
@@ -35,27 +43,30 @@ import {
 import { dataURItoBlob } from 'src/utils/common';
 import { exportSQL } from 'src/utils/exports/export-sql';
 import { databases } from 'src/data/database';
-import { jsonToMermaid } from 'src/utils/exports/export-as/mermaid';
-// import { isRtl } from '../../i18n/utils/rtl';
+import { jsonToMermaid } from 'src/utils/exports/export-as/mermaid'; // import { isRtl } from '../../i18n/utils/rtl';
 import { jsonToDocumentation } from 'src/utils/exports/export-as/documentation';
+import useConfirm from '@shared/hooks/use-confirm';
 import Modal from './Modal/Modal';
 import Sidesheet from './SideSheet/Sidesheet';
 import LayoutDropdown from './LayoutDropdown';
 import { IconAddArea, IconAddNote, IconAddTable } from '../icons';
 import { IdContext } from '../Workspace';
-import useConfirm from "@shared/hooks/use-confirm";
 
 export default function ControlPanel({
-                                       diagramId,
-                                       setDiagramId,
-                                       title,
-                                       setTitle,
-                                       lastSaved,
-                                     }) {
+  diagramId,
+  setDiagramId,
+  title,
+  setTitle,
+  lastSaved,
+}) {
   const confirmBox = useConfirm();
 
-  const [anchorElToolbar, setAnchorElToolbar] = useState<null | HTMLElement>(null);
-  const [anchorElHeader, setAnchorElHeader] = useState<null | HTMLElement>(null);
+  const [anchorElToolbar, setAnchorElToolbar] = useState<null | HTMLElement>(
+    null,
+  );
+  const [anchorElHeader, setAnchorElHeader] = useState<null | HTMLElement>(
+    null,
+  );
   const handleClickToolbar = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorElToolbar(event.currentTarget);
   };
@@ -64,11 +75,10 @@ export default function ControlPanel({
   };
   const handleClickHeader = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorElHeader(event.currentTarget);
-  }
+  };
   const handleCloseHeader = () => {
     setAnchorElHeader(null);
-  }
-
+  };
 
   const [modal, setModal] = useState(MODAL.NONE);
   const [sidesheet, setSidesheet] = useState(SIDESHEET.NONE);
@@ -79,9 +89,9 @@ export default function ControlPanel({
     filename: `${title}_${new Date().toISOString()}`,
     extension: '',
   });
-  const {saveState, setSaveState} = useSaveState();
-  const {layout, setLayout} = useLayout();
-  const {settings, setSettings} = useSetting();
+  const { saveState, setSaveState } = useSaveState();
+  const { layout, setLayout } = useLayout();
+  const { settings, setSettings } = useSetting();
   const {
     relationships,
     tables,
@@ -96,19 +106,19 @@ export default function ControlPanel({
     deleteRelationship,
     database,
   } = useDiagram();
-  const {enums, setEnums, deleteEnum, addEnum, updateEnum} = useEnum();
-  const {types, addType, deleteType, updateType, setTypes} = useType();
-  const {notes, setNotes, updateNote, addNote, deleteNote} = useNote();
-  const {areas, setAreas, updateArea, addArea, deleteArea} = useArea();
-  const {undoStack, redoStack, setUndoStack, setRedoStack} = useUndoRedo();
-  const {selectedElement, setSelectedElement} = useSelect();
-  const {transform, setTransform} = useTransform();
-  const {t, i18n} = useTranslation();
-  const {setGistId} = useContext(IdContext);
+  const { enums, setEnums, deleteEnum, addEnum, updateEnum } = useEnum();
+  const { types, addType, deleteType, updateType, setTypes } = useType();
+  const { notes, setNotes, updateNote, addNote, deleteNote } = useNote();
+  const { areas, setAreas, updateArea, addArea, deleteArea } = useArea();
+  const { undoStack, redoStack, setUndoStack, setRedoStack } = useUndoRedo();
+  const { selectedElement, setSelectedElement } = useSelect();
+  const { transform, setTransform } = useTransform();
+  const { t, i18n } = useTranslation();
+  const { setGistId } = useContext(IdContext);
   const navigate = useNavigate();
 
   const invertLayout = (component) =>
-    setLayout((prev) => ({...prev, [component]: !prev[component]}));
+    setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
 
   const undo = () => {
     if (undoStack.length === 0) return;
@@ -133,21 +143,21 @@ export default function ControlPanel({
       if (a.element === ObjectType.TABLE) {
         setRedoStack((prev) => [
           ...prev,
-          {...a, x: tables[a.id].x, y: tables[a.id].y},
+          { ...a, x: tables[a.id].x, y: tables[a.id].y },
         ]);
-        updateTable(a.id, {x: a.x, y: a.y});
+        updateTable(a.id, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.AREA) {
         setRedoStack((prev) => [
           ...prev,
-          {...a, x: areas[a.id].x, y: areas[a.id].y},
+          { ...a, x: areas[a.id].x, y: areas[a.id].y },
         ]);
-        updateArea(a.id, {x: a.x, y: a.y});
+        updateArea(a.id, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.NOTE) {
         setRedoStack((prev) => [
           ...prev,
-          {...a, x: notes[a.id].x, y: notes[a.id].y},
+          { ...a, x: notes[a.id].x, y: notes[a.id].y },
         ]);
-        updateNote(a.id, {x: a.x, y: a.y});
+        updateNote(a.id, { x: a.x, y: a.y });
       }
     } else if (a.action === Action.DELETE) {
       if (a.element === ObjectType.TABLE) {
@@ -160,9 +170,9 @@ export default function ControlPanel({
       } else if (a.element === ObjectType.AREA) {
         addArea(a.data, false);
       } else if (a.element === ObjectType.TYPE) {
-        addType({id: a.id, ...a.data}, false);
+        addType({ id: a.id, ...a.data }, false);
       } else if (a.element === ObjectType.ENUM) {
-        addEnum({id: a.id, ...a.data}, false);
+        addEnum({ id: a.id, ...a.data }, false);
       }
       setRedoStack((prev) => [...prev, a]);
     } else if (a.action === Action.EDIT) {
@@ -209,7 +219,7 @@ export default function ControlPanel({
                   endFieldId: e.endFieldId + 1,
                 };
               }
-              return {...e, id: i};
+              return { ...e, id: i };
             });
             return temp;
           });
@@ -218,7 +228,7 @@ export default function ControlPanel({
               if (t.id === a.tid) {
                 const temp = t.fields.slice();
                 temp.splice(a.data.field.id, 0, a.data.field);
-                return {...t, fields: temp.map((t, i) => ({...t, id: i}))};
+                return { ...t, fields: temp.map((t, i) => ({ ...t, id: i })) };
               }
               return t;
             }),
@@ -227,22 +237,22 @@ export default function ControlPanel({
           updateTable(a.tid, {
             fields: tables[a.tid].fields
               .filter((e) => e.id !== tables[a.tid].fields.length - 1)
-              .map((t, i) => ({...t, id: i})),
+              .map((t, i) => ({ ...t, id: i })),
           });
         } else if (a.component === 'index_add') {
           updateTable(a.tid, {
             indices: tables[a.tid].indices
               .filter((e) => e.id !== tables[a.tid].indices.length - 1)
-              .map((t, i) => ({...t, id: i})),
+              .map((t, i) => ({ ...t, id: i })),
           });
         } else if (a.component === 'index') {
           updateTable(a.tid, {
             indices: tables[a.tid].indices.map((index) =>
               index.id === a.iid
                 ? {
-                  ...index,
-                  ...a.undo,
-                }
+                    ...index,
+                    ...a.undo,
+                  }
                 : index,
             ),
           });
@@ -254,7 +264,7 @@ export default function ControlPanel({
                 temp.splice(a.data.id, 0, a.data);
                 return {
                   ...table,
-                  indices: temp.map((t, i) => ({...t, id: i})),
+                  indices: temp.map((t, i) => ({ ...t, id: i })),
                 };
               }
               return table;
@@ -265,7 +275,7 @@ export default function ControlPanel({
         }
       } else if (a.element === ObjectType.RELATIONSHIP) {
         setRelationships((prev) =>
-          prev.map((e, idx) => (idx === a.rid ? {...e, ...a.undo} : e)),
+          prev.map((e, idx) => (idx === a.rid ? { ...e, ...a.undo } : e)),
         );
       } else if (a.element === ObjectType.TYPE) {
         if (a.component === 'field_add') {
@@ -278,7 +288,7 @@ export default function ControlPanel({
         if (a.component === 'field') {
           updateType(a.tid, {
             fields: types[a.tid].fields.map((e, i) =>
-              i === a.fid ? {...e, ...a.undo} : e,
+              i === a.fid ? { ...e, ...a.undo } : e,
             ),
           });
         } else if (a.component === 'field_delete') {
@@ -287,7 +297,7 @@ export default function ControlPanel({
               if (i === a.tid) {
                 const temp = t.fields.slice();
                 temp.splice(a.fid, 0, a.data);
-                return {...t, fields: temp};
+                return { ...t, fields: temp };
               }
               return t;
             }),
@@ -297,7 +307,7 @@ export default function ControlPanel({
           if (a.updatedFields) {
             if (a.undo.name) {
               a.updatedFields.forEach((x) =>
-                updateField(x.tid, x.fid, {type: a.undo.name.toUpperCase()}),
+                updateField(x.tid, x.fid, { type: a.undo.name.toUpperCase() }),
               );
             }
           }
@@ -307,7 +317,7 @@ export default function ControlPanel({
         if (a.updatedFields) {
           if (a.undo.name) {
             a.updatedFields.forEach((x) =>
-              updateField(x.tid, x.fid, {type: a.undo.name.toUpperCase()}),
+              updateField(x.tid, x.fid, { type: a.undo.name.toUpperCase() }),
             );
           }
         }
@@ -345,21 +355,21 @@ export default function ControlPanel({
       if (a.element === ObjectType.TABLE) {
         setUndoStack((prev) => [
           ...prev,
-          {...a, x: tables[a.id].x, y: tables[a.id].y},
+          { ...a, x: tables[a.id].x, y: tables[a.id].y },
         ]);
-        updateTable(a.id, {x: a.x, y: a.y});
+        updateTable(a.id, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.AREA) {
         setUndoStack((prev) => [
           ...prev,
-          {...a, x: areas[a.id].x, y: areas[a.id].y},
+          { ...a, x: areas[a.id].x, y: areas[a.id].y },
         ]);
-        updateArea(a.id, {x: a.x, y: a.y});
+        updateArea(a.id, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.NOTE) {
         setUndoStack((prev) => [
           ...prev,
-          {...a, x: notes[a.id].x, y: notes[a.id].y},
+          { ...a, x: notes[a.id].x, y: notes[a.id].y },
         ]);
-        updateNote(a.id, {x: a.x, y: a.y});
+        updateNote(a.id, { x: a.x, y: a.y });
       }
     } else if (a.action === Action.DELETE) {
       if (a.element === ObjectType.TABLE) {
@@ -428,9 +438,9 @@ export default function ControlPanel({
             indices: tables[a.tid].indices.map((index) =>
               index.id === a.iid
                 ? {
-                  ...index,
-                  ...a.redo,
-                }
+                    ...index,
+                    ...a.redo,
+                  }
                 : index,
             ),
           });
@@ -438,14 +448,14 @@ export default function ControlPanel({
           updateTable(a.tid, {
             indices: tables[a.tid].indices
               .filter((e) => e.id !== a.data.id)
-              .map((t, i) => ({...t, id: i})),
+              .map((t, i) => ({ ...t, id: i })),
           });
         } else if (a.component === 'self') {
           updateTable(a.tid, a.redo, false);
         }
       } else if (a.element === ObjectType.RELATIONSHIP) {
         setRelationships((prev) =>
-          prev.map((e, idx) => (idx === a.rid ? {...e, ...a.redo} : e)),
+          prev.map((e, idx) => (idx === a.rid ? { ...e, ...a.redo } : e)),
         );
       } else if (a.element === ObjectType.TYPE) {
         if (a.component === 'field_add') {
@@ -461,7 +471,7 @@ export default function ControlPanel({
         } else if (a.component === 'field') {
           updateType(a.tid, {
             fields: types[a.tid].fields.map((e, i) =>
-              i === a.fid ? {...e, ...a.redo} : e,
+              i === a.fid ? { ...e, ...a.redo } : e,
             ),
           });
         } else if (a.component === 'field_delete') {
@@ -473,7 +483,7 @@ export default function ControlPanel({
           if (a.updatedFields) {
             if (a.redo.name) {
               a.updatedFields.forEach((x) =>
-                updateField(x.tid, x.fid, {type: a.redo.name.toUpperCase()}),
+                updateField(x.tid, x.fid, { type: a.redo.name.toUpperCase() }),
               );
             }
           }
@@ -483,7 +493,7 @@ export default function ControlPanel({
         if (a.updatedFields) {
           if (a.redo.name) {
             a.updatedFields.forEach((x) =>
-              updateField(x.tid, x.fid, {type: a.redo.name.toUpperCase()}),
+              updateField(x.tid, x.fid, { type: a.redo.name.toUpperCase() }),
             );
           }
         }
@@ -500,13 +510,13 @@ export default function ControlPanel({
 
   const fileImport = () => setModal(MODAL.IMPORT);
   const viewGrid = () =>
-    setSettings((prev) => ({...prev, showGrid: !prev.showGrid}));
+    setSettings((prev) => ({ ...prev, showGrid: !prev.showGrid }));
   const zoomIn = () =>
-    setTransform((prev) => ({...prev, zoom: prev.zoom * 1.2}));
+    setTransform((prev) => ({ ...prev, zoom: prev.zoom * 1.2 }));
   const zoomOut = () =>
-    setTransform((prev) => ({...prev, zoom: prev.zoom / 1.2}));
+    setTransform((prev) => ({ ...prev, zoom: prev.zoom / 1.2 }));
   const viewStrictMode = () => {
-    setSettings((prev) => ({...prev, strictMode: !prev.strictMode}));
+    setSettings((prev) => ({ ...prev, strictMode: !prev.strictMode }));
   };
   const viewFieldSummary = () => {
     setSettings((prev) => ({
@@ -518,7 +528,7 @@ export default function ControlPanel({
     toPng(document.getElementById('canvas')).then(function (dataUrl) {
       const blob = dataURItoBlob(dataUrl);
       navigator.clipboard
-        .write([new ClipboardItem({'image/png': blob})])
+        .write([new ClipboardItem({ 'image/png': blob })])
         .then(() => {
           toast('success', t('copied_to_clipboard'));
         })
@@ -528,7 +538,7 @@ export default function ControlPanel({
     });
   };
   const resetView = () =>
-    setTransform((prev) => ({...prev, zoom: 1, pan: {x: 0, y: 0}}));
+    setTransform((prev) => ({ ...prev, zoom: 1, pan: { x: 0, y: 0 } }));
   const fitWindow = () => {
     const diagram = document.getElementById('diagram').getBoundingClientRect();
     const canvas = document.getElementById('canvas').getBoundingClientRect();
@@ -542,7 +552,7 @@ export default function ControlPanel({
     setTransform((prev) => ({
       ...prev,
       zoom: scale - 0.01,
-      pan: {x: translateX, y: translateY},
+      pan: { x: translateX, y: translateY },
     }));
   };
   const edit = () => {
@@ -561,7 +571,7 @@ export default function ControlPanel({
         if (selectedElement.currentTab !== Tab.TABLES) return;
         document
           .getElementById(`scroll_table_${selectedElement.id}`)
-          .scrollIntoView({behavior: 'smooth'});
+          .scrollIntoView({ behavior: 'smooth' });
       }
     } else if (selectedElement.element === ObjectType.AREA) {
       if (layout.sidebar) {
@@ -572,7 +582,7 @@ export default function ControlPanel({
         if (selectedElement.currentTab !== Tab.AREAS) return;
         document
           .getElementById(`scroll_area_${selectedElement.id}`)
-          .scrollIntoView({behavior: 'smooth'});
+          .scrollIntoView({ behavior: 'smooth' });
       } else {
         setSelectedElement((prev) => ({
           ...prev,
@@ -590,7 +600,7 @@ export default function ControlPanel({
         if (selectedElement.currentTab !== Tab.NOTES) return;
         document
           .getElementById(`scroll_note_${selectedElement.id}`)
-          .scrollIntoView({behavior: 'smooth'});
+          .scrollIntoView({ behavior: 'smooth' });
       } else {
         setSelectedElement((prev) => ({
           ...prev,
@@ -649,17 +659,17 @@ export default function ControlPanel({
     switch (selectedElement.element) {
       case ObjectType.TABLE:
         navigator.clipboard
-          .writeText(JSON.stringify({...tables[selectedElement.id]}))
+          .writeText(JSON.stringify({ ...tables[selectedElement.id] }))
           .catch(() => toast('error', t('oops_smth_went_wrong')));
         break;
       case ObjectType.NOTE:
         navigator.clipboard
-          .writeText(JSON.stringify({...notes[selectedElement.id]}))
+          .writeText(JSON.stringify({ ...notes[selectedElement.id] }))
           .catch(() => toast('error', t('oops_smth_went_wrong')));
         break;
       case ObjectType.AREA:
         navigator.clipboard
-          .writeText(JSON.stringify({...areas[selectedElement.id]}))
+          .writeText(JSON.stringify({ ...areas[selectedElement.id] }))
           .catch(() => toast('error', t('oops_smth_went_wrong')));
         break;
       default:
@@ -742,8 +752,8 @@ export default function ControlPanel({
               notes: notes,
               subjectAreas: areas,
               custom: 1,
-              ...(databases[database].hasEnums && {enums: enums}),
-              ...(databases[database].hasTypes && {types: types}),
+              ...(databases[database].hasEnums && { enums: enums }),
+              ...(databases[database].hasTypes && { types: types }),
             })
             .then(() => {
               toast('success', t('template_saved'));
@@ -942,7 +952,7 @@ export default function ControlPanel({
           },
           {
             JPEG: () => {
-              toJpeg(document.getElementById('canvas'), {quality: 0.95}).then(
+              toJpeg(document.getElementById('canvas'), { quality: 0.95 }).then(
                 function (dataUrl) {
                   setExportData((prev) => ({
                     ...prev,
@@ -964,8 +974,8 @@ export default function ControlPanel({
                   notes: notes,
                   subjectAreas: areas,
                   database: database,
-                  ...(databases[database].hasTypes && {types: types}),
-                  ...(databases[database].hasEnums && {enums: enums}),
+                  ...(databases[database].hasTypes && { types: types }),
+                  ...(databases[database].hasEnums && { enums: enums }),
                   title: title,
                 },
                 null,
@@ -981,7 +991,7 @@ export default function ControlPanel({
           {
             SVG: () => {
               const filter = (node) => node.tagName !== 'i';
-              toSvg(document.getElementById('canvas'), {filter: filter}).then(
+              toSvg(document.getElementById('canvas'), { filter: filter }).then(
                 function (dataUrl) {
                   setExportData((prev) => ({
                     ...prev,
@@ -1025,8 +1035,8 @@ export default function ControlPanel({
                   notes: notes,
                   subjectAreas: areas,
                   database: database,
-                  ...(databases[database].hasTypes && {types: types}),
-                  ...(databases[database].hasEnums && {enums: enums}),
+                  ...(databases[database].hasTypes && { types: types }),
+                  ...(databases[database].hasEnums && { enums: enums }),
                 },
                 null,
                 2,
@@ -1065,8 +1075,8 @@ export default function ControlPanel({
                 subjectAreas: areas,
                 database: database,
                 title: title,
-                ...(databases[database].hasTypes && {types: types}),
-                ...(databases[database].hasEnums && {enums: enums}),
+                ...(databases[database].hasTypes && { types: types }),
+                ...(databases[database].hasEnums && { enums: enums }),
               });
               setExportData((prev) => ({
                 ...prev,
@@ -1076,8 +1086,7 @@ export default function ControlPanel({
             },
           },
         ],
-        function: () => {
-        },
+        function: () => {},
       },
       exit: {
         function: () => {
@@ -1143,36 +1152,36 @@ export default function ControlPanel({
     view: {
       header: {
         state: layout.header ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
-          setLayout((prev) => ({...prev, header: !prev.header})),
+          setLayout((prev) => ({ ...prev, header: !prev.header })),
       },
       sidebar: {
         state: layout.sidebar ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
-          setLayout((prev) => ({...prev, sidebar: !prev.sidebar})),
+          setLayout((prev) => ({ ...prev, sidebar: !prev.sidebar })),
       },
       issues: {
         state: layout.issues ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
-          setLayout((prev) => ({...prev, issues: !prev.issues})),
+          setLayout((prev) => ({ ...prev, issues: !prev.issues })),
       },
       strict_mode: {
         state: settings.strictMode ? (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ) : (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ),
         function: viewStrictMode,
         shortcut: 'Ctrl+Shift+M',
@@ -1190,9 +1199,9 @@ export default function ControlPanel({
       // },
       field_details: {
         state: settings.showFieldSummary ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: viewFieldSummary,
         shortcut: 'Ctrl+Shift+F',
@@ -1203,18 +1212,18 @@ export default function ControlPanel({
       },
       show_grid: {
         state: settings.showGrid ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: viewGrid,
         shortcut: 'Ctrl+Shift+G',
       },
       show_cardinality: {
         state: settings.showCardinality ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setSettings((prev) => ({
@@ -1224,9 +1233,9 @@ export default function ControlPanel({
       },
       show_debug_coordinates: {
         state: settings.showDebugCoordinates ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setSettings((prev) => ({
@@ -1243,7 +1252,7 @@ export default function ControlPanel({
                 body.setAttribute('theme-mode', 'light');
               }
               localStorage.setItem('theme', 'light');
-              setSettings((prev) => ({...prev, mode: 'light'}));
+              setSettings((prev) => ({ ...prev, mode: 'light' }));
             },
           },
           {
@@ -1253,12 +1262,11 @@ export default function ControlPanel({
                 body.setAttribute('theme-mode', 'dark');
               }
               localStorage.setItem('theme', 'dark');
-              setSettings((prev) => ({...prev, mode: 'dark'}));
+              setSettings((prev) => ({ ...prev, mode: 'dark' }));
             },
           },
         ],
-        function: () => {
-        },
+        function: () => {},
       },
       zoom_in: {
         function: zoomIn,
@@ -1283,21 +1291,21 @@ export default function ControlPanel({
       },
       autosave: {
         state: settings.autosave ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
-          setSettings((prev) => ({...prev, autosave: !prev.autosave})),
+          setSettings((prev) => ({ ...prev, autosave: !prev.autosave })),
       },
       panning: {
         state: settings.panning ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
-          setSettings((prev) => ({...prev, panning: !prev.panning})),
+          setSettings((prev) => ({ ...prev, panning: !prev.panning })),
       },
       table_width: {
         function: () => setModal(MODAL.TABLE_WIDTH),
@@ -1313,10 +1321,7 @@ export default function ControlPanel({
         function: async () => {
           db.delete()
             .then(() => {
-              toast('success,'
-              t('storage_flushed')
-            )
-              ;
+              toast('success', t('storage_flushed'));
               window.location.reload(false);
             })
             .catch(() => {
@@ -1342,20 +1347,20 @@ export default function ControlPanel({
     },
   };
 
-  useHotkeys('ctrl+i, meta+i', fileImport, {preventDefault: true});
-  useHotkeys('ctrl+z, meta+z', undo, {preventDefault: true});
-  useHotkeys('ctrl+y, meta+y', redo, {preventDefault: true});
-  useHotkeys('ctrl+s, meta+s', save, {preventDefault: true});
-  useHotkeys('ctrl+o, meta+o', open, {preventDefault: true});
-  useHotkeys('ctrl+e, meta+e', edit, {preventDefault: true});
-  useHotkeys('ctrl+d, meta+d', duplicate, {preventDefault: true});
-  useHotkeys('ctrl+c, meta+c', copy, {preventDefault: true});
-  useHotkeys('ctrl+v, meta+v', paste, {preventDefault: true});
-  useHotkeys('ctrl+x, meta+x', cut, {preventDefault: true});
-  useHotkeys('delete', del, {preventDefault: true});
-  useHotkeys('ctrl+shift+g, meta+shift+g', viewGrid, {preventDefault: true});
-  useHotkeys('ctrl+up, meta+up', zoomIn, {preventDefault: true});
-  useHotkeys('ctrl+down, meta+down', zoomOut, {preventDefault: true});
+  useHotkeys('ctrl+i, meta+i', fileImport, { preventDefault: true });
+  useHotkeys('ctrl+z, meta+z', undo, { preventDefault: true });
+  useHotkeys('ctrl+y, meta+y', redo, { preventDefault: true });
+  useHotkeys('ctrl+s, meta+s', save, { preventDefault: true });
+  useHotkeys('ctrl+o, meta+o', open, { preventDefault: true });
+  useHotkeys('ctrl+e, meta+e', edit, { preventDefault: true });
+  useHotkeys('ctrl+d, meta+d', duplicate, { preventDefault: true });
+  useHotkeys('ctrl+c, meta+c', copy, { preventDefault: true });
+  useHotkeys('ctrl+v, meta+v', paste, { preventDefault: true });
+  useHotkeys('ctrl+x, meta+x', cut, { preventDefault: true });
+  useHotkeys('delete', del, { preventDefault: true });
+  useHotkeys('ctrl+shift+g, meta+shift+g', viewGrid, { preventDefault: true });
+  useHotkeys('ctrl+up, meta+up', zoomIn, { preventDefault: true });
+  useHotkeys('ctrl+down, meta+down', zoomOut, { preventDefault: true });
   useHotkeys('ctrl+shift+m, meta+shift+m', viewStrictMode, {
     preventDefault: true,
   });
@@ -1365,12 +1370,12 @@ export default function ControlPanel({
   useHotkeys('ctrl+shift+s, meta+shift+s', saveDiagramAs, {
     preventDefault: true,
   });
-  useHotkeys('ctrl+alt+c, meta+alt+c', copyAsImage, {preventDefault: true});
-  useHotkeys('ctrl+r, meta+r', resetView, {preventDefault: true});
+  useHotkeys('ctrl+alt+c, meta+alt+c', copyAsImage, { preventDefault: true });
+  useHotkeys('ctrl+r, meta+r', resetView, { preventDefault: true });
   useHotkeys('ctrl+h, meta+h', () => window.open('/shortcuts', '_blank'), {
     preventDefault: true,
   });
-  useHotkeys('ctrl+alt+w, meta+alt+w', fitWindow, {preventDefault: true});
+  useHotkeys('ctrl+alt+w, meta+alt+w', fitWindow, { preventDefault: true });
 
   return (
     <>
@@ -1383,7 +1388,7 @@ export default function ControlPanel({
                 color="primary"
                 className="text-base me-2 pe-6 ps-5 py-[18px] rounded-md"
                 size="medium"
-                startIcon={<Iconify icon="mdi:share-outline"/>}
+                startIcon={<Iconify icon="mdi:share-outline" />}
                 onClick={() => setModal(MODAL.SHARE)}
               >
                 {t('share')}
@@ -1412,11 +1417,10 @@ export default function ControlPanel({
 
   function toolbar() {
     return (
-      <div
-        className="py-1.5 px-5 flex justify-between items-center rounded-xl my-1 sm:mx-1 xl:mx-6 select-none overflow-hidden toolbar-theme">
+      <div className="py-1.5 px-5 flex justify-between items-center rounded-xl my-1 sm:mx-1 xl:mx-6 select-none overflow-hidden toolbar-theme">
         <div className="flex justify-start items-center">
-          <LayoutDropdown/>
-          <Divider orientation="vertical" flexItem/>
+          <LayoutDropdown />
+          <Divider orientation="vertical" flexItem />
 
           <div className="control-panel-dropdown" onClick={handleClickToolbar}>
             <div className="py-1 px-2 hover-2 rounded flex items-center justify-center">
@@ -1424,7 +1428,7 @@ export default function ControlPanel({
                 {Math.floor(transform.zoom * 100)}%
               </div>
               <div>
-                <Iconify icon="mdi:caret-down"/>
+                <Iconify icon="mdi:caret-down" />
               </div>
             </div>
             <Menu
@@ -1434,7 +1438,7 @@ export default function ControlPanel({
             >
               <MenuItem
                 onClick={fitWindow}
-                style={{display: 'flex', justifyContent: 'space-between'}}
+                style={{ display: 'flex', justifyContent: 'space-between' }}
               >
                 <div>{t('fit_window_reset')}</div>
                 <div className="text-gray-400">Ctrl+Alt+W</div>
@@ -1443,7 +1447,7 @@ export default function ControlPanel({
                 <Dropdown.Item
                   key={i}
                   onClick={() => {
-                    setTransform((prev) => ({...prev, zoom: e}));
+                    setTransform((prev) => ({ ...prev, zoom: e }));
                   }}
                 >
                   {Math.floor(e * 100)}%
@@ -1463,31 +1467,29 @@ export default function ControlPanel({
                   }
                 />
               </MenuItem>
-
             </Menu>
-
           </div>
           <Tooltip title={t('zoom_in')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded text-lg"
               onClick={() =>
-                setTransform((prev) => ({...prev, zoom: prev.zoom * 1.2}))
+                setTransform((prev) => ({ ...prev, zoom: prev.zoom * 1.2 }))
               }
             >
-              <i className="fa-solid fa-magnifying-glass-plus"/>
+              <i className="fa-solid fa-magnifying-glass-plus" />
             </button>
           </Tooltip>
           <Tooltip title={t('zoom_out')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded text-lg"
               onClick={() =>
-                setTransform((prev) => ({...prev, zoom: prev.zoom / 1.2}))
+                setTransform((prev) => ({ ...prev, zoom: prev.zoom / 1.2 }))
               }
             >
-              <i className="fa-solid fa-magnifying-glass-minus"/>
+              <i className="fa-solid fa-magnifying-glass-minus" />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title={t('undo')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded flex items-center"
@@ -1495,7 +1497,7 @@ export default function ControlPanel({
             >
               <Iconify
                 icon="mdi:undo"
-                sx={{color: undoStack.length === 0 ? '#9598a6' : ''}}
+                sx={{ color: undoStack.length === 0 ? '#9598a6' : '' }}
               />
             </button>
           </Tooltip>
@@ -1512,13 +1514,13 @@ export default function ControlPanel({
               />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title={t('add_table')} placement="bottom">
             <button
               className="flex items-center py-1 px-2 hover-2 rounded"
               onClick={() => addTable()}
             >
-              <IconAddTable/>
+              <IconAddTable />
             </button>
           </Tooltip>
           <Tooltip title={t('add_area')} placement="bottom">
@@ -1526,7 +1528,7 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={() => addArea()}
             >
-              <IconAddArea/>
+              <IconAddArea />
             </button>
           </Tooltip>
           <Tooltip title={t('add_note')} placement="bottom">
@@ -1534,16 +1536,16 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={() => addNote()}
             >
-              <IconAddNote/>
+              <IconAddNote />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title={t('save')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={save}
             >
-              <Iconify icon="mi:save"/>
+              <Iconify icon="mi:save" />
             </button>
           </Tooltip>
           <Tooltip title={t('to_do')} placement="bottom">
@@ -1551,10 +1553,10 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded text-xl -mt-0.5"
               onClick={() => setSidesheet(SIDESHEET.TODO)}
             >
-              <i className="fa-regular fa-calendar-check"/>
+              <i className="fa-regular fa-calendar-check" />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title={t('theme')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded text-xl -mt-0.5"
@@ -1569,7 +1571,7 @@ export default function ControlPanel({
                 }
               }}
             >
-              <i className="fa-solid fa-circle-half-stroke"/>
+              <i className="fa-solid fa-circle-half-stroke" />
             </button>
           </Tooltip>
         </div>
@@ -1578,9 +1580,9 @@ export default function ControlPanel({
           className="flex items-center"
         >
           {layout.header ? (
-            <Iconify icon="mdi:chevron-up"/>
+            <Iconify icon="mdi:chevron-up" />
           ) : (
-            <Iconify icon="mdi:chevron-down"/>
+            <Iconify icon="mdi:chevron-down" />
           )}
         </button>
       </div>
@@ -1647,17 +1649,23 @@ export default function ControlPanel({
                 {title}
               </div>
               {(showEditName || modal === MODAL.RENAME) && (
-                <Iconify icon="lucide:edit"/>
+                <Iconify icon="lucide:edit" />
               )}
             </div>
             <div className="flex justify-between items-center">
               <div className="flex justify-start text-md select-none me-2">
                 {Object.keys(menu).map((category) => (
                   <div>
-                    <div className="px-3 py-1 hover-2 rounded" onClick={handleClickHeader}>
+                    <div
+                      className="px-3 py-1 hover-2 rounded"
+                      onClick={handleClickHeader}
+                    >
                       {t(category)}
                     </div>
-                    <Menu open={Boolean(anchorElHeader)} onClose={handleCloseHeader}>
+                    <Menu
+                      open={Boolean(anchorElHeader)}
+                      onClose={handleCloseHeader}
+                    >
                       {Object.keys(menu[category]).map((item, index) => {
                         if (menu[category][item].children) {
                           return (
@@ -1672,28 +1680,28 @@ export default function ControlPanel({
                               >
                                 {t(item)}
                               </MenuItem>
-                              <Menu open={Boolean(anchorElHeader)} onClose={handleCloseHeader}>
-                                {menu[category][item].children.map(
-                                  (e, i) => (
-                                    <MenuItem
-                                      key={i}
-                                      onClick={Object.values(e)[0]}
-                                    >
-                                      {t(Object.keys(e)[0])}
-                                    </MenuItem>
-                                  ),
-                                )}
+                              <Menu
+                                open={Boolean(anchorElHeader)}
+                                onClose={handleCloseHeader}
+                              >
+                                {menu[category][item].children.map((e, i) => (
+                                  <MenuItem
+                                    key={i}
+                                    onClick={Object.values(e)[0]}
+                                  >
+                                    {t(Object.keys(e)[0])}
+                                  </MenuItem>
+                                ))}
                               </Menu>
                             </div>
                           );
                         }
                         if (menu[category][item].warning) {
                           return confirmBox.confirm({
-                              title: menu[category][item].warning.title,
-                              message: menu[category][item].warning.message,
-                              confirmButtonLabel: t('confirm'),
-                            }
-                          )
+                            title: menu[category][item].warning.title,
+                            message: menu[category][item].warning.message,
+                            confirmButtonLabel: t('confirm'),
+                          });
                         }
                         return (
                           <MenuItem
@@ -1726,13 +1734,9 @@ export default function ControlPanel({
                   </div>
                 ))}
               </div>
-              <Button
-                size="small"
-                color="primary"
-                variant="outlined"
-              >
+              <Button size="small" color="primary" variant="outlined">
                 {saveState === State.LOADING || saveState === State.SAVING ? (
-                  <Spinner/>
+                  <Spinner />
                 ) : null}
                 {getState()}
               </Button>

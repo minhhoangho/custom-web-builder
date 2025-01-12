@@ -1,21 +1,21 @@
-import { Cardinality } from "../../data/constants";
-import { dbToTypes } from "../../data/datatypes";
-import i18n from "../../i18n/i18n";
+import { Cardinality } from '@constants/editor';
+import { dbToTypes } from 'src/data/datatypes';
+import i18n from 'src/i18n/i18n';
 
 export function jsonToMermaid(obj) {
   function getMermaidRelationship(relationship) {
     switch (relationship) {
       case i18n.t(Cardinality.ONE_TO_ONE):
       case Cardinality.ONE_TO_ONE:
-        return "||--||";
+        return '||--||';
       case i18n.t(Cardinality.MANY_TO_ONE_TO_ONE):
       case Cardinality.MANY_TO_ONE:
-        return "||--o{";
+        return '||--o{';
       case i18n.t(Cardinality.ONE_TO_MANY):
       case Cardinality.ONE_TO_MANY:
-        return "}o--||";
+        return '}o--||';
       default:
-        return "--";
+        return '--';
     }
   }
 
@@ -28,15 +28,15 @@ export function jsonToMermaid(obj) {
             ((dbToTypes[obj.database][field.type].isSized ||
               dbToTypes[obj.database][field.type].hasPrecision) &&
             field.size &&
-            field.size !== ""
-              ? "(" + field.size + ")"
-              : "");
+            field.size !== ''
+              ? '(' + field.size + ')'
+              : '');
           return `\t\t${fieldType} ${field.name}`;
         })
-        .join("\n");
+        .join('\n');
       return `\t${table.name} {\n${fields}\n\t}`;
     })
-    .join("\n\n");
+    .join('\n\n');
 
   const mermaidRelationships = obj.relationships?.length
     ? obj.relationships
@@ -45,8 +45,8 @@ export function jsonToMermaid(obj) {
           const endTable = obj.tables[r.endTableId].name;
           return `\t${startTable} ${getMermaidRelationship(r.cardinality)} ${endTable} : references`;
         })
-        .join("\n")
-    : "";
+        .join('\n')
+    : '';
 
-  return `erDiagram\n${mermaidRelationships ? `${mermaidRelationships}\n\n` : ""}${mermaidEntities}`;
+  return `erDiagram\n${mermaidRelationships ? `${mermaidRelationships}\n\n` : ''}${mermaidEntities}`;
 }

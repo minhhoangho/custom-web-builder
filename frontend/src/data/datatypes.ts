@@ -1,5 +1,5 @@
-import { DB } from './constants';
-import { strHasQuotes } from '../utils/utils';
+import { DB } from '@constants/editor';
+import { strHasQuotes } from 'src/utils/common';
 
 const intRegex = /^-?\d*$/;
 const doubleRegex = /^-?\d*.?\d+$/;

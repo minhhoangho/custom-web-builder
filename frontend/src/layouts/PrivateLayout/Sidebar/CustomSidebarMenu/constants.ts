@@ -13,7 +13,7 @@ export const MENU_KEY = {
 
   CATEGORY: 'category',
 
-  GIS_MANAGEMENT: 'gis_management',
+  DRAW_DB: 'draw_db',
   MODEL_BENCHMARK: 'model_benchmark',
 
   ANALYTIC: 'analytic',
@@ -27,6 +27,7 @@ export const MENU_LABEL = {
   [MENU_KEY.USER_MANAGEMENT]: 'Users',
   [MENU_KEY.ANALYTIC]: 'Phân tích',
   [MENU_KEY.MODEL_BENCHMARK]: 'Benchmark',
+  [MENU_KEY.DRAW_DB]: 'Draw DB',
 
   [MENU_KEY.BLOG]: 'Blog',
   [MENU_KEY.POST]: 'Posts',

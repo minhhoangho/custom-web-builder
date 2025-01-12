@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
-import { Action, DB, ObjectType, defaultBlue } from '../data/constants';
+import { Action, DB, ObjectType, defaultBlue } from '@constants/editor';
 import { useTransform, useUndoRedo, useSelect } from '../hooks';
 
 export const DiagramContext = createContext(null);

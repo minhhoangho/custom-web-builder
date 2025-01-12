@@ -10,6 +10,7 @@ export const PathName = {
   Profile: '/me/profile',
 
   UserManagement: '/admin/user-management',
+  DrawDB: '/admin/draw-db',
   GisLocationManagement: '/admin/gis-map',
   ModelBenchmark: '/admin/benchmark',
   Analytic: '/admin/analytic',

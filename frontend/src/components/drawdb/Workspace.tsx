@@ -1,26 +1,26 @@
-import { useState, useEffect, useCallback, createContext } from 'react';
+import * as React from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 // import { Modal } from '@douyinfe/semi-ui';
 import { Button, Modal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 // import { octokit } from 'src/data/octokit';
 import { Box } from '@mui/system';
-import * as React from 'react';
+import { useRouter } from 'next/router';
 import { db } from 'src/data/db';
 import { CanvasContextProvider } from 'src/containers/Editor/context/CanvasContext';
 import { DB, State } from '@constants/editor';
 import {
-  useLayout,
-  useSetting,
-  useTransform,
-  useDiagram,
-  useUndoRedo,
   useArea,
-  useNote,
-  useType,
-  useTasks,
-  useSaveState,
+  useDiagram,
   useEnum,
+  useLayout,
+  useNote,
+  useSaveState,
+  useSetting,
+  useTasks,
+  useTransform,
+  useType,
+  useUndoRedo,
 } from 'src/containers/Editor/hooks';
 import { databases } from 'src/data/database';
 import { isRtl } from 'src/i18n/utils/rtl';
@@ -30,6 +30,40 @@ import Canvas from './EditorCanvas/Canvas';
 import ControlPanel from './EditorHeader/ControlPanel';
 
 export const IdContext = createContext({ gistId: '' });
+
+const useSearchParams = () => {
+  const router = useRouter();
+  const [searchParams, setSearchParams] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return Object.fromEntries(params.entries());
+  });
+
+  const updateSearchParams = (newParams) => {
+    const updatedParams = new URLSearchParams(searchParams);
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value === undefined) {
+        updatedParams.delete(key);
+      } else {
+        updatedParams.set(key, value);
+      }
+    });
+    router.push(`?${updatedParams.toString()}`, undefined, { shallow: true });
+  };
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const params = new URLSearchParams(window.location.search);
+      setSearchParams(Object.fromEntries(params.entries()));
+    };
+
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, []);
+
+  return [searchParams, updateSearchParams];
+};
 
 export default function WorkSpace() {
   const [id, setId] = useState(0);
@@ -60,6 +94,7 @@ export default function WorkSpace() {
   } = useDiagram();
   const { undoStack, redoStack, setUndoStack, setRedoStack } = useUndoRedo();
   const { t, i18n } = useTranslation();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const handleResize = (e) => {
     if (!resize) return;

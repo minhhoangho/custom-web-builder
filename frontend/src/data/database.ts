@@ -1,5 +1,5 @@
-import { DB } from './constants';
-import i18n from '../i18n/i18n';
+import { DB } from '@constants/editor';
+import i18n from 'src/i18n/i18n';
 
 export const databases = new Proxy(
   {

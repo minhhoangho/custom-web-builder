@@ -1,38 +1,38 @@
-import { Cardinality, DB } from "../../data/constants";
-import { dbToTypes } from "../../data/datatypes";
-import { buildSQLFromAST } from "./shared";
+import { Cardinality, DB } from '@constants/editor';
+import { dbToTypes } from 'src/data/datatypes';
+import { buildSQLFromAST } from './shared';
 
 const affinity = {
   [DB.SQLITE]: new Proxy(
     {
-      INT: "INTEGER",
-      TINYINT: "INTEGER",
-      SMALLINT: "INTEGER",
-      MEDIUMINT: "INTEGER",
-      BIGINT: "INTEGER",
-      "UNSIGNED BIG INT": "INTEGER",
-      INT2: "INTEGER",
-      INT8: "INTEGER",
-      CHARACTER: "TEXT",
-      NCHARACTER: "TEXT",
-      NVARCHAR: "VARCHAR",
-      DOUBLE: "REAL",
-      FLOAT: "REAL",
+      INT: 'INTEGER',
+      TINYINT: 'INTEGER',
+      SMALLINT: 'INTEGER',
+      MEDIUMINT: 'INTEGER',
+      BIGINT: 'INTEGER',
+      'UNSIGNED BIG INT': 'INTEGER',
+      INT2: 'INTEGER',
+      INT8: 'INTEGER',
+      CHARACTER: 'TEXT',
+      NCHARACTER: 'TEXT',
+      NVARCHAR: 'VARCHAR',
+      DOUBLE: 'REAL',
+      FLOAT: 'REAL',
     },
-    { get: (target, prop) => (prop in target ? target[prop] : "BLOB") },
+    { get: (target, prop) => (prop in target ? target[prop] : 'BLOB') },
   ),
   [DB.GENERIC]: new Proxy(
     {
-      INTEGER: "INT",
-      TINYINT: "SMALLINT",
-      MEDIUMINT: "INTEGER",
-      INT2: "INTEGER",
-      INT8: "INTEGER",
-      CHARACTER: "TEXT",
-      NCHARACTER: "TEXT",
-      NVARCHAR: "VARCHAR",
+      INTEGER: 'INT',
+      TINYINT: 'SMALLINT',
+      MEDIUMINT: 'INTEGER',
+      INT2: 'INTEGER',
+      INT8: 'INTEGER',
+      CHARACTER: 'TEXT',
+      NCHARACTER: 'TEXT',
+      NVARCHAR: 'VARCHAR',
     },
-    { get: (target, prop) => (prop in target ? target[prop] : "BLOB") },
+    { get: (target, prop) => (prop in target ? target[prop] : 'BLOB') },
   ),
 };
 
@@ -62,19 +62,19 @@ export function fromSQLite(ast, diagramDb = DB.GENERIC) {
     );
     if (startFieldId === -1) return;
 
-    relationship.name = startTable.name + "_" + startFieldName + "_fk";
+    relationship.name = startTable.name + '_' + startFieldName + '_fk';
     relationship.startTableId = startTable.id;
     relationship.endTableId = endTableId;
     relationship.endFieldId = endFieldId;
     relationship.startFieldId = startFieldId;
-    let updateConstraint = "No action";
-    let deleteConstraint = "No action";
+    let updateConstraint = 'No action';
+    let deleteConstraint = 'No action';
     referenceDefinition.on_action.forEach((c) => {
-      if (c.type === "on update") {
+      if (c.type === 'on update') {
         updateConstraint = c.value.value;
         updateConstraint =
           updateConstraint[0].toUpperCase() + updateConstraint.substring(1);
-      } else if (c.type === "on delete") {
+      } else if (c.type === 'on delete') {
         deleteConstraint = c.value.value;
         deleteConstraint =
           deleteConstraint[0].toUpperCase() + deleteConstraint.substring(1);
@@ -93,17 +93,17 @@ export function fromSQLite(ast, diagramDb = DB.GENERIC) {
   };
 
   const parseSingleStatement = (e) => {
-    if (e.type === "create") {
-      if (e.keyword === "table") {
+    if (e.type === 'create') {
+      if (e.keyword === 'table') {
         const table = {};
         table.name = e.table[0].table;
-        table.comment = "";
-        table.color = "#175e7a";
+        table.comment = '';
+        table.color = '#175e7a';
         table.fields = [];
         table.indices = [];
         table.id = tables.length;
         e.create_definitions.forEach((d) => {
-          if (d.resource === "column") {
+          if (d.resource === 'column') {
             const field = {};
             field.name = d.column.column;
 
@@ -113,10 +113,10 @@ export function fromSQLite(ast, diagramDb = DB.GENERIC) {
             }
             field.type = type;
 
-            if (d.definition.expr && d.definition.expr.type === "expr_list") {
+            if (d.definition.expr && d.definition.expr.type === 'expr_list') {
               field.values = d.definition.expr.value.map((v) => v.value);
             }
-            field.comment = d.comment ? d.comment.value.value : "";
+            field.comment = d.comment ? d.comment.value.value : '';
             field.unique = false;
             if (d.unique) field.unique = true;
             field.increment = false;
@@ -125,41 +125,41 @@ export function fromSQLite(ast, diagramDb = DB.GENERIC) {
             if (d.nullable) field.notNull = true;
             field.primary = false;
             if (d.primary_key) field.primary = true;
-            field.default = "";
+            field.default = '';
             if (d.default_val) {
-              let defaultValue = "";
-              if (d.default_val.value.type === "function") {
+              let defaultValue = '';
+              if (d.default_val.value.type === 'function') {
                 defaultValue = d.default_val.value.name.name[0].value;
                 if (d.default_val.value.args) {
                   defaultValue +=
-                    "(" +
+                    '(' +
                     d.default_val.value.args.value
                       .map((v) => {
                         if (
-                          v.type === "single_quote_string" ||
-                          v.type === "double_quote_string"
+                          v.type === 'single_quote_string' ||
+                          v.type === 'double_quote_string'
                         )
                           return "'" + v.value + "'";
                         return v.value;
                       })
-                      .join(", ") +
-                    ")";
+                      .join(', ') +
+                    ')';
                 }
-              } else if (d.default_val.value.type === "null") {
-                defaultValue = "NULL";
+              } else if (d.default_val.value.type === 'null') {
+                defaultValue = 'NULL';
               } else {
                 defaultValue = d.default_val.value.value.toString();
               }
               field.default = defaultValue;
             }
-            if (d.definition["length"]) {
+            if (d.definition['length']) {
               if (d.definition.scale) {
-                field.size = d.definition["length"] + "," + d.definition.scale;
+                field.size = d.definition['length'] + ',' + d.definition.scale;
               } else {
-                field.size = d.definition["length"];
+                field.size = d.definition['length'];
               }
             }
-            field.check = "";
+            field.check = '';
             if (d.check) {
               field.check = buildSQLFromAST(d.check.definition[0], DB.SQLITE);
             }
@@ -172,8 +172,8 @@ export function fromSQLite(ast, diagramDb = DB.GENERIC) {
                 d.reference_definition,
               );
             }
-          } else if (d.resource === "constraint") {
-            if (d.constraint_type === "primary key") {
+          } else if (d.resource === 'constraint') {
+            if (d.constraint_type === 'primary key') {
               d.definition.forEach((c) => {
                 table.fields.forEach((f) => {
                   if (f.name === c.column && !f.primary) {
@@ -181,7 +181,7 @@ export function fromSQLite(ast, diagramDb = DB.GENERIC) {
                   }
                 });
               });
-            } else if (d.constraint_type.toLowerCase() === "foreign key") {
+            } else if (d.constraint_type.toLowerCase() === 'foreign key') {
               addRelationshipFromReferenceDef(
                 table,
                 d.definition[0].column,
@@ -194,11 +194,11 @@ export function fromSQLite(ast, diagramDb = DB.GENERIC) {
           f.id = j;
         });
         tables.push(table);
-      } else if (e.keyword === "index") {
+      } else if (e.keyword === 'index') {
         const index = {};
         index.name = e.index;
         index.unique = false;
-        if (e.index_type === "unique") index.unique = true;
+        if (e.index_type === 'unique') index.unique = true;
         index.fields = [];
         e.index_columns.forEach((f) => index.fields.push(f.column));
 

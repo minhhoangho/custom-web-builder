@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
-import { Action, ObjectType } from '../data/constants';
+import { Action, ObjectType } from '@constants/editor';
 import { useUndoRedo } from '../hooks';
 
 export const TypesContext = createContext(null);

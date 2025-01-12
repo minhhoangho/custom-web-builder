@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import { MouseEvent, useState } from 'react';
+import { Divider, Menu, MenuItem } from '@mui/material';
 import { useLayout } from 'src/containers/Editor/hooks';
 import { Iconify } from '@components/common';
-import { MouseEvent, useState } from "react";
-import { Menu, MenuItem, Divider } from "@mui/material";
 
 export default function LayoutDropdown() {
   const { layout, setLayout } = useLayout();
@@ -15,26 +15,28 @@ export default function LayoutDropdown() {
     setAnchorEl(null);
   };
 
-
   const invertLayout = (component) =>
     setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
 
   return (
     <div>
-      <div className="py-1 px-2 hover-2 rounded flex items-center justify-center" onClick={handleClick}>
-        <Iconify icon="ph:rows"/>
+      <div
+        className="py-1 px-2 hover-2 rounded flex items-center justify-center"
+        onClick={handleClick}
+      >
+        <Iconify icon="ph:rows" />
         <div>
-          <Iconify icon="mdi:caret-down"/>
+          <Iconify icon="mdi:caret-down" />
         </div>
       </div>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem
           icon={
-            layout.header ? <Iconify icon='mdi:checkbox-outline'/> : <div className="px-2"/>
+            layout.header ? (
+              <Iconify icon="mdi:checkbox-outline" />
+            ) : (
+              <div className="px-2" />
+            )
           }
           onClick={() => invertLayout('header')}
         >
@@ -42,7 +44,11 @@ export default function LayoutDropdown() {
         </MenuItem>
         <MenuItem
           icon={
-            layout.sidebar ? <Iconify icon='mdi:checkbox-outline'/> : <div className="px-2"/>
+            layout.sidebar ? (
+              <Iconify icon="mdi:checkbox-outline" />
+            ) : (
+              <div className="px-2" />
+            )
           }
           onClick={() => invertLayout('sidebar')}
         >
@@ -50,20 +56,18 @@ export default function LayoutDropdown() {
         </MenuItem>
         <MenuItem
           icon={
-            layout.issues ? <Iconify icon='mdi:checkbox-outline'/> : <div className="px-2"/>
+            layout.issues ? (
+              <Iconify icon="mdi:checkbox-outline" />
+            ) : (
+              <div className="px-2" />
+            )
           }
           onClick={() => invertLayout('issues')}
         >
           {t('issues')}
         </MenuItem>
-        <Divider/>
+        <Divider />
       </Menu>
-
-
     </div>
-  )
-
-
-)
-  ;
+  );
 }

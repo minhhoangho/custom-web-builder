@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { templateSeeds } from './seeds';
+import { templateSeeds } from './seed';
 
 export const db = new Dexie('drawDB');
 
