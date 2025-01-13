@@ -1,8 +1,8 @@
 import { Input } from '@components/form/Input';
-import { useSetting } from 'src/containers/Editor/hooks';
+import { useSettings } from 'src/containers/Editor/hooks';
 
 export default function SetTableWidth() {
-  const { settings, setSettings } = useSetting();
+  const { settings, setSettings } = useSettings();
 
   return (
     <Input

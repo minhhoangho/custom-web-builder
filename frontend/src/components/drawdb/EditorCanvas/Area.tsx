@@ -10,7 +10,7 @@ import {
   useLayout,
   useSaveState,
   useSelect,
-  useSetting,
+  useSettings,
   useUndoRedo,
 } from 'src/containers/Editor/hooks';
 import { Popover } from '@components/common/Popover';
@@ -30,7 +30,7 @@ export default function Area({
     },
   } = useCanvas();
   const { layout } = useLayout();
-  const { settings } = useSetting();
+  const { settings } = useSettings();
   const { setSaveState } = useSaveState();
   const { selectedElement, setSelectedElement } = useSelect();
 

@@ -1,7 +1,8 @@
-import { createContext, useEffect, useState } from 'react';
+import { Context, createContext, useEffect, useState } from 'react';
 import { tableWidth } from '@constants/editor';
+import { EditorSettingsInterface } from '../interfaces';
 
-const defaultSettings = {
+const DEFAULT_SETTINGS: EditorSettingsInterface = {
   strictMode: false,
   showFieldSummary: true,
   showGrid: true,
@@ -13,15 +14,17 @@ const defaultSettings = {
   showDebugCoordinates: false,
 };
 
-export const SettingsContext = createContext(defaultSettings);
+export const SettingsContext: Context<EditorSettingsInterface> =
+  createContext(DEFAULT_SETTINGS);
 
 export default function SettingsContextProvider({ children }) {
-  const [settings, setSettings] = useState(defaultSettings);
+  const [settings, setSettings] =
+    useState<EditorSettingsInterface>(DEFAULT_SETTINGS);
 
   useEffect(() => {
-    const settings = localStorage.getItem('settings');
-    if (settings) {
-      setSettings(JSON.parse(settings));
+    const savedSettings = localStorage.getItem('settings');
+    if (savedSettings) {
+      setSettings(JSON.parse(savedSettings) as EditorSettingsInterface);
     }
   }, []);
 

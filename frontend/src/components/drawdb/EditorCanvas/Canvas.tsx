@@ -10,7 +10,7 @@ import {
   useLayout,
   useNote,
   useSelect,
-  useSetting,
+  useSettings,
   useTransform,
   useUndoRedo,
 } from 'src/containers/Editor/hooks';
@@ -35,7 +35,7 @@ export default function Canvas() {
   const { areas, updateArea } = useArea();
   const { notes, updateNote } = useNote();
   const { layout } = useLayout();
-  const { settings } = useSetting();
+  const { settings } = useSettings();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { transform, setTransform } = useTransform();
   const { selectedElement, setSelectedElement } = useSelect();

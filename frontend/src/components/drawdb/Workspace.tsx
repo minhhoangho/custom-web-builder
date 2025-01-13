@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 // import { octokit } from 'src/data/octokit';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
+import { AnyObject } from '@common/interfaces';
 import { db } from 'src/data/db';
 import { CanvasContextProvider } from 'src/containers/Editor/context/CanvasContext';
 import { DB, State } from '@constants/editor';
@@ -16,7 +17,7 @@ import {
   useLayout,
   useNote,
   useSaveState,
-  useSetting,
+  useSettings,
   useTasks,
   useTransform,
   useType,
@@ -38,7 +39,7 @@ const useSearchParams = () => {
     return Object.fromEntries(params.entries());
   });
 
-  const updateSearchParams = (newParams) => {
+  const updateSearchParams = (newParams: AnyObject) => {
     const updatedParams = new URLSearchParams(searchParams);
     Object.entries(newParams).forEach(([key, value]) => {
       if (value === undefined) {
@@ -76,7 +77,7 @@ export default function WorkSpace() {
   const [showSelectDbModal, setShowSelectDbModal] = useState(false);
   const [selectedDb, setSelectedDb] = useState('');
   const { layout } = useLayout();
-  const { settings } = useSetting();
+  const { settings } = useSettings();
   const { types, setTypes } = useType();
   const { areas, setAreas } = useArea();
   const { tasks, setTasks } = useTasks();

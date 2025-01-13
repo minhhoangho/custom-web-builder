@@ -5,7 +5,7 @@ import { Badge } from '@mui/material';
 import {
   useDiagram,
   useEnum,
-  useSetting,
+  useSettings,
   useType,
 } from 'src/containers/Editor/hooks';
 import { arrayIsEqual } from 'src/utils/common';
@@ -15,7 +15,7 @@ import { Collapse } from '@components/common';
 export default function Issues() {
   const { types } = useType();
   const { t } = useTranslation();
-  const { settings } = useSetting();
+  const { settings } = useSettings();
   const { enums } = useEnum();
   const { tables, relationships, database } = useDiagram();
   const [issues, setIssues] = useState([]);

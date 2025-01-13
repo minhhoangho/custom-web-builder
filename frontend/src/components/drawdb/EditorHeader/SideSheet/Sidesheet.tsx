@@ -2,13 +2,13 @@
 import { Drawer } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { SIDESHEET } from '@constants/editor';
-import { useSetting } from 'src/containers/Editor/hooks';
+import { useSettings } from 'src/containers/Editor/hooks';
 import Timeline from './Timeline';
 import Todo from './Todo';
 
 export default function Sidesheet({ type, onClose }) {
   const { t } = useTranslation();
-  const { settings } = useSetting();
+  const { settings } = useSettings();
 
   function getTitle(type) {
     switch (type) {

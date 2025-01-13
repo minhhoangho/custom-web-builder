@@ -1,11 +1,11 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
 import { db } from 'src/data/db';
-import { useSetting } from 'src/containers/Editor/hooks';
+import { useSettings } from 'src/containers/Editor/hooks';
 import Thumbnail from '../../Thumbnail';
 
 export default function New({ selectedTemplateId, setSelectedTemplateId }) {
-  const { settings } = useSetting();
+  const { settings } = useSettings();
   const { t } = useTranslation();
   const templates = useLiveQuery(() => db.templates.toArray());
 

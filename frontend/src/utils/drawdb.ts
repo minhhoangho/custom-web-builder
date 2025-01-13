@@ -1,4 +1,4 @@
-import { AnyObject } from 'yup';
+import { AnyObject } from '@common/interfaces';
 import { tableFieldHeight, tableHeaderHeight } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 

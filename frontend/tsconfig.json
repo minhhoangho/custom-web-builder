@@ -47,6 +47,9 @@
       "@components/*": [
         "./src/components/*"
       ],
+      "@common/*": [
+        "./src/common/*"
+      ],
       "@layouts/*": [
         "./src/layouts/*"
       ],

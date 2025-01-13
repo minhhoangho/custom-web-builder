@@ -5,7 +5,7 @@ import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { githubLight } from '@uiw/codemirror-theme-github';
 import { useTranslation } from 'react-i18next';
 import CodeMirror from '@uiw/react-codemirror';
-import { useSetting } from 'src/containers/Editor/hooks';
+import { useSettings } from 'src/containers/Editor/hooks';
 
 const languageExtension = {
   sql: [sql()],
@@ -14,7 +14,7 @@ const languageExtension = {
 
 export default function Code({ value, language }) {
   const { t } = useTranslation();
-  const { settings } = useSetting();
+  const { settings } = useSettings();
   const [copied, setCopied] = useState(false);
 
   const copyCode = () => {

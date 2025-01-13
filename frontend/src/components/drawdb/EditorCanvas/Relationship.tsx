@@ -6,13 +6,13 @@ import {
   useDiagram,
   useLayout,
   useSelect,
-  useSetting,
+  useSettings,
 } from 'src/containers/Editor/hooks';
 import { calcPath } from 'src/utils/drawdb';
 import RelationshipInfo from '../EditorSidePanel/RelationshipsTab/RelationshipInfo';
 
 export default function Relationship({ data }) {
-  const { settings } = useSetting();
+  const { settings } = useSettings();
   const { tables } = useDiagram();
   const { layout } = useLayout();
   const { selectedElement, setSelectedElement } = useSelect();

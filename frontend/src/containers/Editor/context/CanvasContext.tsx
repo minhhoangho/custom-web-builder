@@ -1,6 +1,25 @@
-import { createContext, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useEventListener, useResizeObserver } from 'usehooks-ts';
 import { useTransform } from '../hooks';
+
+const defaultDOMRect = {
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  toJSON: () => ({}),
+};
 
 export const CanvasContext = createContext({
   canvas: {
@@ -8,7 +27,8 @@ export const CanvasContext = createContext({
       x: 0,
       y: 0,
     },
-    viewBox: new DOMRect(),
+    // viewBox: new DOMRect(),
+    viewBox: defaultDOMRect,
   },
   coords: {
     toDiagramSpace(coords) {
@@ -35,12 +55,17 @@ export const CanvasContext = createContext({
 });
 
 export function CanvasContextProvider({ children, ...attrs }) {
+  const [isClient, setIsClient] = useState(false);
+
   const canvasWrapRef = useRef(null);
   const { transform } = useTransform();
   const canvasSize = useResizeObserver({
     ref: canvasWrapRef,
     box: 'content-box',
   });
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const screenSize = useMemo(
     () => ({
       x: canvasSize.width ?? 0,
@@ -57,13 +82,15 @@ export function CanvasContextProvider({ children, ...attrs }) {
   );
   const viewBox = useMemo(
     () =>
-      new DOMRect(
-        transform.pan.x - viewBoxSize.x / 2,
-        transform.pan.y - viewBoxSize.y / 2,
-        viewBoxSize.x,
-        viewBoxSize.y,
-      ),
-    [transform.pan.x, transform.pan.y, viewBoxSize.x, viewBoxSize.y],
+      isClient
+        ? new DOMRect(
+            transform.pan.x - viewBoxSize.x / 2,
+            transform.pan.y - viewBoxSize.y / 2,
+            viewBoxSize.x,
+            viewBoxSize.y,
+          )
+        : defaultDOMRect,
+    [transform.pan.x, transform.pan.y, viewBoxSize.x, viewBoxSize.y, isClient],
   );
 
   const toDiagramSpace = useCallback(
@@ -156,6 +183,10 @@ export function CanvasContextProvider({ children, ...attrs }) {
       setStyle: setPointerStyle,
     },
   };
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <CanvasContext.Provider value={contextValue}>

@@ -12,34 +12,37 @@ import TypesContextProvider from './context/TypesContext';
 import EnumsContextProvider from './context/EnumsContext';
 import SaveStateContextProvider from './context/SaveStateContext';
 import TablesContextProvider from './context/DiagramContext';
+import SettingsContextProvider from './context/SettingsContext';
 
 export function DrawDBEditor() {
   return (
     <BaseLayout>
       <PrivateLayout>
-        <LayoutContextProvider>
-          <TransformContextProvider>
-            <UndoRedoContextProvider>
-              <SelectContextProvider>
-                <TasksContextProvider>
-                  <AreasContextProvider>
-                    <NotesContextProvider>
-                      <TypesContextProvider>
-                        <EnumsContextProvider>
-                          <TablesContextProvider>
-                            <SaveStateContextProvider>
-                              <WorkSpace />
-                            </SaveStateContextProvider>
-                          </TablesContextProvider>
-                        </EnumsContextProvider>
-                      </TypesContextProvider>
-                    </NotesContextProvider>
-                  </AreasContextProvider>
-                </TasksContextProvider>
-              </SelectContextProvider>
-            </UndoRedoContextProvider>
-          </TransformContextProvider>
-        </LayoutContextProvider>
+        <SettingsContextProvider>
+          <LayoutContextProvider>
+            <TransformContextProvider>
+              <UndoRedoContextProvider>
+                <SelectContextProvider>
+                  <TasksContextProvider>
+                    <AreasContextProvider>
+                      <NotesContextProvider>
+                        <TypesContextProvider>
+                          <EnumsContextProvider>
+                            <TablesContextProvider>
+                              <SaveStateContextProvider>
+                                <WorkSpace />
+                              </SaveStateContextProvider>
+                            </TablesContextProvider>
+                          </EnumsContextProvider>
+                        </TypesContextProvider>
+                      </NotesContextProvider>
+                    </AreasContextProvider>
+                  </TasksContextProvider>
+                </SelectContextProvider>
+              </UndoRedoContextProvider>
+            </TransformContextProvider>
+          </LayoutContextProvider>
+        </SettingsContextProvider>
       </PrivateLayout>
     </BaseLayout>
   );

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { SettingsContext } from '../context/SettingsContext';
 
-export function useSetting() {
+export function useSettings() {
   return useContext(SettingsContext);
 }

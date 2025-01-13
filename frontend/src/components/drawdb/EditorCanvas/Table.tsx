@@ -21,7 +21,7 @@ import {
   useDiagram,
   useLayout,
   useSelect,
-  useSetting,
+  useSettings,
 } from 'src/containers/Editor/hooks';
 import TableInfo from '../EditorSidePanel/TablesTab/TableInfo'; // import { isRtl } from '../../i18n/utils/rtl';
 // import { isRtl } from '../../i18n/utils/rtl';
@@ -39,7 +39,7 @@ export default function Table(props) {
   } = props;
   const { layout } = useLayout();
   const { deleteTable, deleteField } = useDiagram();
-  const { settings } = useSetting();
+  const { settings } = useSettings();
   const { t } = useTranslation();
   const { selectedElement, setSelectedElement } = useSelect();
 

@@ -6,7 +6,7 @@ export * from './use-layout';
 export * from './use-note';
 export * from './use-save-state';
 export * from './use-select';
-export * from './use-setting';
+export * from './use-settings';
 export * from './use-task';
 export * from './use-transform';
 export * from './use-type';

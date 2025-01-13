@@ -7,6 +7,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Validator } from 'jsonschema';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Iconify, Spinner, toast } from '@components/common';
 import { Input } from '@components/form/Input';
 import { areaSchema, noteSchema, tableSchema } from 'src/data/drawdb-schema';
@@ -35,7 +36,7 @@ import {
   useNote,
   useSaveState,
   useSelect,
-  useSetting,
+  useSettings,
   useTransform,
   useType,
   useUndoRedo,
@@ -91,7 +92,7 @@ export default function ControlPanel({
   });
   const { saveState, setSaveState } = useSaveState();
   const { layout, setLayout } = useLayout();
-  const { settings, setSettings } = useSetting();
+  const { settings, setSettings } = useSettings();
   const {
     relationships,
     tables,
@@ -115,7 +116,8 @@ export default function ControlPanel({
   const { transform, setTransform } = useTransform();
   const { t, i18n } = useTranslation();
   const { setGistId } = useContext(IdContext);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const router = useRouter();
 
   const invertLayout = (component) =>
     setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
@@ -1091,7 +1093,7 @@ export default function ControlPanel({
       exit: {
         function: () => {
           save();
-          if (saveState === State.SAVED) navigate('/');
+          if (saveState === State.SAVED) router.replace('/');
         },
       },
     },
@@ -1444,14 +1446,14 @@ export default function ControlPanel({
                 <div className="text-gray-400">Ctrl+Alt+W</div>
               </MenuItem>
               {[0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 3.0].map((e, i) => (
-                <Dropdown.Item
+                <MenuItem
                   key={i}
                   onClick={() => {
                     setTransform((prev) => ({ ...prev, zoom: e }));
                   }}
                 >
                   {Math.floor(e * 100)}%
-                </Dropdown.Item>
+                </MenuItem>
               ))}
               <MenuItem>
                 <Input
