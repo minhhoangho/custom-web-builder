@@ -1,10 +1,14 @@
 import { createContext, useState } from 'react';
 import { ObjectType, Tab } from '@constants/editor';
+import { EditorSelectInterface } from "../interfaces";
 
-export const SelectContext = createContext(null);
+export const SelectContext = createContext<{
+  selectedElement: EditorSelectInterface;
+  setSelectedElement: (element: EditorSelectInterface) => void;
+} | null>(null);
 
 export default function SelectContextProvider({ children }) {
-  const [selectedElement, setSelectedElement] = useState({
+  const [selectedElement, setSelectedElement] = useState<EditorSelectInterface>({
     element: ObjectType.NONE,
     id: -1,
     openDialogue: false,
