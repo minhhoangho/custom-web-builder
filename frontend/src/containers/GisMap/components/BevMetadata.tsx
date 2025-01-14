@@ -14,7 +14,7 @@ import {
   ViewPointData,
 } from '../models';
 import { saveBevMetadata } from '../../../api/view-point';
-import { toast } from '../../../components/Toast';
+import { toast } from '@components/common';
 import { isEmptyMatrix } from '../../../utils';
 import { MapWithRectangle } from '../OpenLayerMap';
 

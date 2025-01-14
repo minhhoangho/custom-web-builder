@@ -1,4 +1,5 @@
 export const template4 = {
+  id: 4,
   tables: [
     {
       id: 0,

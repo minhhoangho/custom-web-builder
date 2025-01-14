@@ -36,17 +36,18 @@ import ImportDiagram from './ImportDiagram';
 import ImportSource from './ImportSource';
 import SetTableWidth from './SetTableWidth';
 import Code from './Code';
+import { toast } from '@components/common';
 
 export default function Modal({
-  modal,
-  setModal,
-  title,
-  setTitle,
-  setDiagramId,
-  exportData,
-  setExportData,
-  importDb,
-}) {
+                                modal,
+                                setModal,
+                                title,
+                                setTitle,
+                                setDiagramId,
+                                exportData,
+                                setExportData,
+                                importDb,
+                              }) {
   const { t, i18n } = useTranslation();
   const { setTables, setRelationships, database, setDatabase } = useDiagram();
   const { setNotes } = useNote();
@@ -118,12 +119,12 @@ export default function Modal({
           window.name = `d ${diagram.id}`;
         } else {
           window.name = '';
-          Toast.error(t('didnt_find_diagram'));
+          toast('error', 'Cannot find the diagram');
         }
       })
       .catch((error) => {
         console.log(error);
-        Toast.error(t('didnt_find_diagram'));
+        toast('error', 'Cannot find the diagram');
       });
   };
 
@@ -265,7 +266,7 @@ export default function Modal({
         );
       case MODAL.RENAME:
         return (
-          <Rename key={title} title={title} setTitle={setUncontrolledTitle} />
+          <Rename key={title} title={title} setTitle={setUncontrolledTitle}/>
         );
       case MODAL.OPEN:
         return (
@@ -288,9 +289,9 @@ export default function Modal({
           return (
             <>
               {modal === MODAL.IMG ? (
-                <Image src={exportData.data} alt="Diagram" height={280} />
+                <Image src={exportData.data} alt="Diagram" height={280}/>
               ) : (
-                <Code value={exportData.data} language={exportData.extension} />
+                <Code value={exportData.data} language={exportData.extension}/>
               )}
               <div className="text-sm font-semibold mt-2">{t('filename')}:</div>
               <Input
@@ -308,12 +309,12 @@ export default function Modal({
           return (
             <div className="text-center my-3 text-sky-600">
               {/*<Spin tip={t('loading')} size="large" />*/}
-              <Spinner />
+              <Spinner/>
             </div>
           );
         }
       case MODAL.TABLE_WIDTH:
-        return <SetTableWidth />;
+        return <SetTableWidth/>;
       // case MODAL.LANGUAGE:
       //   return <Language />;
       // case MODAL.SHARE:

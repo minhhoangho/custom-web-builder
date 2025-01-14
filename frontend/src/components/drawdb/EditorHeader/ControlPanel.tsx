@@ -535,7 +535,7 @@ export default function ControlPanel({
           toast('success', t('copied_to_clipboard'));
         })
         .catch(() => {
-          toast('error', t('oops_smth_went_wrong'));
+          toast('error', 'Something went wrong');
         });
     });
   };
@@ -662,17 +662,17 @@ export default function ControlPanel({
       case ObjectType.TABLE:
         navigator.clipboard
           .writeText(JSON.stringify({ ...tables[selectedElement.id] }))
-          .catch(() => toast('error', t('oops_smth_went_wrong')));
+          .catch(() => toast('error', 'Something went wrong'));
         break;
       case ObjectType.NOTE:
         navigator.clipboard
           .writeText(JSON.stringify({ ...notes[selectedElement.id] }))
-          .catch(() => toast('error', t('oops_smth_went_wrong')));
+          .catch(() => toast('error', 'Something went wrong'));
         break;
       case ObjectType.AREA:
         navigator.clipboard
           .writeText(JSON.stringify({ ...areas[selectedElement.id] }))
-          .catch(() => toast('error', t('oops_smth_went_wrong')));
+          .catch(() => toast('error', 'Something went wrong'));
         break;
       default:
         break;
@@ -788,7 +788,7 @@ export default function ControlPanel({
               setRedoStack([]);
               setGistId('');
             })
-            .catch(() => toast('error', t('oops_smth_went_wrong')));
+            .catch(() => toast('error', 'Something went wrong'));
         },
       },
       import_diagram: {
@@ -1327,7 +1327,7 @@ export default function ControlPanel({
               window.location.reload(false);
             })
             .catch(() => {
-              toast('error', t('oops_smth_went_wrong'));
+              toast('error', 'Something went wrong');
             });
         },
       },
