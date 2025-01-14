@@ -1,17 +1,34 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
 import { Action, ObjectType } from '@constants/editor';
 import { useUndoRedo } from '../hooks';
+import { EditorTypeInterface } from '../interfaces';
 
-export const TypesContext = createContext(null);
+export const TypesContext = createContext<{
+  types: EditorTypeInterface[];
+  setTypes: React.Dispatch<React.SetStateAction<EditorTypeInterface[]>>;
+  addType: (data: EditorTypeInterface, addToHistory?: boolean) => void;
+  updateType: (id: number, values: Partial<EditorTypeInterface>) => void;
+  deleteType: (id: number, addToHistory?: boolean) => void;
+}>({
+  types: [],
+  setTypes: () => {},
+  addType: () => {},
+  updateType: () => {},
+  deleteType: () => {},
+});
 
-export default function TypesContextProvider({ children }) {
+export default function TypesContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { t } = useTranslation();
-  const [types, setTypes] = useState([]);
+  const [types, setTypes] = useState<EditorTypeInterface[]>([]);
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
-  const addType = (data, addToHistory = true) => {
+  const addType = (data: EditorTypeInterface, addToHistory = true) => {
     if (data) {
       setTypes((prev) => {
         const temp = prev.slice();

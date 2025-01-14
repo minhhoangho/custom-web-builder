@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { createContext, useCallback, useEffect, useState } from 'react';
-// import { Modal } from '@douyinfe/semi-ui';
 import { Button, Modal } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-// import { octokit } from 'src/data/octokit';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
 import { AnyObject } from '@common/interfaces';
@@ -24,7 +21,6 @@ import {
   useUndoRedo,
 } from 'src/containers/Editor/hooks';
 import { databases } from 'src/data/database';
-import { isRtl } from 'src/i18n/utils/rtl';
 import FloatingControls from './FloatingControls';
 import SidePanel from './EditorSidePanel/SidePanel';
 import Canvas from './EditorCanvas/Canvas';
@@ -94,12 +90,13 @@ export default function WorkSpace() {
     setDatabase,
   } = useDiagram();
   const { undoStack, redoStack, setUndoStack, setRedoStack } = useUndoRedo();
-  const { t, i18n } = useTranslation();
+  // const { t, i18n } = useTranslation();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const handleResize = (e) => {
     if (!resize) return;
-    const w = isRtl(i18n.language) ? window.innerWidth - e.clientX : e.clientX;
+    // const w = isRtl(i18n.language) ? window.innerWidth - e.clientX : e.clientX;
+    const w = e.clientX;
     if (w > 340) setWidth(w);
   };
 
@@ -442,7 +439,8 @@ export default function WorkSpace() {
           // https://stackoverflow.com/a/70976017/1137077
           e.target.releasePointerCapture(e.pointerId);
         }}
-        style={isRtl(i18n.language) ? { direction: 'rtl' } : {}}
+        // style={isRtl(i18n.language) ? { direction: 'rtl' } : {}}
+        style={{ direction: 'rtl' }}
       >
         {layout.sidebar && (
           <SidePanel resize={resize} setResize={setResize} width={width} />

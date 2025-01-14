@@ -1,4 +1,4 @@
-import { Context, createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { tableWidth } from '@constants/editor';
 import { EditorSettingsInterface } from '../interfaces';
 
@@ -14,17 +14,19 @@ const DEFAULT_SETTINGS: EditorSettingsInterface = {
   showDebugCoordinates: false,
 };
 
-
 export const SettingsContext = createContext<{
   settings: EditorSettingsInterface;
-  setSettings: (settings: EditorSettingsInterface) => void;
+  setSettings: React.Dispatch<React.SetStateAction<EditorSettingsInterface>>;
 }>({
   settings: DEFAULT_SETTINGS,
-  setSettings: () => {
-  },
-})
+  setSettings: () => {},
+});
 
-export default function SettingsContextProvider({ children }) {
+export default function SettingsContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [settings, setSettings] =
     useState<EditorSettingsInterface>(DEFAULT_SETTINGS);
 

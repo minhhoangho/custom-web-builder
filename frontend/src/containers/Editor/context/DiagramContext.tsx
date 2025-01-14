@@ -1,9 +1,8 @@
 import { createContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
-import { Action, DB, ObjectType, defaultBlue } from '@constants/editor';
-import { useTransform, useUndoRedo, useSelect } from '../hooks';
-import { DField, DRelationship, DTable } from "src/data/interface";
+import { Action, DB, defaultBlue, ObjectType } from '@constants/editor';
+import { DField, DRelationship, DTable } from 'src/data/interface';
+import { useSelect, useTransform, useUndoRedo } from '../hooks';
 
 export const DiagramContext = createContext<{
   tables: DTable[];
@@ -17,13 +16,18 @@ export const DiagramContext = createContext<{
   setRelationships: (_relationships: DRelationship[]) => void;
   addRelationship: (_data: DRelationship, addToHistory: boolean) => void;
   deleteRelationship: (id: number, addToHistory: boolean) => void;
-  database: typeof DB[keyof typeof DB];
-  setDatabase: (string) => void;
-} | null>(null)
+  database: (typeof DB)[keyof typeof DB];
+  setDatabase: (dbName: (typeof DB)[keyof typeof DB]) => void;
+} | null>(null);
 
-export default function DiagramContextProvider({ children }) {
-  const { t } = useTranslation();
-  const [database, setDatabase] = useState<typeof DB[keyof typeof DB]>(DB.GENERIC);
+export default function DiagramContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [database, setDatabase] = useState<(typeof DB)[keyof typeof DB]>(
+    DB.GENERIC,
+  );
   const [tables, setTables] = useState<DTable[]>([]);
   const [relationships, setRelationships] = useState<DRelationship[]>([]);
   const { transform } = useTransform();
@@ -72,14 +76,14 @@ export default function DiagramContextProvider({ children }) {
         {
           action: Action.ADD,
           element: ObjectType.TABLE,
-          message: 'Add table'
+          message: 'Add table',
         },
       ]);
       setRedoStack([]);
     }
   };
 
-  const deleteTable = (id, addToHistory = true) => {
+  const deleteTable = (id: number, addToHistory = true) => {
     if (addToHistory) {
       toast('success', 'Table deleted');
       const rels = relationships.reduce((acc, r) => {
@@ -134,7 +138,11 @@ export default function DiagramContextProvider({ children }) {
     );
   };
 
-  const updateField = (tid, fid, updatedValues) => {
+  const updateField = (
+    tid: number,
+    fid: number,
+    updatedValues: Partial<DField>,
+  ) => {
     setTables((prev) =>
       prev.map((table, i) => {
         if (tid === i) {
@@ -150,7 +158,7 @@ export default function DiagramContextProvider({ children }) {
     );
   };
 
-  const deleteField = (field, tid, addToHistory = true) => {
+  const deleteField = (field: DField, tid: number, addToHistory = true) => {
     if (addToHistory) {
       const rels = relationships.reduce((acc, r) => {
         if (
@@ -238,7 +246,7 @@ export default function DiagramContextProvider({ children }) {
     }
   };
 
-  const deleteRelationship = (id, addToHistory = true) => {
+  const deleteRelationship = (id: number, addToHistory = true) => {
     if (addToHistory) {
       setUndoStack((prev) => [
         ...prev,

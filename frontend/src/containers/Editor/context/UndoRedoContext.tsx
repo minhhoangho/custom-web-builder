@@ -1,13 +1,25 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
+import {
+  EditorRedoStackInterface,
+  EditorUndoStackInterface,
+} from '../interfaces/stack.interface';
 
 export const UndoRedoContext = createContext({
   undoStack: [],
-  setUndoStack: (data: any[] | Function) => {},
+  setUndoStack: React.Dispatch<
+    React.SetStateAction<EditorUndoStackInterface[]>
+  >,
   redoStack: [],
-  setRedoStack: (data: any[]) => {},
+  setRedoStack: React.Dispatch<
+    React.SetStateAction<EditorRedoStackInterface[]>
+  >,
 });
 
-export default function UndoRedoContextProvider({ children }) {
+export default function UndoRedoContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [undoStack, setUndoStack] = useState([]);
   const [redoStack, setRedoStack] = useState([]);
 
