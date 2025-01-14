@@ -1657,6 +1657,7 @@ export default function ControlPanel({
                 <Iconify icon="lucide:edit"/>
               )}
             </div>
+
             <div className="flex justify-between items-center">
               <div className="flex justify-start text-md select-none me-2">
                 {Object.keys(menu).map((category) => (
