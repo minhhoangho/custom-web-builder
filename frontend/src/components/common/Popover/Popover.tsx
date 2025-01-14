@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 type PopoverProps = {
   className?: string;
+  style?: React.CSSProperties;
   visible?: boolean;
   buttonElement: React.ReactNode;
   children: React.ReactNode;
@@ -82,13 +83,14 @@ const mapPositionToAnchorOrigin = (
 };
 
 export function Popover({
-  children,
-  position,
-  buttonElement,
-  visible,
-  onClickOutSide,
-  className,
-}: PopoverProps) {
+                          children,
+                          position,
+                          buttonElement,
+                          visible,
+                          onClickOutSide,
+                          className,
+                          style
+                        }: PopoverProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -117,7 +119,7 @@ export function Popover({
   }, [onClickOutSide]);
 
   return (
-    <div ref={popoverRef} className={className}>
+    <div ref={popoverRef} className={className} style={style}>
       <div onClick={handleClick}>{buttonElement}</div>
       <MuiPopover
         open={visible ?? open}

@@ -197,19 +197,21 @@ export default function TableField({ data, tid, index }) {
       </Grid>
       <Grid item xs={2}>
         <Popover
-          content={
-            <div className="px-1 w-[240px] popover-theme">
-              <FieldDetails data={data} index={index} tid={tid} />
-            </div>
+          buttonElement={
+            <Button
+              type="tertiary"
+              startIcon={<Iconify icon="ic:round-more-vert"/>}
+            />
           }
-          trigger="click"
+          // trigger="click"
           position="right"
-          showArrow
+          // showArrow
         >
-          <Button
-            type="tertiary"
-            startIcon={<Iconify icon="ic:round-more-vert" />}
-          />
+
+          <div className="px-1 w-[240px] popover-theme">
+            <FieldDetails data={data} index={index} tid={tid}/>
+          </div>
+
         </Popover>
       </Grid>
     </Grid>

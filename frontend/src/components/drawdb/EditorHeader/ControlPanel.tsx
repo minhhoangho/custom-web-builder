@@ -54,12 +54,12 @@ import { IconAddArea, IconAddNote, IconAddTable } from '../icons';
 import { IdContext } from '../Workspace';
 
 export default function ControlPanel({
-  diagramId,
-  setDiagramId,
-  title,
-  setTitle,
-  lastSaved,
-}) {
+                                       diagramId,
+                                       setDiagramId,
+                                       title,
+                                       setTitle,
+                                       lastSaved,
+                                     }) {
   const confirmBox = useConfirm();
 
   const [anchorElToolbar, setAnchorElToolbar] = useState<null | HTMLElement>(
@@ -252,9 +252,9 @@ export default function ControlPanel({
             indices: tables[a.tid].indices.map((index) =>
               index.id === a.iid
                 ? {
-                    ...index,
-                    ...a.undo,
-                  }
+                  ...index,
+                  ...a.undo,
+                }
                 : index,
             ),
           });
@@ -440,9 +440,9 @@ export default function ControlPanel({
             indices: tables[a.tid].indices.map((index) =>
               index.id === a.iid
                 ? {
-                    ...index,
-                    ...a.redo,
-                  }
+                  ...index,
+                  ...a.redo,
+                }
                 : index,
             ),
           });
@@ -758,7 +758,7 @@ export default function ControlPanel({
               ...(databases[database].hasTypes && { types: types }),
             })
             .then(() => {
-              toast('success', t('template_saved'));
+              toast('success', 'Template saved');
             });
         },
       },
@@ -1088,7 +1088,8 @@ export default function ControlPanel({
             },
           },
         ],
-        function: () => {},
+        function: () => {
+        },
       },
       exit: {
         function: () => {
@@ -1154,36 +1155,36 @@ export default function ControlPanel({
     view: {
       header: {
         state: layout.header ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: () =>
           setLayout((prev) => ({ ...prev, header: !prev.header })),
       },
       sidebar: {
         state: layout.sidebar ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: () =>
           setLayout((prev) => ({ ...prev, sidebar: !prev.sidebar })),
       },
       issues: {
         state: layout.issues ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: () =>
           setLayout((prev) => ({ ...prev, issues: !prev.issues })),
       },
       strict_mode: {
         state: settings.strictMode ? (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ) : (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ),
         function: viewStrictMode,
         shortcut: 'Ctrl+Shift+M',
@@ -1201,9 +1202,9 @@ export default function ControlPanel({
       // },
       field_details: {
         state: settings.showFieldSummary ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: viewFieldSummary,
         shortcut: 'Ctrl+Shift+F',
@@ -1214,18 +1215,18 @@ export default function ControlPanel({
       },
       show_grid: {
         state: settings.showGrid ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: viewGrid,
         shortcut: 'Ctrl+Shift+G',
       },
       show_cardinality: {
         state: settings.showCardinality ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: () =>
           setSettings((prev) => ({
@@ -1235,9 +1236,9 @@ export default function ControlPanel({
       },
       show_debug_coordinates: {
         state: settings.showDebugCoordinates ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: () =>
           setSettings((prev) => ({
@@ -1268,7 +1269,8 @@ export default function ControlPanel({
             },
           },
         ],
-        function: () => {},
+        function: () => {
+        },
       },
       zoom_in: {
         function: zoomIn,
@@ -1293,18 +1295,18 @@ export default function ControlPanel({
       },
       autosave: {
         state: settings.autosave ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: () =>
           setSettings((prev) => ({ ...prev, autosave: !prev.autosave })),
       },
       panning: {
         state: settings.panning ? (
-          <i className="bi bi-toggle-on" />
+          <i className="bi bi-toggle-on"/>
         ) : (
-          <i className="bi bi-toggle-off" />
+          <i className="bi bi-toggle-off"/>
         ),
         function: () =>
           setSettings((prev) => ({ ...prev, panning: !prev.panning })),
@@ -1390,7 +1392,7 @@ export default function ControlPanel({
                 color="primary"
                 className="text-base me-2 pe-6 ps-5 py-[18px] rounded-md"
                 size="medium"
-                startIcon={<Iconify icon="mdi:share-outline" />}
+                startIcon={<Iconify icon="mdi:share-outline"/>}
                 onClick={() => setModal(MODAL.SHARE)}
               >
                 {t('share')}
@@ -1419,10 +1421,11 @@ export default function ControlPanel({
 
   function toolbar() {
     return (
-      <div className="py-1.5 px-5 flex justify-between items-center rounded-xl my-1 sm:mx-1 xl:mx-6 select-none overflow-hidden toolbar-theme">
+      <div
+        className="py-1.5 px-5 flex justify-between items-center rounded-xl my-1 sm:mx-1 xl:mx-6 select-none overflow-hidden toolbar-theme">
         <div className="flex justify-start items-center">
-          <LayoutDropdown />
-          <Divider orientation="vertical" flexItem />
+          <LayoutDropdown/>
+          <Divider orientation="vertical" flexItem/>
 
           <div className="control-panel-dropdown" onClick={handleClickToolbar}>
             <div className="py-1 px-2 hover-2 rounded flex items-center justify-center">
@@ -1430,7 +1433,7 @@ export default function ControlPanel({
                 {Math.floor(transform.zoom * 100)}%
               </div>
               <div>
-                <Iconify icon="mdi:caret-down" />
+                <Iconify icon="mdi:caret-down"/>
               </div>
             </div>
             <Menu
@@ -1478,7 +1481,7 @@ export default function ControlPanel({
                 setTransform((prev) => ({ ...prev, zoom: prev.zoom * 1.2 }))
               }
             >
-              <i className="fa-solid fa-magnifying-glass-plus" />
+              <i className="fa-solid fa-magnifying-glass-plus"/>
             </button>
           </Tooltip>
           <Tooltip title={t('zoom_out')} placement="bottom">
@@ -1488,10 +1491,10 @@ export default function ControlPanel({
                 setTransform((prev) => ({ ...prev, zoom: prev.zoom / 1.2 }))
               }
             >
-              <i className="fa-solid fa-magnifying-glass-minus" />
+              <i className="fa-solid fa-magnifying-glass-minus"/>
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem/>
           <Tooltip title={t('undo')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded flex items-center"
@@ -1516,13 +1519,13 @@ export default function ControlPanel({
               />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem/>
           <Tooltip title={t('add_table')} placement="bottom">
             <button
               className="flex items-center py-1 px-2 hover-2 rounded"
               onClick={() => addTable()}
             >
-              <IconAddTable />
+              <IconAddTable/>
             </button>
           </Tooltip>
           <Tooltip title={t('add_area')} placement="bottom">
@@ -1530,7 +1533,7 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={() => addArea()}
             >
-              <IconAddArea />
+              <IconAddArea/>
             </button>
           </Tooltip>
           <Tooltip title={t('add_note')} placement="bottom">
@@ -1538,16 +1541,16 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={() => addNote()}
             >
-              <IconAddNote />
+              <IconAddNote/>
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem/>
           <Tooltip title={t('save')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={save}
             >
-              <Iconify icon="mi:save" />
+              <Iconify icon="mi:save"/>
             </button>
           </Tooltip>
           <Tooltip title={t('to_do')} placement="bottom">
@@ -1555,10 +1558,10 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded text-xl -mt-0.5"
               onClick={() => setSidesheet(SIDESHEET.TODO)}
             >
-              <i className="fa-regular fa-calendar-check" />
+              <i className="fa-regular fa-calendar-check"/>
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem/>
           <Tooltip title={t('theme')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded text-xl -mt-0.5"
@@ -1573,7 +1576,7 @@ export default function ControlPanel({
                 }
               }}
             >
-              <i className="fa-solid fa-circle-half-stroke" />
+              <i className="fa-solid fa-circle-half-stroke"/>
             </button>
           </Tooltip>
         </div>
@@ -1582,9 +1585,9 @@ export default function ControlPanel({
           className="flex items-center"
         >
           {layout.header ? (
-            <Iconify icon="mdi:chevron-up" />
+            <Iconify icon="mdi:chevron-up"/>
           ) : (
-            <Iconify icon="mdi:chevron-down" />
+            <Iconify icon="mdi:chevron-down"/>
           )}
         </button>
       </div>
@@ -1651,7 +1654,7 @@ export default function ControlPanel({
                 {title}
               </div>
               {(showEditName || modal === MODAL.RENAME) && (
-                <Iconify icon="lucide:edit" />
+                <Iconify icon="lucide:edit"/>
               )}
             </div>
             <div className="flex justify-between items-center">
@@ -1738,7 +1741,7 @@ export default function ControlPanel({
               </div>
               <Button size="small" color="primary" variant="outlined">
                 {saveState === State.LOADING || saveState === State.SAVING ? (
-                  <Spinner />
+                  <Spinner/>
                 ) : null}
                 {getState()}
               </Button>

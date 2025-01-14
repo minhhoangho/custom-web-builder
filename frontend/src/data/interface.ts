@@ -18,7 +18,7 @@ export interface DTable {
   name: string;
   x: number;
   y: number;
-  fields: Field[];
+  fields: DField[];
   comment: string;
   indices: any[]; // assuming indices can be of any type
   color: string;
@@ -37,13 +37,12 @@ export interface DRelationship {
 }
 
 export interface DTemplate {
-  id: number;
   tables: DTable[];
   relationships: DRelationship[];
   notes: any[]; // assuming notes can be of any type
   subjectAreas: any[]; // assuming subjectAreas can be of any type
   types: any[]; // assuming types can be of any type
   title: string;
-  description: string;
+  description?: string;
   custom: number;
 }

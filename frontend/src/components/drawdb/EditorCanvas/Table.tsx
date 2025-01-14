@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Chip, Drawer, Popover } from '@mui/material';
+import { Button, Chip, Drawer } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
   ObjectType,
@@ -16,7 +16,7 @@ import {
 // } from "@douyinfe/semi-icons";
 // import { Popover, Tag, Button, SideSheet } from "@douyinfe/semi-ui";
 import { dbToTypes } from 'src/data/datatypes';
-import { Iconify } from '@components/common';
+import { Iconify, Popover } from '@components/common';
 import {
   useDiagram,
   useLayout,
@@ -83,15 +83,15 @@ export default function Table(props) {
           onDoubleClick={openEditor}
           className={`border-2 hover:border-dashed hover:border-blue-500
                select-none rounded-lg w-full ${
-                 settings.mode === 'light'
-                   ? 'bg-zinc-100 text-zinc-800'
-                   : 'bg-zinc-800 text-zinc-200'
-               } ${
-                 selectedElement.id === tableData.id &&
-                 selectedElement.element === ObjectType.TABLE
-                   ? 'border-solid border-blue-500'
-                   : 'border-zinc-500'
-               }`}
+            settings.mode === 'light'
+              ? 'bg-zinc-100 text-zinc-800'
+              : 'bg-zinc-800 text-zinc-200'
+          } ${
+            selectedElement.id === tableData.id &&
+            selectedElement.element === ObjectType.TABLE
+              ? 'border-solid border-blue-500'
+              : 'border-zinc-500'
+          }`}
           style={{ direction: 'ltr' }}
         >
           <div
@@ -109,7 +109,7 @@ export default function Table(props) {
             <div className="hidden group-hover:block">
               <div className="flex justify-end items-center mx-2">
                 <Button
-                  startIcon={<Iconify icon="lucide:edit" />}
+                  startIcon={<Iconify icon="lucide:edit"/>}
                   size="small"
                   theme="solid"
                   style={{
@@ -120,74 +120,76 @@ export default function Table(props) {
                 />
                 <Popover
                   key={tableData.key}
-                  content={
-                    <div className="popover-theme">
-                      <div className="mb-2">
-                        <strong>{t('comment')}:</strong>{' '}
-                        {tableData.comment === '' ? (
-                          t('not_set')
-                        ) : (
-                          <div>{tableData.comment}</div>
-                        )}
-                      </div>
-                      <div>
-                        <strong
-                          className={`${
-                            tableData.indices.length === 0 ? '' : 'block'
-                          }`}
-                        >
-                          {t('indices')}:
-                        </strong>{' '}
-                        {tableData.indices.length === 0 ? (
-                          t('not_set')
-                        ) : (
-                          <div>
-                            {tableData.indices.map((index, k) => (
-                              <div
-                                key={k}
-                                className={`flex items-center my-1 px-2 py-1 rounded ${
-                                  settings.mode === 'light'
-                                    ? 'bg-gray-100'
-                                    : 'bg-zinc-800'
-                                }`}
-                              >
-                                <i className="fa-solid fa-thumbtack me-2 mt-1 text-slate-500"></i>
-                                <div>
-                                  {index.fields.map((f) => (
-                                    <Chip color="blue" key={f} className="me-1">
-                                      {f}
-                                    </Chip>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <Button
-                        startIcon={<Iconify icon="typcn:delete" />}
-                        color="error"
-                        style={{ marginTop: '8px' }}
-                        onClick={() => deleteTable(tableData.id)}
-                      >
-                        {t('delete')}
-                      </Button>
-                    </div>
+                  buttonElement={
+                    <Button
+                      startIcon={<Iconify icon="ic:round-more-vert"/>}
+                      type="tertiary"
+                      size="small"
+                      style={{
+                        backgroundColor: '#808080b3',
+                        color: 'white',
+                      }}
+                    />
                   }
-                  position="rightTop"
-                  showArrow
-                  trigger="click"
+                  position="topRight"
+                  // showArrow
+                  // trigger="click"
                   style={{ width: '200px', wordBreak: 'break-word' }}
                 >
-                  <Button
-                    startIcon={<Iconify icon="ic:round-more-vert" />}
-                    type="tertiary"
-                    size="small"
-                    style={{
-                      backgroundColor: '#808080b3',
-                      color: 'white',
-                    }}
-                  />
+
+
+                  <div className="popover-theme">
+                    <div className="mb-2">
+                      <strong>{t('comment')}:</strong>{' '}
+                      {tableData.comment === '' ? (
+                        t('not_set')
+                      ) : (
+                        <div>{tableData.comment}</div>
+                      )}
+                    </div>
+                    <div>
+                      <strong
+                        className={`${
+                          tableData.indices.length === 0 ? '' : 'block'
+                        }`}
+                      >
+                        {t('indices')}:
+                      </strong>{' '}
+                      {tableData.indices.length === 0 ? (
+                        t('not_set')
+                      ) : (
+                        <div>
+                          {tableData.indices.map((index, k) => (
+                            <div
+                              key={k}
+                              className={`flex items-center my-1 px-2 py-1 rounded ${
+                                settings.mode === 'light'
+                                  ? 'bg-gray-100'
+                                  : 'bg-zinc-800'
+                              }`}
+                            >
+                              <i className="fa-solid fa-thumbtack me-2 mt-1 text-slate-500"></i>
+                              <div>
+                                {index.fields.map((f) => (
+                                  <Chip color="blue" key={f} className="me-1">
+                                    {f}
+                                  </Chip>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <Button
+                      startIcon={<Iconify icon="typcn:delete"/>}
+                      color="error"
+                      style={{ marginTop: '8px' }}
+                      onClick={() => deleteTable(tableData.id)}
+                    >
+                      {t('delete')}
+                    </Button>
+                  </div>
                 </Popover>
               </div>
             </div>
@@ -196,63 +198,63 @@ export default function Table(props) {
             return settings.showFieldSummary ? (
               <Popover
                 key={i}
-                content={
-                  <div className="popover-theme">
-                    <div
-                      className="flex justify-between items-center pb-2"
-                      style={{ direction: 'ltr' }}
-                    >
-                      <p className="me-4 font-bold">{e.name}</p>
-                      <p className="ms-4">
-                        {e.type +
-                          ((dbToTypes[database][e.type].isSized ||
-                            dbToTypes[database][e.type].hasPrecision) &&
-                          e.size &&
-                          e.size !== ''
-                            ? '(' + e.size + ')'
-                            : '')}
-                      </p>
-                    </div>
-                    <hr />
-                    {e.primary && (
-                      <Chip color="blue" className="me-2 my-2">
-                        {t('primary')}
-                      </Chip>
-                    )}
-                    {e.unique && (
-                      <Chip color="amber" className="me-2 my-2">
-                        {t('unique')}
-                      </Chip>
-                    )}
-                    {e.notNull && (
-                      <Chip color="purple" className="me-2 my-2">
-                        {t('not_null')}
-                      </Chip>
-                    )}
-                    {e.increment && (
-                      <Chip color="green" className="me-2 my-2">
-                        {t('autoincrement')}
-                      </Chip>
-                    )}
-                    <p>
-                      <strong>{t('default_value')}: </strong>
-                      {e.default === '' ? t('not_set') : e.default}
-                    </p>
-                    <p>
-                      <strong>{t('comment')}: </strong>
-                      {e.comment === '' ? t('not_set') : e.comment}
-                    </p>
-                  </div>
+                buttonElement={
+                  field(e, i)
                 }
                 position="right"
-                showArrow
+                // showArrow
                 // style={
                 //   isRtl(i18n.language)
                 //     ? { direction: 'rtl' }
                 //     : { direction: 'ltr' }
                 // }
               >
-                {field(e, i)}
+                <div className="popover-theme">
+                  <div
+                    className="flex justify-between items-center pb-2"
+                    style={{ direction: 'ltr' }}
+                  >
+                    <p className="me-4 font-bold">{e.name}</p>
+                    <p className="ms-4">
+                      {e.type +
+                        ((dbToTypes[database][e.type].isSized ||
+                          dbToTypes[database][e.type].hasPrecision) &&
+                        e.size &&
+                        e.size !== ''
+                          ? '(' + e.size + ')'
+                          : '')}
+                    </p>
+                  </div>
+                  <hr/>
+                  {e.primary && (
+                    <Chip color="blue" className="me-2 my-2">
+                      {t('primary')}
+                    </Chip>
+                  )}
+                  {e.unique && (
+                    <Chip color="amber" className="me-2 my-2">
+                      {t('unique')}
+                    </Chip>
+                  )}
+                  {e.notNull && (
+                    <Chip color="purple" className="me-2 my-2">
+                      {t('not_null')}
+                    </Chip>
+                  )}
+                  {e.increment && (
+                    <Chip color="green" className="me-2 my-2">
+                      {t('autoincrement')}
+                    </Chip>
+                  )}
+                  <p>
+                    <strong>{t('default_value')}: </strong>
+                    {e.default === '' ? t('not_set') : e.default}
+                  </p>
+                  <p>
+                    <strong>{t('comment')}: </strong>
+                    {e.comment === '' ? t('not_set') : e.comment}
+                  </p>
+                </div>
               </Popover>
             ) : (
               field(e, i)
@@ -261,7 +263,7 @@ export default function Table(props) {
         </div>
       </foreignObject>
       <Drawer
-        title={t('edit')}
+        title='Edit'
         // size="small"
         open={
           selectedElement.element === ObjectType.TABLE &&
@@ -278,7 +280,7 @@ export default function Table(props) {
         style={{ paddingBottom: '16px' }}
       >
         <div className="sidesheet-theme">
-          <TableInfo data={tableData} />
+          <TableInfo data={tableData}/>
         </div>
       </Drawer>
     </>
@@ -357,12 +359,12 @@ export default function Table(props) {
               style={{
                 backgroundColor: '#d42020b3',
               }}
-              startIcon={<Iconify icon="ic:baseline-minus" />}
+              startIcon={<Iconify icon="ic:baseline-minus"/>}
               onClick={() => deleteField(fieldData, tableData.id)}
             />
           ) : (
             <div className="flex gap-1 items-center">
-              {fieldData.primary && <Iconify icon="material-symbols:key-off" />}
+              {fieldData.primary && <Iconify icon="material-symbols:key-off"/>}
               {!fieldData.notNull && <span>?</span>}
               <span>
                 {fieldData.type +

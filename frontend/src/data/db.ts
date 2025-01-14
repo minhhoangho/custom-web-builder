@@ -5,11 +5,11 @@ import { DTemplate } from "./interface";
 
 // Extend the Transaction type to include the templates property
 interface AppTransaction extends Transaction {
-  templates: EntityTable<DTemplate, 'id'>;
+  templates: EntityTable<DTemplate>;
 }
 
 const db = new Dexie('drawDB') as Dexie & {
-  templates: EntityTable<DTemplate, 'id'>;
+  templates: EntityTable<DTemplate>;
 };
 
 

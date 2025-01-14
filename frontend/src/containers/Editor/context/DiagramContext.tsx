@@ -3,19 +3,58 @@ import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
 import { Action, DB, ObjectType, defaultBlue } from '@constants/editor';
 import { useTransform, useUndoRedo, useSelect } from '../hooks';
+import { DRelationship, DTable } from "../../../data/interface";
 
-export const DiagramContext = createContext(null);
+export const DiagramContext = createContext<{
+  tables: DTable[];
+  setTables: (_table: DTable[]) => void;
+  addTable: (_data: DTable, addToHistory: boolean) => void;
+  updateTable: (_id: number, payload: Partial<DTable>) => void;
+  updateField: () => void;
+  deleteField: () => void;
+  deleteTable: () => void;
+  relationships: any[];
+  setRelationships: () => void;
+  addRelationship: () => void;
+  deleteRelationship: () => void;
+  database: typeof DB[keyof typeof DB];
+  setDatabase: (string) => void;
+}>({
+  tables: [],
+  setTables: () => {
+  },
+  addTable: () => {
+  },
+  updateTable: () => {
+  },
+  updateField: () => {
+  },
+  deleteField: () => {
+  },
+  deleteTable: () => {
+  },
+  relationships: [],
+  setRelationships: () => {
+  },
+  addRelationship: () => {
+  },
+  deleteRelationship: () => {
+  },
+  database: DB.GENERIC,
+  setDatabase: () => {
+  },
+})
 
 export default function DiagramContextProvider({ children }) {
   const { t } = useTranslation();
-  const [database, setDatabase] = useState(DB.GENERIC);
-  const [tables, setTables] = useState([]);
-  const [relationships, setRelationships] = useState([]);
+  const [database, setDatabase] = useState<typeof DB[keyof typeof DB]>(DB.GENERIC);
+  const [tables, setTables] = useState<DTable[]>([]);
+  const [relationships, setRelationships] = useState<DRelationship[]>([]);
   const { transform } = useTransform();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { selectedElement, setSelectedElement } = useSelect();
 
-  const addTable = (data, addToHistory = true) => {
+  const addTable = (data: DTable, addToHistory = true) => {
     if (data) {
       setTables((prev) => {
         const temp = prev.slice();
@@ -113,7 +152,7 @@ export default function DiagramContextProvider({ children }) {
     }
   };
 
-  const updateTable = (id, updatedValues) => {
+  const updateTable = (id: number, updatedValues: Partial<DTable>) => {
     setTables((prev) =>
       prev.map((t) => (t.id === id ? { ...t, ...updatedValues } : t)),
     );
