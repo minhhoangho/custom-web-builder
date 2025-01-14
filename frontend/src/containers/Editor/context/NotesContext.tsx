@@ -1,19 +1,36 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
 import { Action, defaultNoteTheme, ObjectType } from '@constants/editor';
 import { useSelect, useTransform, useUndoRedo } from '../hooks';
+import { EditorNoteInterface } from '../interfaces';
 
-export const NotesContext = createContext(null);
+export const NotesContext = createContext<{
+  notes: EditorNoteInterface[];
+  setNotes: React.Dispatch<React.SetStateAction<EditorNoteInterface[]>>;
+  updateNote: (id: number, values: EditorNoteInterface) => void;
+  addNote: (data: EditorNoteInterface, addToHistory?: boolean) => void;
+  deleteNote: (id: number, addToHistory?: boolean) => void;
+}>({
+  notes: [],
+  setNotes: () => {},
+  updateNote: () => {},
+  addNote: () => {},
+  deleteNote: () => {},
+});
 
-export default function NotesContextProvider({ children }) {
+export default function NotesContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { t } = useTranslation();
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState<EditorNoteInterface[]>([]);
   const { transform } = useTransform();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { selectedElement, setSelectedElement } = useSelect();
 
-  const addNote = (data, addToHistory = true) => {
+  const addNote = (data: EditorNoteInterface, addToHistory = true) => {
     if (data) {
       setNotes((prev) => {
         const temp = prev.slice();
@@ -48,7 +65,7 @@ export default function NotesContextProvider({ children }) {
     }
   };
 
-  const deleteNote = (id, addToHistory = true) => {
+  const deleteNote = (id: number, addToHistory = true) => {
     if (addToHistory) {
       toast('success', t('note_deleted'));
       setUndoStack((prev) => [
@@ -57,7 +74,7 @@ export default function NotesContextProvider({ children }) {
           action: Action.DELETE,
           element: ObjectType.NOTE,
           data: notes[id],
-          message: t('delete_note', { noteTitle: notes[id].title }),
+          message: `Deleted note: ${notes[id]?.title}`,
         },
       ]);
       setRedoStack([]);
@@ -75,7 +92,7 @@ export default function NotesContextProvider({ children }) {
     }
   };
 
-  const updateNote = (id, values) => {
+  const updateNote = (id: number, values: Partial<EditorNoteInterface>) => {
     setNotes((prev) =>
       prev.map((t) => {
         if (t.id === id) {

@@ -1,9 +1,22 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
+import { EditorTaskInterface } from '../interfaces/task.interface';
 
-export const TasksContext = createContext(null);
+export const TasksContext = createContext<{
+  tasks: EditorTaskInterface[];
+  setTasks: React.Dispatch<React.SetStateAction<EditorTaskInterface[]>>;
+  updateTask: (id: number, values: Partial<EditorTaskInterface>) => void;
+}>({
+  tasks: [],
+  setTasks: () => {},
+  updateTask: () => {},
+});
 
-export default function TasksContextProvider({ children }) {
-  const [tasks, setTasks] = useState([]);
+export default function TasksContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [tasks, setTasks] = useState<EditorTaskInterface[]>([]);
 
   const updateTask = (id, values) =>
     setTasks((prev) =>

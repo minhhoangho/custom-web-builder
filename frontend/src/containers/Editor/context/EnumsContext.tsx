@@ -1,17 +1,49 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Action, ObjectType } from '@constants/editor';
 import { toast } from '@components/common';
 import { useUndoRedo } from '../hooks';
 
-export const EnumsContext = createContext(null);
+export const EnumsContext = createContext<{
+  enums: { id?: number; name: string; values: string[] }[];
+  setEnums: React.Dispatch<
+    React.SetStateAction<{ name: string; values: string[] }[]>
+  >;
+  addEnum: (
+    data: { id: number; name: string; values: string[] } | null,
+    addToHistory?: boolean,
+  ) => void;
+  deleteEnum: (id: number, addToHistory?: boolean) => void;
+  updateEnum: (
+    id: number,
+    values: { name?: string; values?: string[] },
+  ) => void;
+}>({
+  enums: [],
+  setEnums: () => {},
+  addEnum: () => {},
+  deleteEnum: () => {},
+  updateEnum: () => {},
+});
 
-export default function EnumsContextProvider({ children }) {
+export default function EnumsContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { t } = useTranslation();
-  const [enums, setEnums] = useState([]);
+  const [enums, setEnums] = useState<
+    {
+      name: string;
+      values: string[];
+    }[]
+  >([]);
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
-  const addEnum = (data, addToHistory = true) => {
+  const addEnum = (
+    data: { id: number; name: string; values: string[] } | null,
+    addToHistory = true,
+  ) => {
     if (data) {
       setEnums((prev) => {
         const temp = prev.slice();
@@ -40,7 +72,7 @@ export default function EnumsContextProvider({ children }) {
     }
   };
 
-  const deleteEnum = (id, addToHistory = true) => {
+  const deleteEnum = (id: number, addToHistory = true) => {
     if (addToHistory) {
       toast('success', t('enum_deleted'));
       setUndoStack((prev) => [
@@ -50,9 +82,7 @@ export default function EnumsContextProvider({ children }) {
           element: ObjectType.ENUM,
           id: id,
           data: enums[id],
-          message: t('delete_enum', {
-            enumName: enums[id].name,
-          }),
+          message: `Deleted enum ${enums[id]?.name}`,
         },
       ]);
       setRedoStack([]);
@@ -60,7 +90,13 @@ export default function EnumsContextProvider({ children }) {
     setEnums((prev) => prev.filter((_, i) => i !== id));
   };
 
-  const updateEnum = (id, values) => {
+  const updateEnum = (
+    id: number,
+    values: Partial<{
+      name: string;
+      values: string[];
+    }>,
+  ) => {
     setEnums((prev) =>
       prev.map((e, i) => (i === id ? { ...e, ...values } : e)),
     );
