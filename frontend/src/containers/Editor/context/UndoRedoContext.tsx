@@ -4,15 +4,20 @@ import {
   EditorUndoStackInterface,
 } from '../interfaces/stack.interface';
 
-export const UndoRedoContext = createContext({
-  undoStack: [],
+export const UndoRedoContext = createContext<{
+  undoStack: EditorUndoStackInterface[];
   setUndoStack: React.Dispatch<
-    React.SetStateAction<EditorUndoStackInterface[]>
-  >,
-  redoStack: [],
+    React.SetStateAction<Partial<EditorUndoStackInterface>[]>
+  >;
+  redoStack: EditorRedoStackInterface[];
   setRedoStack: React.Dispatch<
     React.SetStateAction<EditorRedoStackInterface[]>
-  >,
+  >;
+}>({
+  undoStack: [],
+  setUndoStack: () => {},
+  redoStack: [],
+  setRedoStack: () => {},
 });
 
 export default function UndoRedoContextProvider({
@@ -20,8 +25,8 @@ export default function UndoRedoContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [undoStack, setUndoStack] = useState([]);
-  const [redoStack, setRedoStack] = useState([]);
+  const [undoStack, setUndoStack] = useState<EditorUndoStackInterface[]>([]);
+  const [redoStack, setRedoStack] = useState<EditorRedoStackInterface[]>([]);
 
   return (
     <UndoRedoContext.Provider

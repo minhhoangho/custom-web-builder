@@ -1,19 +1,39 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
 import { Action, defaultBlue, ObjectType } from '@constants/editor';
 import { useSelect, useTransform, useUndoRedo } from '../hooks';
+import { EditorAreaInterface } from '../interfaces';
 
-export const AreasContext = createContext(null);
+export const AreasContext = createContext<{
+  areas: EditorAreaInterface[];
+  setAreas: React.Dispatch<React.SetStateAction<EditorAreaInterface[]>>;
+  updateArea: (id: number, values: Partial<EditorAreaInterface>) => void;
+  addArea: (data: EditorAreaInterface | null, addToHistory?: boolean) => void;
+  deleteArea: (id: number, addToHistory?: boolean) => void;
+}>({
+  areas: [],
+  setAreas: () => {},
+  updateArea: () => {},
+  addArea: () => {},
+  deleteArea: () => {},
+});
 
-export default function AreasContextProvider({ children }) {
+export default function AreasContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { t } = useTranslation();
-  const [areas, setAreas] = useState([]);
+  const [areas, setAreas] = useState<EditorAreaInterface[]>([]);
   const { transform } = useTransform();
   const { selectedElement, setSelectedElement } = useSelect();
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
-  const addArea = (data, addToHistory = true) => {
+  const addArea = (
+    data: EditorAreaInterface | null,
+    addToHistory: boolean = true,
+  ) => {
     if (data) {
       setAreas((prev) => {
         const temp = prev.slice();
@@ -51,14 +71,14 @@ export default function AreasContextProvider({ children }) {
 
   const deleteArea = (id, addToHistory = true) => {
     if (addToHistory) {
-      toast('success', t('area_deleted'));
+      toast('success', 'Deleted area');
       setUndoStack((prev) => [
         ...prev,
         {
           action: Action.DELETE,
           element: ObjectType.AREA,
           data: areas[id],
-          message: t('delete_area', areas[id].name),
+          message: `Deleted area ${areas[id]?.name}`,
         },
       ]);
       setRedoStack([]);
@@ -76,7 +96,7 @@ export default function AreasContextProvider({ children }) {
     }
   };
 
-  const updateArea = (id, values) => {
+  const updateArea = (id: number, values: Partial<EditorAreaInterface>) => {
     setAreas((prev) =>
       prev.map((t) => {
         if (t.id === id) {

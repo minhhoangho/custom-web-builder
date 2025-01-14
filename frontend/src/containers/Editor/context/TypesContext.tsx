@@ -4,6 +4,7 @@ import { toast } from '@components/common';
 import { Action, ObjectType } from '@constants/editor';
 import { useUndoRedo } from '../hooks';
 import { EditorTypeInterface } from '../interfaces';
+import { EditorUndoStackInterface } from '../interfaces/stack.interface';
 
 export const TypesContext = createContext<{
   types: EditorTypeInterface[];
@@ -32,7 +33,7 @@ export default function TypesContextProvider({
     if (data) {
       setTypes((prev) => {
         const temp = prev.slice();
-        temp.splice(data.id, 0, data);
+        temp.splice(data.id ?? 0, 0, data); // TODO: need check
         return temp;
       });
     } else {
@@ -46,7 +47,7 @@ export default function TypesContextProvider({
       ]);
     }
     if (addToHistory) {
-      setUndoStack((prev) => [
+      setUndoStack((prev: EditorUndoStackInterface[]) => [
         ...prev,
         {
           action: Action.ADD,
@@ -58,27 +59,27 @@ export default function TypesContextProvider({
     }
   };
 
-  const deleteType = (id, addToHistory = true) => {
+  const deleteType = (id: number, addToHistory = true) => {
     if (addToHistory) {
       toast('success', t('type_deleted'));
-      setUndoStack((prev) => [
+      setUndoStack((prev: EditorUndoStackInterface[]) => [
         ...prev,
         {
           action: Action.DELETE,
           element: ObjectType.TYPE,
           id: id,
           data: types[id],
-          message: t('delete_type', {
-            typeName: types[id].name,
-          }),
+          message: `Type ${types[id]?.name} deleted`,
         },
       ]);
       setRedoStack([]);
     }
-    setTypes((prev) => prev.filter((e, i) => i !== id));
+    setTypes((prev: EditorTypeInterface[]) =>
+      prev.filter((_e: EditorTypeInterface, i) => i !== id),
+    );
   };
 
-  const updateType = (id, values) => {
+  const updateType = (id: number, values: Partial<EditorTypeInterface>) => {
     setTypes((prev) =>
       prev.map((e, i) => (i === id ? { ...e, ...values } : e)),
     );

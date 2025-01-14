@@ -1,9 +1,23 @@
-import { createContext, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useState } from 'react';
+import { EditorTransformInterface } from '../interfaces';
 
-export const TransformContext = createContext(null);
+export const TransformContext = createContext<{
+  transform: EditorTransformInterface;
+  setTransform: React.Dispatch<React.SetStateAction<EditorTransformInterface>>;
+}>({
+  transform: {
+    zoom: 1,
+    pan: { x: 0, y: 0 },
+  },
+  setTransform: () => {},
+});
 
-export default function TransformContextProvider({ children }) {
-  const [transform, setTransformInternal] = useState({
+export default function TransformContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [transform, setTransformInternal] = useState<EditorTransformInterface>({
     zoom: 1,
     pan: { x: 0, y: 0 },
   });
