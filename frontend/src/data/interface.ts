@@ -22,6 +22,7 @@ export interface DTable {
   comment: string;
   indices: any[]; // assuming indices can be of any type
   color: string;
+  key?: number;
 }
 
 export interface DRelationship {

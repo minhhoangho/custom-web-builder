@@ -3,47 +3,23 @@ import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
 import { Action, DB, ObjectType, defaultBlue } from '@constants/editor';
 import { useTransform, useUndoRedo, useSelect } from '../hooks';
-import { DRelationship, DTable } from "../../../data/interface";
+import { DField, DRelationship, DTable } from "src/data/interface";
 
 export const DiagramContext = createContext<{
   tables: DTable[];
-  setTables: (_table: DTable[]) => void;
+  setTables: (_tables: DTable[]) => void;
   addTable: (_data: DTable, addToHistory: boolean) => void;
   updateTable: (_id: number, payload: Partial<DTable>) => void;
-  updateField: () => void;
-  deleteField: () => void;
-  deleteTable: () => void;
-  relationships: any[];
-  setRelationships: () => void;
-  addRelationship: () => void;
-  deleteRelationship: () => void;
+  updateField: (tid: number, fid: number, payload: Partial<DField>) => void;
+  deleteField: (field: DField, tid: number, addToHistory: boolean) => void;
+  deleteTable: (id: number, addToHistory: boolean) => void;
+  relationships: DRelationship[];
+  setRelationships: (_relationships: DRelationship[]) => void;
+  addRelationship: (_data: DRelationship, addToHistory: boolean) => void;
+  deleteRelationship: (id: number, addToHistory: boolean) => void;
   database: typeof DB[keyof typeof DB];
   setDatabase: (string) => void;
-}>({
-  tables: [],
-  setTables: () => {
-  },
-  addTable: () => {
-  },
-  updateTable: () => {
-  },
-  updateField: () => {
-  },
-  deleteField: () => {
-  },
-  deleteTable: () => {
-  },
-  relationships: [],
-  setRelationships: () => {
-  },
-  addRelationship: () => {
-  },
-  deleteRelationship: () => {
-  },
-  database: DB.GENERIC,
-  setDatabase: () => {
-  },
-})
+} | null>(null)
 
 export default function DiagramContextProvider({ children }) {
   const { t } = useTranslation();
@@ -62,7 +38,7 @@ export default function DiagramContextProvider({ children }) {
         return temp.map((t, i) => ({ ...t, id: i }));
       });
     } else {
-      setTables((prev) => [
+      setTables((prev: DTable[]) => [
         ...prev,
         {
           id: prev.length,
@@ -96,7 +72,7 @@ export default function DiagramContextProvider({ children }) {
         {
           action: Action.ADD,
           element: ObjectType.TABLE,
-          message: t('add_table'),
+          message: 'Add table'
         },
       ]);
       setRedoStack([]);
@@ -105,7 +81,7 @@ export default function DiagramContextProvider({ children }) {
 
   const deleteTable = (id, addToHistory = true) => {
     if (addToHistory) {
-      toast('success', t('table_deleted'));
+      toast('success', 'Table deleted');
       const rels = relationships.reduce((acc, r) => {
         if (r.startTableId === id || r.endTableId === id) {
           acc.push(r);
@@ -118,7 +94,7 @@ export default function DiagramContextProvider({ children }) {
           action: Action.DELETE,
           element: ObjectType.TABLE,
           data: { table: tables[id], relationship: rels },
-          message: t('delete_table', { tableName: tables[id].name }),
+          message: `Delete table ${tables[id].name}`,
         },
       ]);
       setRedoStack([]);
@@ -196,10 +172,7 @@ export default function DiagramContextProvider({ children }) {
             field: field,
             relationship: rels,
           },
-          message: t('edit_table', {
-            tableName: tables[tid].name,
-            extra: '[delete field]',
-          }),
+          message: `Delete field in table ${tables[tid].name}`,
         },
       ]);
       setRedoStack([]);
@@ -241,7 +214,7 @@ export default function DiagramContextProvider({ children }) {
     });
   };
 
-  const addRelationship = (data, addToHistory = true) => {
+  const addRelationship = (data: DRelationship, addToHistory = true) => {
     if (addToHistory) {
       setRelationships((prev) => {
         setUndoStack((prevUndo) => [
@@ -250,7 +223,7 @@ export default function DiagramContextProvider({ children }) {
             action: Action.ADD,
             element: ObjectType.RELATIONSHIP,
             data: data,
-            message: t('add_relationship'),
+            message: 'Add relationship',
           },
         ]);
         setRedoStack([]);
@@ -273,9 +246,7 @@ export default function DiagramContextProvider({ children }) {
           action: Action.DELETE,
           element: ObjectType.RELATIONSHIP,
           data: relationships[id],
-          message: t('delete_relationship', {
-            refName: relationships[id].name,
-          }),
+          message: `Delete relationship ${relationships[id].name}`,
         },
       ]);
       setRedoStack([]);
