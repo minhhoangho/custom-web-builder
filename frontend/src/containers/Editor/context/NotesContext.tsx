@@ -9,7 +9,10 @@ export const NotesContext = createContext<{
   notes: EditorNoteInterface[];
   setNotes: React.Dispatch<React.SetStateAction<EditorNoteInterface[]>>;
   updateNote: (id: number, values: EditorNoteInterface) => void;
-  addNote: (data: EditorNoteInterface, addToHistory?: boolean) => void;
+  addNote: (
+    data?: Partial<EditorNoteInterface> | null,
+    addToHistory?: boolean,
+  ) => void;
   deleteNote: (id: number, addToHistory?: boolean) => void;
 }>({
   notes: [],
@@ -30,7 +33,10 @@ export default function NotesContextProvider({
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { selectedElement, setSelectedElement } = useSelect();
 
-  const addNote = (data: EditorNoteInterface, addToHistory = true) => {
+  const addNote = (
+    data?: Partial<EditorNoteInterface> | null,
+    addToHistory = true,
+  ) => {
     if (data) {
       setNotes((prev) => {
         const temp = prev.slice();

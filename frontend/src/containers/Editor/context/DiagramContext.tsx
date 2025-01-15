@@ -7,15 +7,15 @@ import { useSelect, useTransform, useUndoRedo } from '../hooks';
 export const DiagramContext = createContext<{
   tables: DTable[];
   setTables: (_tables: DTable[]) => void;
-  addTable: (_data: DTable, addToHistory: boolean) => void;
+  addTable: (_data?: Partial<DTable> | null, addToHistory?: boolean) => void;
   updateTable: (_id: number, payload: Partial<DTable>) => void;
   updateField: (tid: number, fid: number, payload: Partial<DField>) => void;
-  deleteField: (field: DField, tid: number, addToHistory: boolean) => void;
-  deleteTable: (id: number, addToHistory: boolean) => void;
+  deleteField: (field: DField, tid: number, addToHistory?: boolean) => void;
+  deleteTable: (id: number, addToHistory?: boolean) => void;
   relationships: DRelationship[];
   setRelationships: (_relationships: DRelationship[]) => void;
-  addRelationship: (_data: DRelationship, addToHistory: boolean) => void;
-  deleteRelationship: (id: number, addToHistory: boolean) => void;
+  addRelationship: (_data: DRelationship, addToHistory?: boolean) => void;
+  deleteRelationship: (id: number, addToHistory?: boolean) => void;
   database: (typeof DB)[keyof typeof DB];
   setDatabase: (dbName: (typeof DB)[keyof typeof DB]) => void;
 }>({
@@ -48,11 +48,11 @@ export default function DiagramContextProvider({
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { selectedElement, setSelectedElement } = useSelect();
 
-  const addTable = (data: DTable, addToHistory = true) => {
-    if (data) {
+  const addTable = (data?: Partial<DTable> | null, addToHistory = true) => {
+    if (data?.id) {
       setTables((prev) => {
         const temp = prev.slice();
-        temp.splice(data.id, 0, data);
+        temp.splice(Number(data.id), 0, data as DTable);
         return temp.map((t, i) => ({ ...t, id: i }));
       });
     } else {
@@ -100,19 +100,22 @@ export default function DiagramContextProvider({
   const deleteTable = (id: number, addToHistory = true) => {
     if (addToHistory) {
       toast('success', 'Table deleted');
-      const rels = relationships.reduce((acc, r) => {
-        if (r.startTableId === id || r.endTableId === id) {
-          acc.push(r);
-        }
-        return acc;
-      }, []);
+      const rels = relationships.reduce(
+        (acc: DRelationship[], r: DRelationship) => {
+          if (r.startTableId === id || r.endTableId === id) {
+            acc.push(r);
+          }
+          return acc;
+        },
+        [],
+      );
       setUndoStack((prev) => [
         ...prev,
         {
           action: Action.DELETE,
           element: ObjectType.TABLE,
           data: { table: tables[id], relationship: rels },
-          message: `Delete table ${tables[id].name}`,
+          message: `Delete table ${tables[id]?.name}`,
         },
       ]);
       setRedoStack([]);
@@ -174,15 +177,18 @@ export default function DiagramContextProvider({
 
   const deleteField = (field: DField, tid: number, addToHistory = true) => {
     if (addToHistory) {
-      const rels = relationships.reduce((acc, r) => {
-        if (
-          (r.startTableId === tid && r.startFieldId === field.id) ||
-          (r.endTableId === tid && r.endFieldId === field.id)
-        ) {
-          acc.push(r);
-        }
-        return acc;
-      }, []);
+      const rels: DRelationship[] = relationships.reduce(
+        (acc: DRelationship[], r: DRelationship) => {
+          if (
+            (r.startTableId === tid && r.startFieldId === field.id) ||
+            (r.endTableId === tid && r.endFieldId === field.id)
+          ) {
+            acc.push(r);
+          }
+          return acc;
+        },
+        [],
+      );
       setUndoStack((prev) => [
         ...prev,
         {
@@ -194,7 +200,7 @@ export default function DiagramContextProvider({
             field: field,
             relationship: rels,
           },
-          message: `Delete field in table ${tables[tid].name}`,
+          message: `Delete field in table ${tables[tid]?.name}`,
         },
       ]);
       setRedoStack([]);
@@ -228,7 +234,7 @@ export default function DiagramContextProvider({
       return temp;
     });
     updateTable(tid, {
-      fields: tables[tid].fields
+      fields: tables[tid]?.fields
         .filter((e) => e.id !== field.id)
         .map((t, i) => {
           return { ...t, id: i };
@@ -268,7 +274,7 @@ export default function DiagramContextProvider({
           action: Action.DELETE,
           element: ObjectType.RELATIONSHIP,
           data: relationships[id],
-          message: `Delete relationship ${relationships[id].name}`,
+          message: `Delete relationship ${relationships[id]?.name}`,
         },
       ]);
       setRedoStack([]);

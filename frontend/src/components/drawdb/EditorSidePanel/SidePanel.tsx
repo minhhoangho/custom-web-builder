@@ -85,6 +85,7 @@ export default function SidePanel({ width, resize, setResize }) {
           </div>
         )}
       </div>
+
       <div
         className={`flex justify-center items-center p-1 h-auto hover-2 cursor-col-resize ${
           resize && 'bg-semi-grey-2'

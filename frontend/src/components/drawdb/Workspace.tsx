@@ -25,8 +25,12 @@ import FloatingControls from './FloatingControls';
 import SidePanel from './EditorSidePanel/SidePanel';
 import Canvas from './EditorCanvas/Canvas';
 import ControlPanel from './EditorHeader/ControlPanel';
+import { DTemplate } from '../../data/interface';
 
-export const IdContext = createContext({ gistId: '' });
+export const IdContext = createContext<{
+  gistId: string;
+  setGistId: React.Dispatch<React.SetStateAction<string>>;
+}>({ gistId: '', setGistId: () => {} });
 
 const useSearchParams = () => {
   const router = useRouter();
@@ -93,7 +97,7 @@ export default function WorkSpace() {
   // const { t, i18n } = useTranslation();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const handleResize = (e) => {
+  const handleResize = (e: any) => {
     if (!resize) return;
     // const w = isRtl(i18n.language) ? window.innerWidth - e.clientX : e.clientX;
     const w = e.clientX;
@@ -108,7 +112,7 @@ export default function WorkSpace() {
     const saveAsDiagram = window.name === '' || op === 'd' || op === 'lt';
 
     if (saveAsDiagram) {
-      searchParams.delete('shareId');
+      searchParams?.delete('shareId');
       setSearchParams(searchParams);
       if ((id === 0 && window.name === '') || op === 'lt') {
         await db.diagrams
@@ -283,7 +287,7 @@ export default function WorkSpace() {
     const loadTemplate = async (id) => {
       await db.templates
         .get(id)
-        .then((diagram) => {
+        .then((diagram: DTemplate) => {
           if (diagram) {
             if (diagram.database) {
               setDatabase(diagram.database);

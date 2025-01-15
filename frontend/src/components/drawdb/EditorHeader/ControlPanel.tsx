@@ -47,19 +47,28 @@ import { databases } from 'src/data/database';
 import { jsonToMermaid } from 'src/utils/exports/export-as/mermaid'; // import { isRtl } from '../../i18n/utils/rtl';
 import { jsonToDocumentation } from 'src/utils/exports/export-as/documentation';
 import useConfirm from '@shared/hooks/use-confirm';
+import { EditorUndoStackInterface } from 'src/containers/Editor/interfaces';
 import Modal from './Modal/Modal';
 import Sidesheet from './SideSheet/Sidesheet';
 import LayoutDropdown from './LayoutDropdown';
 import { IconAddArea, IconAddNote, IconAddTable } from '../icons';
 import { IdContext } from '../Workspace';
 
+type ControlPanelProps = {
+  diagramId: number;
+  setDiagramId: (id: number) => void;
+  title: string;
+  setTitle: (title: string) => void;
+  lastSaved: string;
+};
+
 export default function ControlPanel({
-                                       diagramId,
-                                       setDiagramId,
-                                       title,
-                                       setTitle,
-                                       lastSaved,
-                                     }) {
+  diagramId,
+  setDiagramId,
+  title,
+  setTitle,
+  lastSaved,
+}: ControlPanelProps) {
   const confirmBox = useConfirm();
 
   const [anchorElToolbar, setAnchorElToolbar] = useState<null | HTMLElement>(
@@ -114,7 +123,7 @@ export default function ControlPanel({
   const { undoStack, redoStack, setUndoStack, setRedoStack } = useUndoRedo();
   const { selectedElement, setSelectedElement } = useSelect();
   const { transform, setTransform } = useTransform();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { setGistId } = useContext(IdContext);
   // const navigate = useNavigate();
   const router = useRouter();
@@ -124,15 +133,17 @@ export default function ControlPanel({
 
   const undo = () => {
     if (undoStack.length === 0) return;
-    const a = undoStack[undoStack.length - 1];
+    const a: EditorUndoStackInterface = undoStack[
+      undoStack.length - 1
+    ] as EditorUndoStackInterface;
     setUndoStack((prev) => prev.filter((_, i) => i !== prev.length - 1));
     if (a.action === Action.ADD) {
       if (a.element === ObjectType.TABLE) {
-        deleteTable(tables[tables.length - 1].id, false);
+        deleteTable(tables[tables.length - 1]?.id as number, false);
       } else if (a.element === ObjectType.AREA) {
-        deleteArea(areas[areas.length - 1].id, false);
+        deleteArea(areas[areas.length - 1]?.id as number, false);
       } else if (a.element === ObjectType.NOTE) {
-        deleteNote(notes[notes.length - 1].id, false);
+        deleteNote(notes[notes.length - 1]?.id as number, false);
       } else if (a.element === ObjectType.RELATIONSHIP) {
         deleteRelationship(a.data.id, false);
       } else if (a.element === ObjectType.TYPE) {
@@ -252,9 +263,9 @@ export default function ControlPanel({
             indices: tables[a.tid].indices.map((index) =>
               index.id === a.iid
                 ? {
-                  ...index,
-                  ...a.undo,
-                }
+                    ...index,
+                    ...a.undo,
+                  }
                 : index,
             ),
           });
@@ -440,9 +451,9 @@ export default function ControlPanel({
             indices: tables[a.tid].indices.map((index) =>
               index.id === a.iid
                 ? {
-                  ...index,
-                  ...a.redo,
-                }
+                    ...index,
+                    ...a.redo,
+                  }
                 : index,
             ),
           });
@@ -527,7 +538,7 @@ export default function ControlPanel({
     }));
   };
   const copyAsImage = () => {
-    toPng(document.getElementById('canvas')).then(function (dataUrl) {
+    toPng(document.getElementById('canvas') as HTMLElement).then((dataUrl) => {
       const blob = dataURItoBlob(dataUrl);
       navigator.clipboard
         .write([new ClipboardItem({ 'image/png': blob })])
@@ -542,8 +553,8 @@ export default function ControlPanel({
   const resetView = () =>
     setTransform((prev) => ({ ...prev, zoom: 1, pan: { x: 0, y: 0 } }));
   const fitWindow = () => {
-    const diagram = document.getElementById('diagram').getBoundingClientRect();
-    const canvas = document.getElementById('canvas').getBoundingClientRect();
+    const diagram = document.getElementById('diagram')?.getBoundingClientRect();
+    const canvas = document.getElementById('canvas')?.getBoundingClientRect();
 
     const scaleX = canvas.width / diagram.width;
     const scaleY = canvas.height / diagram.height;
@@ -573,7 +584,7 @@ export default function ControlPanel({
         if (selectedElement.currentTab !== Tab.TABLES) return;
         document
           .getElementById(`scroll_table_${selectedElement.id}`)
-          .scrollIntoView({ behavior: 'smooth' });
+          ?.scrollIntoView({ behavior: 'smooth' });
       }
     } else if (selectedElement.element === ObjectType.AREA) {
       if (layout.sidebar) {
@@ -584,7 +595,7 @@ export default function ControlPanel({
         if (selectedElement.currentTab !== Tab.AREAS) return;
         document
           .getElementById(`scroll_area_${selectedElement.id}`)
-          .scrollIntoView({ behavior: 'smooth' });
+          ?.scrollIntoView({ behavior: 'smooth' });
       } else {
         setSelectedElement((prev) => ({
           ...prev,
@@ -632,24 +643,24 @@ export default function ControlPanel({
       case ObjectType.TABLE:
         addTable({
           ...tables[selectedElement.id],
-          x: tables[selectedElement.id].x + 20,
-          y: tables[selectedElement.id].y + 20,
+          x: (tables[selectedElement.id].x ?? 0) + 20,
+          y: (tables[selectedElement.id].y ?? 0) + 20,
           id: tables.length,
         });
         break;
       case ObjectType.NOTE:
         addNote({
           ...notes[selectedElement.id],
-          x: notes[selectedElement.id].x + 20,
-          y: notes[selectedElement.id].y + 20,
+          x: (notes[selectedElement.id]?.x ?? 0) + 20,
+          y: (notes[selectedElement.id]?.y ?? 0) + 20,
           id: notes.length,
         });
         break;
       case ObjectType.AREA:
         addArea({
           ...areas[selectedElement.id],
-          x: areas[selectedElement.id].x + 20,
-          y: areas[selectedElement.id].y + 20,
+          x: (areas[selectedElement.id]?.x ?? 0) + 20,
+          y: (areas[selectedElement.id]?.y ?? 0) + 20,
           id: areas.length,
         });
         break;
@@ -754,8 +765,8 @@ export default function ControlPanel({
               notes: notes,
               subjectAreas: areas,
               custom: 1,
-              ...(databases[database].hasEnums && { enums: enums }),
-              ...(databases[database].hasTypes && { types: types }),
+              ...(databases[database]?.hasEnums && { enums: enums }),
+              ...(databases[database]?.hasTypes && { types: types }),
             })
             .then(() => {
               toast('success', 'Template saved');
@@ -774,7 +785,7 @@ export default function ControlPanel({
         },
         function: async () => {
           await db.diagrams
-            .delete(diagramId)
+            .delete(diagramId as never)
             .then(() => {
               setDiagramId(0);
               setTitle('Untitled diagram');
@@ -1088,8 +1099,7 @@ export default function ControlPanel({
             },
           },
         ],
-        function: () => {
-        },
+        function: () => {},
       },
       exit: {
         function: () => {
@@ -1155,36 +1165,36 @@ export default function ControlPanel({
     view: {
       header: {
         state: layout.header ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setLayout((prev) => ({ ...prev, header: !prev.header })),
       },
       sidebar: {
         state: layout.sidebar ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setLayout((prev) => ({ ...prev, sidebar: !prev.sidebar })),
       },
       issues: {
         state: layout.issues ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setLayout((prev) => ({ ...prev, issues: !prev.issues })),
       },
       strict_mode: {
         state: settings.strictMode ? (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ) : (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ),
         function: viewStrictMode,
         shortcut: 'Ctrl+Shift+M',
@@ -1202,9 +1212,9 @@ export default function ControlPanel({
       // },
       field_details: {
         state: settings.showFieldSummary ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: viewFieldSummary,
         shortcut: 'Ctrl+Shift+F',
@@ -1215,18 +1225,18 @@ export default function ControlPanel({
       },
       show_grid: {
         state: settings.showGrid ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: viewGrid,
         shortcut: 'Ctrl+Shift+G',
       },
       show_cardinality: {
         state: settings.showCardinality ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setSettings((prev) => ({
@@ -1236,9 +1246,9 @@ export default function ControlPanel({
       },
       show_debug_coordinates: {
         state: settings.showDebugCoordinates ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setSettings((prev) => ({
@@ -1269,8 +1279,7 @@ export default function ControlPanel({
             },
           },
         ],
-        function: () => {
-        },
+        function: () => {},
       },
       zoom_in: {
         function: zoomIn,
@@ -1295,18 +1304,18 @@ export default function ControlPanel({
       },
       autosave: {
         state: settings.autosave ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setSettings((prev) => ({ ...prev, autosave: !prev.autosave })),
       },
       panning: {
         state: settings.panning ? (
-          <i className="bi bi-toggle-on"/>
+          <i className="bi bi-toggle-on" />
         ) : (
-          <i className="bi bi-toggle-off"/>
+          <i className="bi bi-toggle-off" />
         ),
         function: () =>
           setSettings((prev) => ({ ...prev, panning: !prev.panning })),
@@ -1392,7 +1401,7 @@ export default function ControlPanel({
                 color="primary"
                 className="text-base me-2 pe-6 ps-5 py-[18px] rounded-md"
                 size="medium"
-                startIcon={<Iconify icon="mdi:share-outline"/>}
+                startIcon={<Iconify icon="mdi:share-outline" />}
                 onClick={() => setModal(MODAL.SHARE)}
               >
                 {t('share')}
@@ -1421,11 +1430,10 @@ export default function ControlPanel({
 
   function toolbar() {
     return (
-      <div
-        className="py-1.5 px-5 flex justify-between items-center rounded-xl my-1 sm:mx-1 xl:mx-6 select-none overflow-hidden toolbar-theme">
+      <div className="py-1.5 px-5 flex justify-between items-center rounded-xl my-1 sm:mx-1 xl:mx-6 select-none overflow-hidden toolbar-theme">
         <div className="flex justify-start items-center">
-          <LayoutDropdown/>
-          <Divider orientation="vertical" flexItem/>
+          <LayoutDropdown />
+          <Divider orientation="vertical" flexItem />
 
           <div className="control-panel-dropdown" onClick={handleClickToolbar}>
             <div className="py-1 px-2 hover-2 rounded flex items-center justify-center">
@@ -1433,7 +1441,7 @@ export default function ControlPanel({
                 {Math.floor(transform.zoom * 100)}%
               </div>
               <div>
-                <Iconify icon="mdi:caret-down"/>
+                <Iconify icon="mdi:caret-down" />
               </div>
             </div>
             <Menu
@@ -1464,7 +1472,7 @@ export default function ControlPanel({
                   name="zoom"
                   label={t('zoom')}
                   placeholder={t('zoom')}
-                  onChange={(v: number) =>
+                  onInputChange={(v: number) =>
                     setTransform((prev) => ({
                       ...prev,
                       zoom: parseFloat(v) * 0.01,
@@ -1481,7 +1489,7 @@ export default function ControlPanel({
                 setTransform((prev) => ({ ...prev, zoom: prev.zoom * 1.2 }))
               }
             >
-              <i className="fa-solid fa-magnifying-glass-plus"/>
+              <i className="fa-solid fa-magnifying-glass-plus" />
             </button>
           </Tooltip>
           <Tooltip title={t('zoom_out')} placement="bottom">
@@ -1491,10 +1499,10 @@ export default function ControlPanel({
                 setTransform((prev) => ({ ...prev, zoom: prev.zoom / 1.2 }))
               }
             >
-              <i className="fa-solid fa-magnifying-glass-minus"/>
+              <i className="fa-solid fa-magnifying-glass-minus" />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title={t('undo')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded flex items-center"
@@ -1519,13 +1527,13 @@ export default function ControlPanel({
               />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title={t('add_table')} placement="bottom">
             <button
               className="flex items-center py-1 px-2 hover-2 rounded"
               onClick={() => addTable()}
             >
-              <IconAddTable/>
+              <IconAddTable />
             </button>
           </Tooltip>
           <Tooltip title={t('add_area')} placement="bottom">
@@ -1533,7 +1541,7 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={() => addArea()}
             >
-              <IconAddArea/>
+              <IconAddArea />
             </button>
           </Tooltip>
           <Tooltip title={t('add_note')} placement="bottom">
@@ -1541,16 +1549,16 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={() => addNote()}
             >
-              <IconAddNote/>
+              <IconAddNote />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title={t('save')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded flex items-center"
               onClick={save}
             >
-              <Iconify icon="mi:save"/>
+              <Iconify icon="mi:save" />
             </button>
           </Tooltip>
           <Tooltip title={t('to_do')} placement="bottom">
@@ -1558,10 +1566,10 @@ export default function ControlPanel({
               className="py-1 px-2 hover-2 rounded text-xl -mt-0.5"
               onClick={() => setSidesheet(SIDESHEET.TODO)}
             >
-              <i className="fa-regular fa-calendar-check"/>
+              <i className="fa-regular fa-calendar-check" />
             </button>
           </Tooltip>
-          <Divider orientation="vertical" flexItem/>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title={t('theme')} placement="bottom">
             <button
               className="py-1 px-2 hover-2 rounded text-xl -mt-0.5"
@@ -1576,7 +1584,7 @@ export default function ControlPanel({
                 }
               }}
             >
-              <i className="fa-solid fa-circle-half-stroke"/>
+              <i className="fa-solid fa-circle-half-stroke" />
             </button>
           </Tooltip>
         </div>
@@ -1585,9 +1593,9 @@ export default function ControlPanel({
           className="flex items-center"
         >
           {layout.header ? (
-            <Iconify icon="mdi:chevron-up"/>
+            <Iconify icon="mdi:chevron-up" />
           ) : (
-            <Iconify icon="mdi:chevron-down"/>
+            <Iconify icon="mdi:chevron-down" />
           )}
         </button>
       </div>
@@ -1654,7 +1662,7 @@ export default function ControlPanel({
                 {title}
               </div>
               {(showEditName || modal === MODAL.RENAME) && (
-                <Iconify icon="lucide:edit"/>
+                <Iconify icon="lucide:edit" />
               )}
             </div>
 
@@ -1742,7 +1750,7 @@ export default function ControlPanel({
               </div>
               <Button size="small" color="primary" variant="outlined">
                 {saveState === State.LOADING || saveState === State.SAVING ? (
-                  <Spinner/>
+                  <Spinner />
                 ) : null}
                 {getState()}
               </Button>

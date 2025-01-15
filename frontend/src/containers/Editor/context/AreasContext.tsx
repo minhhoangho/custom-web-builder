@@ -9,7 +9,10 @@ export const AreasContext = createContext<{
   areas: EditorAreaInterface[];
   setAreas: React.Dispatch<React.SetStateAction<EditorAreaInterface[]>>;
   updateArea: (id: number, values: Partial<EditorAreaInterface>) => void;
-  addArea: (data: EditorAreaInterface | null, addToHistory?: boolean) => void;
+  addArea: (
+    data?: Partial<EditorAreaInterface> | null,
+    addToHistory?: boolean,
+  ) => void;
   deleteArea: (id: number, addToHistory?: boolean) => void;
 }>({
   areas: [],
@@ -31,7 +34,7 @@ export default function AreasContextProvider({
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
   const addArea = (
-    data: EditorAreaInterface | null,
+    data?: Partial<EditorAreaInterface> | null,
     addToHistory: boolean = true,
   ) => {
     if (data) {
