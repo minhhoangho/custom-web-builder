@@ -1,5 +1,5 @@
+import { create } from 'zustand';
 import { UserData } from 'src/containers/UserManagement/models';
-import { create } from 'zustand'
 
 export type Role = {
   id: number;

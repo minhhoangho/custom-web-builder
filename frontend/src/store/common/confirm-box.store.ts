@@ -1,6 +1,16 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 import { ConfirmType } from '@constants/common';
 
+export type ConfirmBoxType = {
+  type: (typeof ConfirmType)[keyof typeof ConfirmType];
+  reverse: boolean;
+  show: boolean;
+  title: string;
+  message: string;
+  confirmButtonLabel: string;
+  confirmButtonVariant: string;
+  contentClassName: string;
+};
 
 export const defaultConfirmBox = {
   type: ConfirmType.YesNo,
@@ -13,7 +23,10 @@ export const defaultConfirmBox = {
   contentClassName: '',
 };
 
-export const useConfirmBoxStore = create((set) => ({
+export const useConfirmBoxStore = create<{
+  confirmBox: ConfirmBoxType;
+  setConfirmBox: (confirmBox: ConfirmBoxType) => void;
+}>((set) => ({
   confirmBox: defaultConfirmBox,
-  setConfirmBox: (confirmBox) => set({ confirmBox }),
-}))
+  setConfirmBox: (confirmBox: ConfirmBoxType) => set({ confirmBox }),
+}));

@@ -5,7 +5,7 @@
 //   Toast,
 //   Modal as SemiUIModal,
 // } from '@douyinfe/semi-ui';
-import { Button, Modal as MuiModal } from '@mui/material';
+import { Box, Button, Modal as MuiModal } from '@mui/material';
 import Image from 'next/image';
 import * as React from 'react'; // import { isRtl } from '../../../i18n/utils/rtl';
 import { useState } from 'react';
@@ -28,7 +28,8 @@ import {
 import { db } from 'src/data/db';
 import { importSQL } from 'src/utils/imports/import-sql';
 import { databases } from 'src/data/database';
-import { Spinner } from '@components/common';
+import { Spinner, toast } from '@components/common';
+import { DTemplate } from 'src/data/interface';
 import Rename from './Rename';
 import Open from './Open';
 import New from './New';
@@ -36,18 +37,38 @@ import ImportDiagram from './ImportDiagram';
 import ImportSource from './ImportSource';
 import SetTableWidth from './SetTableWidth';
 import Code from './Code';
-import { toast } from '@components/common';
+
+type ModalProps = {
+  modal: (typeof MODAL)[keyof typeof MODAL];
+  setModal: (modal: (typeof MODAL)[keyof typeof MODAL]) => void;
+  title: string;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setDiagramId: React.Dispatch<React.SetStateAction<number>>;
+  exportData: {
+    data: never | null;
+    extension: string;
+    filename: string;
+  };
+  setExportData: React.Dispatch<
+    React.SetStateAction<{
+      data: never | null;
+      extension: string;
+      filename: string;
+    }>
+  >;
+  importDb: string;
+};
 
 export default function Modal({
-                                modal,
-                                setModal,
-                                title,
-                                setTitle,
-                                setDiagramId,
-                                exportData,
-                                setExportData,
-                                importDb,
-                              }) {
+  modal,
+  setModal,
+  title,
+  setTitle,
+  setDiagramId,
+  exportData,
+  setExportData,
+  importDb,
+}: ModalProps) {
   const { t, i18n } = useTranslation();
   const { setTables, setRelationships, database, setDatabase } = useDiagram();
   const { setNotes } = useNote();
@@ -62,7 +83,7 @@ export default function Modal({
     src: '',
     overwrite: true,
   });
-  const [importData, setImportData] = useState(null);
+  const [importData, setImportData] = useState<DTemplate | null>(null);
   const [error, setError] = useState({
     type: STATUS.NONE,
     message: '',
@@ -72,6 +93,7 @@ export default function Modal({
   const [saveAsTitle, setSaveAsTitle] = useState(title);
 
   const overwriteDiagram = () => {
+    if (!importData) return;
     setTables(importData.tables);
     setRelationships(importData.relationships);
     setAreas(importData.subjectAreas);
@@ -79,17 +101,17 @@ export default function Modal({
     if (importData.title) {
       setTitle(importData.title);
     }
-    if (databases[database].hasEnums && importData.enums) {
+    if (databases[database]?.hasEnums && importData.enums) {
       setEnums(importData.enums);
     }
-    if (databases[database].hasTypes && importData.types) {
+    if (databases[database]?.hasTypes && importData.types) {
       setTypes(importData.types);
     }
   };
 
-  const loadDiagram = async (id) => {
+  const loadDiagram = async (id: number) => {
     await db.diagrams
-      .get(id)
+      .get(id as never)
       .then((diagram) => {
         if (diagram) {
           if (diagram.database) {
@@ -97,7 +119,7 @@ export default function Modal({
           } else {
             setDatabase(DB.GENERIC);
           }
-          setDiagramId(diagram.id);
+          setDiagramId(diagram.id ?? 0);
           setTitle(diagram.name);
           setTables(diagram.tables);
           setRelationships(diagram.references);
@@ -182,7 +204,7 @@ export default function Modal({
     }
   };
 
-  const createNewDiagram = (id) => {
+  const createNewDiagram = (id: number) => {
     const newWindow = window.open('/editor');
     newWindow.name = 'lt ' + id;
   };
@@ -266,7 +288,7 @@ export default function Modal({
         );
       case MODAL.RENAME:
         return (
-          <Rename key={title} title={title} setTitle={setUncontrolledTitle}/>
+          <Rename key={title} title={title} setTitle={setUncontrolledTitle} />
         );
       case MODAL.OPEN:
         return (
@@ -280,7 +302,7 @@ export default function Modal({
           <Input
             placeholder={t('name')}
             value={saveAsTitle}
-            onChange={(v) => setSaveAsTitle(v)}
+            onInputChange={(v) => setSaveAsTitle(v)}
           />
         );
       case MODAL.CODE:
@@ -289,9 +311,9 @@ export default function Modal({
           return (
             <>
               {modal === MODAL.IMG ? (
-                <Image src={exportData.data} alt="Diagram" height={280}/>
+                <Image src={exportData.data} alt="Diagram" height={280} />
               ) : (
-                <Code value={exportData.data} language={exportData.extension}/>
+                <Code value={exportData.data} language={exportData.extension} />
               )}
               <div className="text-sm font-semibold mt-2">{t('filename')}:</div>
               <Input
@@ -301,7 +323,7 @@ export default function Modal({
                 onInputChange={(value) =>
                   setExportData((prev) => ({ ...prev, filename: value }))
                 }
-                field="filename"
+                name="filename"
               />
             </>
           );
@@ -309,12 +331,12 @@ export default function Modal({
           return (
             <div className="text-center my-3 text-sky-600">
               {/*<Spin tip={t('loading')} size="large" />*/}
-              <Spinner/>
+              <Spinner />
             </div>
           );
         }
       case MODAL.TABLE_WIDTH:
-        return <SetTableWidth/>;
+        return <SetTableWidth />;
       // case MODAL.LANGUAGE:
       //   return <Language />;
       // case MODAL.SHARE:
@@ -361,7 +383,7 @@ export default function Modal({
   };
   return (
     <MuiModal
-      style={{ direction: 'rtl' }}
+      // style={{ direction: 'rtl' }}
       title={getModalTitle(modal)}
       open={modal !== MODAL.NONE}
       // onOk={getModalOnOk}
@@ -382,15 +404,18 @@ export default function Modal({
         });
       }}
       centered
-      xs={{
-        maxHeight: window.innerHeight - 280,
-        overflow:
-          modal === MODAL.CODE || modal === MODAL.IMG ? 'hidden' : 'auto',
-        direction: 'ltr',
-      }}
+
+      // xs={{
+      //   maxHeight: window.innerHeight - 280,
+      //   overflow:
+      //     modal === MODAL.CODE || modal === MODAL.IMG ? 'hidden' : 'auto',
+      //   direction: 'ltr',
+      // }}
     >
-      {getModalBody()}
-      {getModelAction()}
+      <Box>
+        {getModalBody()}
+        {getModelAction()}
+      </Box>
     </MuiModal>
   );
 }

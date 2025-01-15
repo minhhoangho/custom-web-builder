@@ -1,4 +1,4 @@
-import { MouseEvent, useContext, useState } from 'react';
+import React, { MouseEvent, useContext, useState } from 'react';
 import { Button, Divider, Menu, MenuItem, Tooltip } from '@mui/material';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import { saveAs } from 'file-saver';
@@ -56,9 +56,9 @@ import { IdContext } from '../Workspace';
 
 type ControlPanelProps = {
   diagramId: number;
-  setDiagramId: (id: number) => void;
+  setDiagramId: React.Dispatch<React.SetStateAction<number>>;
   title: string;
-  setTitle: (title: string) => void;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
   lastSaved: string;
 };
 
@@ -69,8 +69,6 @@ export default function ControlPanel({
   setTitle,
   lastSaved,
 }: ControlPanelProps) {
-  const confirmBox = useConfirm();
-
   const [anchorElToolbar, setAnchorElToolbar] = useState<null | HTMLElement>(
     null,
   );
@@ -90,6 +88,7 @@ export default function ControlPanel({
     setAnchorElHeader(null);
   };
 
+  const confirmBox = useConfirm();
   const [modal, setModal] = useState(MODAL.NONE);
   const [sidesheet, setSidesheet] = useState(SIDESHEET.NONE);
   const [showEditName, setShowEditName] = useState(false);
@@ -1577,9 +1576,9 @@ export default function ControlPanel({
                 const body = document.body;
                 if (body.hasAttribute('theme-mode')) {
                   if (body.getAttribute('theme-mode') === 'light') {
-                    menu['view']['theme'].children[1]['dark']();
+                    menu['view']['theme']?.children[1]?.['dark']?.();
                   } else {
-                    menu['view']['theme'].children[0]['light']();
+                    menu['view']['theme']?.children[0]?.['light']?.();
                   }
                 }
               }}
@@ -1668,8 +1667,8 @@ export default function ControlPanel({
 
             <div className="flex justify-between items-center">
               <div className="flex justify-start text-md select-none me-2">
-                {Object.keys(menu).map((category) => (
-                  <div>
+                {Object.keys(menu).map((category, _index) => (
+                  <div key={_index}>
                     <div
                       className="px-3 py-1 hover-2 rounded"
                       onClick={handleClickHeader}
@@ -1683,7 +1682,7 @@ export default function ControlPanel({
                       {Object.keys(menu[category]).map((item, index) => {
                         if (menu[category][item].children) {
                           return (
-                            <div>
+                            <div key={index}>
                               <MenuItem
                                 style={{
                                   display: 'flex',

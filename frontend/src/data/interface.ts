@@ -58,6 +58,7 @@ export interface DDiagram {
   name: string;
   description: string;
   database: string;
+  tables: DTable[];
   template: DTemplate;
   subjectAreas: any[]; // assuming subjectAreas can be of any type
   notes?: any[]; // assuming notes can be of any type

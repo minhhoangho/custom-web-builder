@@ -1,7 +1,7 @@
-import { defaultConfirmBox, useConfirmBoxStore } from "src/store";
-
+import { defaultConfirmBox, useConfirmBoxStore } from 'src/store';
 
 let resolve: (param: any) => void;
+
 const useConfirm = () => {
   const { confirmBox, setConfirmBox } = useConfirmBoxStore();
 

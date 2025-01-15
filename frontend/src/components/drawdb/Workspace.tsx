@@ -30,7 +30,10 @@ import { DTemplate } from '../../data/interface';
 export const IdContext = createContext<{
   gistId: string;
   setGistId: React.Dispatch<React.SetStateAction<string>>;
-}>({ gistId: '', setGistId: () => {} });
+}>({
+  gistId: '',
+  setGistId: () => {},
+});
 
 const useSearchParams = () => {
   const router = useRouter();
@@ -430,7 +433,7 @@ export default function WorkSpace() {
           title={title}
           setTitle={setTitle}
           lastSaved={lastSaved}
-          setLastSaved={setLastSaved}
+          // setLastSaved={setLastSaved}
         />
       </IdContext.Provider>
       <div
