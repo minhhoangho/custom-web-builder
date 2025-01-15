@@ -1,10 +1,16 @@
-import React, { JSX } from 'react';
+import { useRef } from 'react';
 import { AppProps as NextAppProps } from 'next/app';
+import dynamic from 'next/dynamic';
 import { appWithTranslation } from 'next-i18next';
 import { Hydrate } from 'react-query/hydration'; // import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { CookiesProvider } from 'react-cookie';
-import { ToastContainer } from 'react-toastify';
+const ToastContainer = dynamic(
+  () => import('react-toastify').then((module) => module.ToastContainer),
+  {
+    ssr: false,
+  },
+);
 import { ThemeProvider } from 'src/theme';
 import { ConfirmBox } from '@components/common/ConfirmBox';
 
@@ -22,9 +28,8 @@ type AppInitialProps = {
 };
 type AppProps = AppInitialProps & Omit<NextAppProps, 'pageProps'>;
 
-
-function MyApp({ Component, pageProps }: AppProps){
-  const queryClientRef = React.useRef<QueryClient>();
+function MyApp({ Component, pageProps }: AppProps) {
+  const queryClientRef = useRef<QueryClient>(null);
 
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient({
@@ -45,13 +50,12 @@ function MyApp({ Component, pageProps }: AppProps){
       {/*<SessionProvider session={pageProps.session} refetchInterval={0}>*/}
       <QueryClientProvider client={queryClientRef.current}>
         <Hydrate state={pageProps.dehydratedState}>
-          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */}
-            <CookiesProvider>
-              <ThemeProvider>
-                <Component {...pageProps} />
-                <ConfirmBox />
-              </ThemeProvider>
-            </CookiesProvider>
+          <CookiesProvider>
+            <ThemeProvider>
+              <Component {...pageProps} />
+              <ConfirmBox />
+            </ThemeProvider>
+          </CookiesProvider>
           <ToastContainer
             className="global-toast"
             position="top-right"

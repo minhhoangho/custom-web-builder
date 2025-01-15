@@ -1,5 +1,4 @@
 import { Container, Typography } from '@mui/material';
-import React from 'react';
 import { PrivateLayout } from '@layouts/PrivateLayout';
 import { BaseLayout } from '@layouts/BaseLayout';
 import styles from './Admin.module.scss';

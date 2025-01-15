@@ -1,11 +1,11 @@
-import * as React from 'react';
+import React, { JSX } from 'react';
 import Document, {
-  Html,
+  DocumentContext,
+  DocumentProps,
   Head,
+  Html,
   Main,
   NextScript,
-  DocumentProps,
-  DocumentContext,
 } from 'next/document';
 
 interface MyDocumentProps extends DocumentProps {
