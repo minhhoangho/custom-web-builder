@@ -32,9 +32,6 @@ const config = {
       },
     ],
   },
-  experimental: {
-    esmExternals: false,
-  },
   poweredByHeader: false,
   headers() {
     return [

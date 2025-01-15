@@ -1,5 +1,6 @@
-import { atom } from 'recoil';
+import { create } from 'zustand'
 import { ConfirmType } from '@constants/common';
+
 
 export const defaultConfirmBox = {
   type: ConfirmType.YesNo,
@@ -12,9 +13,7 @@ export const defaultConfirmBox = {
   contentClassName: '',
 };
 
-const confirmBoxState = atom({
-  key: 'confirmBox',
-  default: defaultConfirmBox,
-});
-
-export default confirmBoxState;
+export const useConfirmBoxStore = create((set) => ({
+  confirmBox: defaultConfirmBox,
+  setConfirmBox: (confirmBox) => set({ confirmBox }),
+}))

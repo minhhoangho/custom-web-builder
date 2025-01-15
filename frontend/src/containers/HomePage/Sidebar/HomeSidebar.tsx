@@ -22,7 +22,7 @@ import { useSetRecoilState } from 'recoil';
 import { Iconify } from '@components/common/Iconify';
 import { DEFAULT_PAGINATION_PARAMS } from '@constants/pagination';
 import { listViewPointsPaginate } from '@api/view-point';
-import { mapFocusState } from '@app-recoil/atoms/map';
+import { useMapFocusStore } from 'src/store';
 import { Scrollbar, Spinner } from '@components/common';
 import { PathName } from '@constants/routes';
 import styles from './HomeSidebar.module.scss';
@@ -42,7 +42,7 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
   const [keyword, setKeyword] = React.useState<string | null>('');
   const [activeViewPoint, setActiveViewPoint] =
     React.useState<ViewPointData | null>(null);
-  const setMapFocus = useSetRecoilState(mapFocusState);
+  const { setMapFocus } = useMapFocusStore()
 
   const { data, fetchNextPage, isLoading, isFetching } =
     useInfiniteQuery<ListViewPointPaginateResponse>({
@@ -123,7 +123,7 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
               />
             </div>
           ) : (
-            <Skeleton variant="rectangular" height={140} animation={false} />
+            <Skeleton variant="rectangular" height={140} animation={false}/>
           )}
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
@@ -166,7 +166,7 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    <SearchIcon/>
                   </InputAdornment>
                 ),
               }}
@@ -194,7 +194,7 @@ export function HomeSidebar({ open, onClose }: Props): React.ReactElement {
               })}
             {(isLoading || isFetching) && (
               <div className="w-100 flex justify-center">
-                <Spinner />
+                <Spinner/>
               </div>
             )}
           </Scrollbar>

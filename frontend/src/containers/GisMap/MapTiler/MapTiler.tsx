@@ -7,14 +7,13 @@ import { Box, Card, Skeleton, Typography } from '@mui/material';
 import CardActionArea from '@mui/material/CardActionArea';
 import Image from 'next/image';
 import CardContent from '@mui/material/CardContent';
-import { useRecoilValue } from 'recoil';
 import _toNumber from 'lodash/toNumber';
-import { mapFocusState } from 'src/app-recoil/atoms/map';
+import { useMapFocusStore } from 'src/store';
 import {
   useWebsocket,
   WebsocketMessagePayload,
 } from 'src/shared/hooks/use-websocket';
-import { SOCKET_BASE_URL } from 'src/constants';
+import { SOCKET_BASE_URL } from 'src/constants/app-config';
 import styles from './MapTiler.module.scss';
 import { ViewPointData } from '../models';
 import { CenterProps } from '../types';
@@ -35,7 +34,7 @@ export function MapTiler({ geoData, center, zoom }: Props) {
   const [isConnected, message, _, _dis] = useWebsocket(
     `${SOCKET_BASE_URL}/ws/`,
   );
-  const mapFocus = useRecoilValue(mapFocusState);
+  const { mapFocus } = useMapFocusStore
 
   const handleControlRotate = useCallback((map: Map) => {
     const deltaDistance = 100;

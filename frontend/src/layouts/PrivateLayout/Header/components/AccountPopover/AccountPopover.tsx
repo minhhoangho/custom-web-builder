@@ -10,11 +10,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
 import { account } from 'src/mocks/account';
-import { userState } from 'src/app-recoil/atoms/user';
-import { UserData } from 'src/containers/UserManagement/models';
 import { CookieStorage } from 'src/utils/cookie-storage';
+import {useUserStore } from "src/store";
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +36,7 @@ const MENU_OPTIONS = [
 export function AccountPopover() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const router = useRouter();
-  const currentUser: UserData = useRecoilValue(userState);
+  const currentUser = useUserStore((state) => state.user);
 
   const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

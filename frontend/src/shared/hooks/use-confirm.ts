@@ -1,11 +1,9 @@
-import { useRecoilState } from 'recoil';
-import confirmBoxState, {
-  defaultConfirmBox,
-} from 'src/app-recoil/atoms/common/confirm-box';
+import { defaultConfirmBox, useConfirmBoxStore } from "src/store";
+
 
 let resolve: (param: any) => void;
 const useConfirm = () => {
-  const [confirmBox, setConfirmBox] = useRecoilState(confirmBoxState);
+  const { confirmBox, setConfirmBox } = useConfirmBoxStore();
 
   const confirm = (args: Record<string, any>) => {
     const {

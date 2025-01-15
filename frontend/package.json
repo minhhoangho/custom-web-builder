@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev --turbopack -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "eslint \"{src,test}/**/*.{ts,tsx,scss}\" --fix"
@@ -49,7 +49,7 @@
     "lodash": "4.17.21",
     "moment": "2.29.4",
     "moment-timezone": "0.5.43",
-    "next": "13.5.4",
+    "next": "15.1.4",
     "next-auth": "4.24.5",
     "next-i18next": "14.0.0",
     "node-sql-parser": "^5.3.5",
@@ -58,27 +58,27 @@
     "ol": "^9.0.0",
     "ol-ext": "^4.0.17",
     "qs": "6.11.2",
-    "react": "^18.2.0",
+    "react": "19.0.0",
     "react-apexcharts": "1.4.1",
     "react-cookie": "4.1.1",
     "react-custom-scrollbars-2": "4.5.0",
     "react-dates": "21.8.0",
-    "react-dom": "18.2.0",
+    "react-dom": "19.0.0",
     "react-hook-form": "7.44.3",
     "react-hotkeys-hook": "^4.6.1",
-    "react-i18next": "13.0.1",
+    "react-i18next": "15.4.0",
     "react-pro-sidebar": "^1.1.0-alpha.1",
     "react-query": "^3.39.3",
     "react-toastify": "9.1.3",
     "react-tooltip": "5.14.0",
-    "recoil": "0.7.7",
     "redux-saga": "1.1.3",
     "sass": "1.63.4",
     "socket.io-client": "^4.8.0",
     "tinycolor2": "^1.6.0",
     "universal-cookie": "4.0.4",
     "usehooks-ts": "^3.1.0",
-    "yup": "1.2.0"
+    "yup": "1.2.0",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@babel/node": "7.16.8",
@@ -97,10 +97,10 @@
     "@types/node": "^14.17.4",
     "@types/numeral": "^2.0.5",
     "@types/qs": "^6.9.8",
-    "@types/react": "^17.0.13",
+    "@types/react": "19.0.7",
     "@types/react-copy-to-clipboard": "^5.0.7",
     "@types/react-datepicker": "4.1.7",
-    "@types/react-dom": "^17.0.8",
+    "@types/react-dom": "19.0.3",
     "@types/react-draft-wysiwyg": "^1.13.4",
     "@types/react-scroll-sync": "^0.8.4",
     "@types/react-slick": "^0.23.8",
@@ -117,7 +117,7 @@
     "cross-env": "7.0.3",
     "eslint": "^9.17.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
-    "eslint-config-next": "15.1.2",
+    "eslint-config-next": "15.1.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-cypress": "2.12.1",
     "eslint-plugin-formatjs": "3.1.0",
@@ -134,5 +134,9 @@
     "sass": "1.63.4",
     "tailwindcss": "3.0.24",
     "typescript": "^5.1.3"
+  },
+  "resolutions": {
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3"
   }
 }
