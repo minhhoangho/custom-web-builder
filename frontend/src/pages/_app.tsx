@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { AppProps as NextAppProps } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
 import { Hydrate } from 'react-query/hydration'; // import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { RecoilRoot } from 'recoil';
 import { CookiesProvider } from 'react-cookie';
 import { ToastContainer } from 'react-toastify';
 import { ThemeProvider } from 'src/theme';
 import { ConfirmBox } from '@components/common/ConfirmBox';
-import { userState } from '@app-recoil/atoms/user';
 
 import 'src/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,14 +22,8 @@ type AppInitialProps = {
 };
 type AppProps = AppInitialProps & Omit<NextAppProps, 'pageProps'>;
 
-const initializeRecoilState =
-  (initialRecoilState: Record<string, any>) =>
-  ({ set }: { set: any }) => {
-    set(userState, { ...initialRecoilState });
-    return initializeRecoilState;
-  };
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+function MyApp({ Component, pageProps }: AppProps){
   const queryClientRef = React.useRef<QueryClient>();
 
   if (!queryClientRef.current) {
@@ -54,14 +46,12 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       <QueryClientProvider client={queryClientRef.current}>
         <Hydrate state={pageProps.dehydratedState}>
           {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */}
-          <RecoilRoot initializeState={initializeRecoilState(pageProps?.user)}>
             <CookiesProvider>
               <ThemeProvider>
                 <Component {...pageProps} />
                 <ConfirmBox />
               </ThemeProvider>
             </CookiesProvider>
-          </RecoilRoot>
           <ToastContainer
             className="global-toast"
             position="top-right"

@@ -6,9 +6,6 @@
       "DOM",
       "DOM.Iterable",
       "ESNext",
-      "ESNext.Intl",
-      "ES2017.Intl",
-      "ES2018.Intl"
     ],
     "allowJs": true,
     "skipLibCheck": true,

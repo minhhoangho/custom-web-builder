@@ -4,11 +4,13 @@ import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { LoginPayloadDto, LoginResponseDto } from '@app/auth/dto';
+import { TokenPayloadInterface } from "@app/auth/interfaces";
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+  }
 
   @Post('/login')
   @HttpCode(200)
@@ -20,17 +22,23 @@ export class AuthController {
     const user: User = await this.authService.validateUserByEmailPassword(
       email,
       password,
-    );
+    ) as User;
     const userAgent = req.get('user-agent') ?? 'UNKNOWN';
     const ip = req.ip ?? 'UNKNOWN';
-    const data: LoginResponseDto = await this.authService.createAuthToken(
+    const data: TokenPayloadInterface = await this.authService.createAuthToken(
       user,
       {
         userAgent,
         ip,
       },
     );
+    console.log("User", user);
 
-    return data;
+    return {
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+      expirationTime: data.expirationTime,
+      user,
+    } as LoginResponseDto;
   }
 }

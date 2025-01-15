@@ -15,19 +15,18 @@ import { Box, Card, Skeleton, Typography } from '@mui/material';
 import CardActionArea from '@mui/material/CardActionArea';
 import Image from 'next/image';
 import CardContent from '@mui/material/CardContent';
-import { useRecoilValue } from 'recoil';
 import { Circle } from 'ol/style';
 import Fill from 'ol/style/Fill';
 import _toNumber from 'lodash/toNumber';
 import styles from './OpenLayerMap.module.scss';
 import { CenterProps } from '../types';
 import { ViewPointData } from '../models';
-import { mapFocusState } from '../../../app-recoil/atoms/map';
+import { useMapFocusStore } from 'src/store';
 import {
   useWebsocket,
   WebsocketMessagePayload,
-} from '../../../shared/hooks/use-websocket';
-import { SOCKET_BASE_URL } from '../../../constants';
+} from '@shared/hooks/use-websocket';
+import { SOCKET_BASE_URL } from 'src/constants/app-config';
 // Import OpenLayers CSS
 
 // const DEFAULT_GEO = [12047000, 1812900]; // (long, lat) Da nang location
@@ -43,16 +42,16 @@ type OpenLayerMapProps = {
 };
 
 export function OpenLayerMap({
-  width,
-  height,
-  center,
-  geoData,
-  zoom,
-}: OpenLayerMapProps) {
+                               width,
+                               height,
+                               center,
+                               geoData,
+                               zoom,
+                             }: OpenLayerMapProps) {
   const mapContainer = useRef<HTMLDivElement | null | undefined>(null);
   const mapRef = useRef<Map | null>(null);
   const [hoverPoint, setHoverPoint] = useState<ViewPointData | null>(null);
-  const mapFocus = useRecoilValue(mapFocusState);
+  const { mapFocus } = useMapFocusStore()
   const [isConnected, message, _, disconnect] = useWebsocket(
     `${SOCKET_BASE_URL}/ws/`,
   );
@@ -235,7 +234,8 @@ export function OpenLayerMap({
 
   return (
     <div className={styles['openlayer']}>
-      <div ref={mapContainer} style={{ width, height }} />;
+      <div ref={mapContainer} style={{ width, height }}/>
+      ;
       <div className={styles['hoverInformation']} id="hover-information-id">
         {hoverPoint ? (
           <Card className="mt-3">
@@ -270,7 +270,7 @@ export function OpenLayerMap({
             </Box>
           </Card>
         ) : (
-          <Skeleton variant="rectangular" height={140} animation={false} />
+          <Skeleton variant="rectangular" height={140} animation={false}/>
         )}
       </div>
     </div>

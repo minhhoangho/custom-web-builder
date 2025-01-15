@@ -23,7 +23,7 @@ import { useSetRecoilState } from 'recoil';
 import { Polygon } from 'ol/geom';
 import {Circle} from 'ol/style'
 import { Coordinate } from 'ol/coordinate';
-import { bevCoordinateState } from '../../../app-recoil/atoms/map';
+import { useBevCoordinateStore } from 'src/store';
 import { CenterProps } from '../types';
 
 // Import OpenLayers CSS
@@ -59,7 +59,7 @@ export function OpenLayerMapManagement({
 
   const markPointLayer = useRef<VectorLayer<VectorSource> | null>(null);
   const vectorSourceMarkerRef = useRef(new VectorSource());
-  const setBevCoordinate = useSetRecoilState(bevCoordinateState);
+  const {setBevCoordinate} = useBevCoordinateStore()
 
 
   const handleMapOnClick = useCallback((event)  =>{

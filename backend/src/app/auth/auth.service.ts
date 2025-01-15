@@ -13,6 +13,7 @@ import { UnAuthorizedError } from 'src/errors/unauthorized.error';
 import { ErrorCode } from '@common/constants';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginResponseDto } from '@app/auth/dto';
+import { TokenPayloadInterface } from "@app/auth/interfaces";
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,8 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
     private cacheService: RedisCacheService,
-  ) {}
+  ) {
+  }
 
   private getUserAuthRedisKey(userId) {
     return `${loadConfig.redis.prefix}-auth:${userId}`;
@@ -64,7 +66,7 @@ export class AuthService {
   public async createAuthToken(
     user: User,
     context: { userAgent: string; ip: string },
-  ): Promise<LoginResponseDto> {
+  ): Promise<TokenPayloadInterface> {
     const { userAgent, ip } = context;
 
     return this.createToken(user, { userAgent, ip });
@@ -207,7 +209,7 @@ export class AuthService {
   public async validateUserByEmailPassword(
     email: string,
     password: string,
-  ): Promise<User> {
+  ): Promise<Partial<User>> {
     const user = await this.userRepository.findOne({
       where: { email },
       select: ['id', 'email', 'password', 'firstName', 'lastName'],
@@ -220,7 +222,7 @@ export class AuthService {
     // Hash password on parameter before compare to db
     // Using bcryptjs to hash id payload -> return token with result
     if (user && compareSync(password, user.password)) {
-      return user;
+      return _.omit(user, ['password']);
     }
 
     throw new UnAuthorizedError();

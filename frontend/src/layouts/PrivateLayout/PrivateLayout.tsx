@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import { useSetRecoilState } from 'recoil';
 import { Box } from '@mui/material';
 import { CookieStorage } from 'src/utils';
 import { CookieKey } from '@constants/storage';
-import { UserInfo, userState } from 'src/app-recoil/atoms/user';
+// import { UserInfo, userState } from 'src/app-recoil/atoms/user';
 // import {useGetCurrentUser} from "src/modules/UserProfile/hooks";
 import { useResponsive } from '@shared/hooks/use-responsive';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { UserInfo, useUserStore } from "../../store";
 // import { UserRole } from '../../constants/user';
 
 type Props = {
@@ -21,7 +21,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
   const lgUp = useResponsive('up', 'lg');
 
   const router = useRouter();
-  const setCurrentUser = useSetRecoilState(userState);
+  const { user, setCurrentUser } = useUserStore();
   const isAuthenticated = CookieStorage.isAuthenticated();
 
   const userData: UserInfo | null = null;
@@ -84,7 +84,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
     return (
       <>
         {/*<CircularProgress color="inherit" />*/}
-        <Header onOpenNav={() => setCollapsed(true)} />
+        <Header onOpenNav={() => setCollapsed(true)}/>
         <Box
           sx={{
             minHeight: 1,
@@ -92,7 +92,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
             flexDirection: { xs: 'column', lg: 'row' },
           }}
         >
-          <Sidebar open={collapsed} onClose={() => setCollapsed(false)} />
+          <Sidebar open={collapsed} onClose={() => setCollapsed(false)}/>
 
           <Box
             component="main"
