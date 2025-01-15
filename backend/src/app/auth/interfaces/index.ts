@@ -1,1 +1,1 @@
-export * from './login.interface';
+export * from './token-payload.interface';

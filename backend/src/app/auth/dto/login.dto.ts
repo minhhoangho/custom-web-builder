@@ -32,6 +32,19 @@ export class LoginResponseDto {
 
   @ApiProperty({ example: 86400 })
   expirationTime: number;
+
+  @ApiProperty({ example: {
+    id: 1,
+    email: 'admin@gmail.com',
+    firstName: 'John',
+    lastName: 'Doe',
+  }})
+  user: {
+    id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
 }
 // export function LoginPayloadApiDoc() {
 //   return applyDecorators(

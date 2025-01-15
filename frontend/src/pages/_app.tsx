@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { AppProps as NextAppProps } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
 import { Hydrate } from 'react-query/hydration'; // import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-// import { RecoilRoot } from 'recoil';
 import { CookiesProvider } from 'react-cookie';
 import { ToastContainer } from 'react-toastify';
 import { ThemeProvider } from 'src/theme';
@@ -24,7 +23,7 @@ type AppInitialProps = {
 type AppProps = AppInitialProps & Omit<NextAppProps, 'pageProps'>;
 
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+function MyApp({ Component, pageProps }: AppProps){
   const queryClientRef = React.useRef<QueryClient>();
 
   if (!queryClientRef.current) {
