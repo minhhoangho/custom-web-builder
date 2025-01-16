@@ -75,19 +75,6 @@ export default function ControlPanel({
   const [anchorElHeader, setAnchorElHeader] = useState<null | HTMLElement>(
     null,
   );
-  const handleClickToolbar = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorElToolbar(event.currentTarget);
-  };
-  const handleCloseToolbar = () => {
-    setAnchorElToolbar(null);
-  };
-  const handleClickHeader = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorElHeader(event.currentTarget);
-  };
-  const handleCloseHeader = () => {
-    setAnchorElHeader(null);
-  };
-
   const confirmBox = useConfirm();
   const [modal, setModal] = useState(MODAL.NONE);
   const [sidesheet, setSidesheet] = useState(SIDESHEET.NONE);
@@ -126,6 +113,19 @@ export default function ControlPanel({
   const { setGistId } = useContext(IdContext);
   // const navigate = useNavigate();
   const router = useRouter();
+
+  const handleClickToolbar = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorElToolbar(event.currentTarget);
+  };
+  const handleCloseToolbar = () => {
+    setAnchorElToolbar(null);
+  };
+  const handleClickHeader = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorElHeader(event.currentTarget);
+  };
+  const handleCloseHeader = () => {
+    setAnchorElHeader(null);
+  };
 
   const invertLayout = (component) =>
     setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
@@ -1621,6 +1621,97 @@ export default function ControlPanel({
   }
 
   function header() {
+    const renderMenuHeader = (category, _index) => {
+      const handleOnClickMenuItem = (menuItem) => {
+        if (menuItem.warning) {
+          return confirmBox.confirm({
+            title: menu[category][item].warning.title,
+            message: menu[category][item].warning.message,
+            confirmButtonLabel: t('confirm'),
+          });
+        }
+
+        return menuItem.function();
+      };
+
+      return (
+        <div key={_index}>
+          <div
+            className="px-3 py-1 hover-2 rounded"
+            onClick={handleClickHeader}
+          >
+            {t(category)}
+          </div>
+          <Menu open={Boolean(anchorElHeader)} onClose={handleCloseHeader}>
+            {Object.keys(menu[category]).map((item, index) => {
+              if (menu[category][item].children) {
+                return (
+                  <div key={index}>
+                    <MenuItem
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                      // onClick={menu[category][item].function}
+                      onClick={() =>
+                        handleOnClickMenuItem(menu[category][item])
+                      }
+                    >
+                      {t(item)}
+                    </MenuItem>
+                    <Menu
+                      open={Boolean(anchorElHeader)}
+                      onClose={handleCloseHeader}
+                    >
+                      {menu[category][item].children.map((e, i) => (
+                        <MenuItem key={i} onClick={Object.values(e)[0]}>
+                          {t(Object.keys(e)[0])}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </div>
+                );
+              }
+              // if (menu[category][item].warning) {
+              //   return confirmBox.confirm({
+              //     title: menu[category][item].warning.title,
+              //     message: menu[category][item].warning.message,
+              //     confirmButtonLabel: t('confirm'),
+              //   });
+              // }
+              return (
+                <MenuItem
+                  key={index}
+                  // onClick={menu[category][item].function}
+                  onClick={() => handleOnClickMenuItem(menu[category][item])}
+                  style={
+                    menu[category][item].shortcut && {
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }
+                  }
+                >
+                  <div className="w-full flex items-center justify-between">
+                    <div>{t(item)}</div>
+                    <div className="flex items-center gap-1">
+                      {menu[category][item].shortcut && (
+                        <div className="text-gray-400">
+                          {menu[category][item].shortcut}
+                        </div>
+                      )}
+                      {menu[category][item].state && menu[category][item].state}
+                    </div>
+                  </div>
+                </MenuItem>
+              );
+            })}
+          </Menu>
+        </div>
+      );
+    };
+
     return (
       <nav className="flex justify-between pt-1 items-center whitespace-nowrap">
         <div className="flex justify-start items-center">
@@ -1667,85 +1758,9 @@ export default function ControlPanel({
 
             <div className="flex justify-between items-center">
               <div className="flex justify-start text-md select-none me-2">
-                {Object.keys(menu).map((category, _index) => (
-                  <div key={_index}>
-                    <div
-                      className="px-3 py-1 hover-2 rounded"
-                      onClick={handleClickHeader}
-                    >
-                      {t(category)}
-                    </div>
-                    <Menu
-                      open={Boolean(anchorElHeader)}
-                      onClose={handleCloseHeader}
-                    >
-                      {Object.keys(menu[category]).map((item, index) => {
-                        if (menu[category][item].children) {
-                          return (
-                            <div key={index}>
-                              <MenuItem
-                                style={{
-                                  display: 'flex',
-                                  justifyContent: 'space-between',
-                                  alignItems: 'center',
-                                }}
-                                onClick={menu[category][item].function}
-                              >
-                                {t(item)}
-                              </MenuItem>
-                              <Menu
-                                open={Boolean(anchorElHeader)}
-                                onClose={handleCloseHeader}
-                              >
-                                {menu[category][item].children.map((e, i) => (
-                                  <MenuItem
-                                    key={i}
-                                    onClick={Object.values(e)[0]}
-                                  >
-                                    {t(Object.keys(e)[0])}
-                                  </MenuItem>
-                                ))}
-                              </Menu>
-                            </div>
-                          );
-                        }
-                        if (menu[category][item].warning) {
-                          return confirmBox.confirm({
-                            title: menu[category][item].warning.title,
-                            message: menu[category][item].warning.message,
-                            confirmButtonLabel: t('confirm'),
-                          });
-                        }
-                        return (
-                          <MenuItem
-                            key={index}
-                            onClick={menu[category][item].function}
-                            style={
-                              menu[category][item].shortcut && {
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                              }
-                            }
-                          >
-                            <div className="w-full flex items-center justify-between">
-                              <div>{t(item)}</div>
-                              <div className="flex items-center gap-1">
-                                {menu[category][item].shortcut && (
-                                  <div className="text-gray-400">
-                                    {menu[category][item].shortcut}
-                                  </div>
-                                )}
-                                {menu[category][item].state &&
-                                  menu[category][item].state}
-                              </div>
-                            </div>
-                          </MenuItem>
-                        );
-                      })}
-                    </Menu>
-                  </div>
-                ))}
+                {Object.keys(menu).map((category, _index) =>
+                  renderMenuHeader(category, _index),
+                )}
               </div>
               <Button size="small" color="primary" variant="outlined">
                 {saveState === State.LOADING || saveState === State.SAVING ? (

@@ -58,6 +58,7 @@ export function CanvasContextProvider({ children, ...attrs }) {
   const [isClient, setIsClient] = useState(false);
 
   const canvasWrapRef = useRef(null);
+  console.log(canvasWrapRef);
   const { transform } = useTransform();
   const canvasSize = useResizeObserver({
     ref: canvasWrapRef,
@@ -149,10 +150,12 @@ export function CanvasContextProvider({ children, ...attrs }) {
    * @param {PointerEvent} e
    */
   function detectPointerMovement(e) {
+    console.log('detectPointerMovement >> e >> ', e);
     const targetElm = /** @type {HTMLElement | null} */ e.currentTarget;
     if (!e.isPrimary || !targetElm) return;
+    console.log('targetElm >> ', targetElm);
 
-    const canvasBounds = targetElm.getBoundingClientRect();
+    const canvasBounds = targetElm?.getBoundingClientRect();
 
     setPointerScreenCoords({
       x: e.clientX - canvasBounds.left,

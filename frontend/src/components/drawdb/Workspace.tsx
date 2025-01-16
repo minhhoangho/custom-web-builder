@@ -38,7 +38,7 @@ export const IdContext = createContext<{
 const useSearchParams = () => {
   const router = useRouter();
   const [searchParams, setSearchParams] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window?.location.search);
     return Object.fromEntries(params.entries());
   });
 
@@ -56,7 +56,7 @@ const useSearchParams = () => {
 
   useEffect(() => {
     const handleRouteChange = () => {
-      const params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window?.location.search);
       setSearchParams(Object.fromEntries(params.entries()));
     };
 
@@ -330,7 +330,7 @@ export default function WorkSpace() {
       console.log('This function is not supported');
     };
 
-    const shareId = searchParams.get('shareId');
+    const shareId = searchParams?.['shareId'];
     if (shareId) {
       const existingDiagram = await db.diagrams.get({
         loadedFromGistId: shareId,

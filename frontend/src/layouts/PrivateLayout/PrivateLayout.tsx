@@ -6,9 +6,9 @@ import { CookieKey } from '@constants/storage';
 // import { UserInfo, userState } from 'src/app-recoil/atoms/user';
 // import {useGetCurrentUser} from "src/modules/UserProfile/hooks";
 import { useResponsive } from '@shared/hooks/use-responsive';
+import { UserInfo, useUserStore } from 'src/store';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-import { UserInfo, useUserStore } from "../../store";
 // import { UserRole } from '../../constants/user';
 
 type Props = {
@@ -84,7 +84,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
     return (
       <>
         {/*<CircularProgress color="inherit" />*/}
-        <Header onOpenNav={() => setCollapsed(true)}/>
+        <Header onOpenNav={() => setCollapsed(true)} />
         <Box
           sx={{
             minHeight: 1,
@@ -92,7 +92,7 @@ export function PrivateLayout({ children }: Props): React.ReactElement {
             flexDirection: { xs: 'column', lg: 'row' },
           }}
         >
-          <Sidebar open={collapsed} onClose={() => setCollapsed(false)}/>
+          <Sidebar open={collapsed} onClose={() => setCollapsed(false)} />
 
           <Box
             component="main"

@@ -1,5 +1,4 @@
 import WorkSpace from '@components/drawdb/Workspace';
-import { PrivateLayout } from '@layouts/PrivateLayout';
 import { BaseLayout } from '@layouts/BaseLayout';
 import LayoutContextProvider from './context/LayoutContext';
 import TransformContextProvider from './context/TransformContext';
@@ -17,33 +16,33 @@ import SettingsContextProvider from './context/SettingsContext';
 export function DrawDBEditor() {
   return (
     <BaseLayout>
-      <PrivateLayout>
-        <SettingsContextProvider>
-          <LayoutContextProvider>
-            <TransformContextProvider>
-              <UndoRedoContextProvider>
-                <SelectContextProvider>
-                  <TasksContextProvider>
-                    <AreasContextProvider>
-                      <NotesContextProvider>
-                        <TypesContextProvider>
-                          <EnumsContextProvider>
-                            <TablesContextProvider>
-                              <SaveStateContextProvider>
-                                <WorkSpace />
-                              </SaveStateContextProvider>
-                            </TablesContextProvider>
-                          </EnumsContextProvider>
-                        </TypesContextProvider>
-                      </NotesContextProvider>
-                    </AreasContextProvider>
-                  </TasksContextProvider>
-                </SelectContextProvider>
-              </UndoRedoContextProvider>
-            </TransformContextProvider>
-          </LayoutContextProvider>
-        </SettingsContextProvider>
-      </PrivateLayout>
+      {/*<PrivateLayout>*/}
+      <SettingsContextProvider>
+        <LayoutContextProvider>
+          <TransformContextProvider>
+            <UndoRedoContextProvider>
+              <SelectContextProvider>
+                <TasksContextProvider>
+                  <AreasContextProvider>
+                    <NotesContextProvider>
+                      <TypesContextProvider>
+                        <EnumsContextProvider>
+                          <TablesContextProvider>
+                            <SaveStateContextProvider>
+                              <WorkSpace />
+                            </SaveStateContextProvider>
+                          </TablesContextProvider>
+                        </EnumsContextProvider>
+                      </TypesContextProvider>
+                    </NotesContextProvider>
+                  </AreasContextProvider>
+                </TasksContextProvider>
+              </SelectContextProvider>
+            </UndoRedoContextProvider>
+          </TransformContextProvider>
+        </LayoutContextProvider>
+      </SettingsContextProvider>
+      {/*</PrivateLayout>*/}
     </BaseLayout>
   );
 }
