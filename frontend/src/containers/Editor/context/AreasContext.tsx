@@ -2,17 +2,14 @@ import React, { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
 import { Action, defaultBlue, ObjectType } from '@constants/editor';
+import { DArea } from 'src/data/interface';
 import { useSelect, useTransform, useUndoRedo } from '../hooks';
-import { EditorAreaInterface } from '../interfaces';
 
 export const AreasContext = createContext<{
-  areas: EditorAreaInterface[];
-  setAreas: React.Dispatch<React.SetStateAction<EditorAreaInterface[]>>;
-  updateArea: (id: number, values: Partial<EditorAreaInterface>) => void;
-  addArea: (
-    data?: Partial<EditorAreaInterface> | null,
-    addToHistory?: boolean,
-  ) => void;
+  areas: DArea[];
+  setAreas: React.Dispatch<React.SetStateAction<DArea[]>>;
+  updateArea: (id: number, values: Partial<DArea>) => void;
+  addArea: (data?: Partial<DArea> | null, addToHistory?: boolean) => void;
   deleteArea: (id: number, addToHistory?: boolean) => void;
 }>({
   areas: [],
@@ -28,13 +25,13 @@ export default function AreasContextProvider({
   children: React.ReactNode;
 }) {
   const { t } = useTranslation();
-  const [areas, setAreas] = useState<EditorAreaInterface[]>([]);
+  const [areas, setAreas] = useState<DArea[]>([]);
   const { transform } = useTransform();
   const { selectedElement, setSelectedElement } = useSelect();
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
   const addArea = (
-    data?: Partial<EditorAreaInterface> | null,
+    data?: Partial<DArea> | null,
     addToHistory: boolean = true,
   ) => {
     if (data) {
@@ -99,7 +96,7 @@ export default function AreasContextProvider({
     }
   };
 
-  const updateArea = (id: number, values: Partial<EditorAreaInterface>) => {
+  const updateArea = (id: number, values: Partial<DArea>) => {
     setAreas((prev) =>
       prev.map((t) => {
         if (t.id === id) {

@@ -1,3 +1,39 @@
+import { ObjectType } from '@constants/editor';
+
+export interface DType {
+  id?: number;
+  name: string;
+  fields: any[];
+  comment: string;
+  element?: (typeof ObjectType)[keyof typeof ObjectType];
+}
+
+export interface DEnum {
+  id?: number;
+  name: string;
+  values: string[];
+}
+
+export interface DNote {
+  id: number;
+  x: number;
+  y: number;
+  title: string;
+  content: string;
+  color: string;
+  height: number;
+}
+
+export interface DArea {
+  id: number;
+  name: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  color: string;
+}
+
 export interface DField {
   name: string;
   type: string;
@@ -42,30 +78,33 @@ export interface DTemplate {
   database: string;
   tables: DTable[];
   relationships: DRelationship[];
-  notes: any[]; // assuming notes can be of any type
-  subjectAreas: any[]; // assuming subjectAreas can be of any type
+  notes: DNote[]; // assuming notes can be of any type
+  subjectAreas: DArea[]; // assuming subjectAreas can be of any type
   title: string;
   description?: string;
   custom: number;
-  enums?: any[];
+  types?: DType[];
+  enums?: DEnum[];
   todos?: any[]; // assuming todos can be of any type
-  types?: any[];
 }
 
 export interface DDiagram {
-  id?: number;
+  id: number;
   gistId: string;
+  loadedFromGistId: string;
   name: string;
-  description: string;
+  description?: string;
   database: string;
   tables: DTable[];
-  template: DTemplate;
-  subjectAreas: any[]; // assuming subjectAreas can be of any type
-  notes?: any[]; // assuming notes can be of any type
-  areas?: any[]; // assuming areas can be of any type
-  todos?: any[]; // assuming todos can be of any type
-  types?: any[]; // assuming types can be of any type
-  enums?: string[]; // assuming enums can be of any type
+  references: DRelationship[];
+  template?: DTemplate;
+  subjectAreas?: any[]; // assuming subjectAreas can be of any type
+  notes: DNote[]; // assuming notes can be of any type
+  areas: DArea[]; // assuming areas can be of any type
+  todos: any[]; // assuming todos can be of any type
+  types: DType[];
+  enums: DEnum[];
   pan: { x: number; y: number };
   zoom: number;
+  lastModified: Date;
 }

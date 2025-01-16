@@ -8,8 +8,8 @@ interface AppTransaction extends Transaction {
 }
 
 const db = new Dexie('drawDB') as Dexie & {
-  templates: EntityTable<DTemplate>;
-  diagrams: EntityTable<DDiagram>;
+  templates: EntityTable<Partial<DTemplate>>;
+  diagrams: EntityTable<Partial<DDiagram>>;
 };
 
 db.version(6).stores({

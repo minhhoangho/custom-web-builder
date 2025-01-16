@@ -2,15 +2,15 @@ import React, { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
 import { Action, ObjectType } from '@constants/editor';
+import { DType } from 'src/data/interface';
 import { useUndoRedo } from '../hooks';
-import { EditorTypeInterface } from '../interfaces';
 import { EditorUndoStackInterface } from '../interfaces/stack.interface';
 
 export const TypesContext = createContext<{
-  types: EditorTypeInterface[];
-  setTypes: React.Dispatch<React.SetStateAction<EditorTypeInterface[]>>;
-  addType: (data: EditorTypeInterface, addToHistory?: boolean) => void;
-  updateType: (id: number, values: Partial<EditorTypeInterface>) => void;
+  types: DType[];
+  setTypes: React.Dispatch<React.SetStateAction<DType[]>>;
+  addType: (data: DType, addToHistory?: boolean) => void;
+  updateType: (id: number, values: Partial<DType>) => void;
   deleteType: (id: number, addToHistory?: boolean) => void;
 }>({
   types: [],
@@ -26,10 +26,10 @@ export default function TypesContextProvider({
   children: React.ReactNode;
 }) {
   const { t } = useTranslation();
-  const [types, setTypes] = useState<EditorTypeInterface[]>([]);
+  const [types, setTypes] = useState<DType[]>([]);
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
-  const addType = (data: EditorTypeInterface, addToHistory = true) => {
+  const addType = (data: DType, addToHistory = true) => {
     if (data) {
       setTypes((prev) => {
         const temp = prev.slice();
@@ -74,12 +74,10 @@ export default function TypesContextProvider({
       ]);
       setRedoStack([]);
     }
-    setTypes((prev: EditorTypeInterface[]) =>
-      prev.filter((_e: EditorTypeInterface, i) => i !== id),
-    );
+    setTypes((prev: DType[]) => prev.filter((_e: DType, i) => i !== id));
   };
 
-  const updateType = (id: number, values: Partial<EditorTypeInterface>) => {
+  const updateType = (id: number, values: Partial<DType>) => {
     setTypes((prev) =>
       prev.map((e, i) => (i === id ? { ...e, ...values } : e)),
     );

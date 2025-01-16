@@ -2,17 +2,14 @@ import React, { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@components/common';
 import { Action, defaultNoteTheme, ObjectType } from '@constants/editor';
+import { DNote } from 'src/data/interface';
 import { useSelect, useTransform, useUndoRedo } from '../hooks';
-import { EditorNoteInterface } from '../interfaces';
 
 export const NotesContext = createContext<{
-  notes: EditorNoteInterface[];
-  setNotes: React.Dispatch<React.SetStateAction<EditorNoteInterface[]>>;
-  updateNote: (id: number, values: EditorNoteInterface) => void;
-  addNote: (
-    data?: Partial<EditorNoteInterface> | null,
-    addToHistory?: boolean,
-  ) => void;
+  notes: DNote[];
+  setNotes: React.Dispatch<React.SetStateAction<DNote[]>>;
+  updateNote: (id: number, values: DNote) => void;
+  addNote: (data?: Partial<DNote> | null, addToHistory?: boolean) => void;
   deleteNote: (id: number, addToHistory?: boolean) => void;
 }>({
   notes: [],
@@ -28,15 +25,12 @@ export default function NotesContextProvider({
   children: React.ReactNode;
 }) {
   const { t } = useTranslation();
-  const [notes, setNotes] = useState<EditorNoteInterface[]>([]);
+  const [notes, setNotes] = useState<DNote[]>([]);
   const { transform } = useTransform();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { selectedElement, setSelectedElement } = useSelect();
 
-  const addNote = (
-    data?: Partial<EditorNoteInterface> | null,
-    addToHistory = true,
-  ) => {
+  const addNote = (data?: Partial<DNote> | null, addToHistory = true) => {
     if (data) {
       setNotes((prev) => {
         const temp = prev.slice();
@@ -98,7 +92,7 @@ export default function NotesContextProvider({
     }
   };
 
-  const updateNote = (id: number, values: Partial<EditorNoteInterface>) => {
+  const updateNote = (id: number, values: Partial<DNote>) => {
     setNotes((prev) =>
       prev.map((t) => {
         if (t.id === id) {

@@ -25,7 +25,7 @@ import FloatingControls from './FloatingControls';
 import SidePanel from './EditorSidePanel/SidePanel';
 import Canvas from './EditorCanvas/Canvas';
 import ControlPanel from './EditorHeader/ControlPanel';
-import { DTemplate } from '../../data/interface';
+import { DDiagram, DTemplate } from '../../data/interface';
 
 export const IdContext = createContext<{
   gistId: string;
@@ -132,8 +132,8 @@ export default function WorkSpace() {
             pan: transform.pan,
             zoom: transform.zoom,
             loadedFromGistId: loadedFromGistId,
-            ...(databases[database].hasEnums && { enums: enums }),
-            ...(databases[database].hasTypes && { types: types }),
+            ...(databases[database]?.hasEnums && { enums: enums }),
+            ...(databases[database]?.hasTypes && { types: types }),
           })
           .then((id) => {
             setId(id);
@@ -156,8 +156,8 @@ export default function WorkSpace() {
             pan: transform.pan,
             zoom: transform.zoom,
             loadedFromGistId: loadedFromGistId,
-            ...(databases[database].hasEnums && { enums: enums }),
-            ...(databases[database].hasTypes && { types: types }),
+            ...(databases[database]?.hasEnums && { enums: enums }),
+            ...(databases[database]?.hasTypes && { types: types }),
           })
           .then(() => {
             setSaveState(State.SAVED);
@@ -176,8 +176,8 @@ export default function WorkSpace() {
           todos: tasks,
           pan: transform.pan,
           zoom: transform.zoom,
-          ...(databases[database].hasEnums && { enums: enums }),
-          ...(databases[database].hasTypes && { types: types }),
+          ...(databases[database]?.hasEnums && { enums: enums }),
+          ...(databases[database]?.hasTypes && { types: types }),
         })
         .then(() => {
           setSaveState(State.SAVED);
@@ -212,7 +212,7 @@ export default function WorkSpace() {
       await db.diagrams
         .orderBy('lastModified')
         .last()
-        .then((d) => {
+        .then((d: DDiagram) => {
           if (d) {
             if (d.database) {
               setDatabase(d.database);
@@ -229,10 +229,10 @@ export default function WorkSpace() {
             setAreas(d.areas);
             setTasks(d.todos ?? []);
             setTransform({ pan: d.pan, zoom: d.zoom });
-            if (databases[database].hasTypes) {
+            if (databases[database]?.hasTypes) {
               setTypes(d.types ?? []);
             }
-            if (databases[database].hasEnums) {
+            if (databases[database]?.hasEnums) {
               setEnums(d.enums ?? []);
             }
             window.name = `d ${d.id}`;
@@ -246,7 +246,7 @@ export default function WorkSpace() {
         });
     };
 
-    const loadDiagram = async (id) => {
+    const loadDiagram = async (id: number) => {
       await db.diagrams
         .get(id)
         .then((diagram) => {
@@ -287,7 +287,7 @@ export default function WorkSpace() {
         });
     };
 
-    const loadTemplate = async (id) => {
+    const loadTemplate = async (id: number) => {
       await db.templates
         .get(id)
         .then((diagram: DTemplate) => {
@@ -326,7 +326,7 @@ export default function WorkSpace() {
         });
     };
 
-    const loadFromGist = async (shareId) => {
+    const loadFromGist = async (shareId: string) => {
       console.log('This function is not supported');
     };
 
@@ -352,7 +352,7 @@ export default function WorkSpace() {
     } else {
       const name = window.name.split(' ');
       const op = name[0];
-      const id = parseInt(name[1]);
+      const id = parseInt(name?.[1] ?? '0');
       switch (op) {
         case 'd': {
           await loadDiagram(id);
@@ -425,7 +425,7 @@ export default function WorkSpace() {
   }, [load]);
 
   return (
-    <div className="h-full flex flex-col overflow-hidden theme">
+    <div className="h-screen w-full flex flex-col overflow-hidden theme">
       <IdContext.Provider value={{ gistId, setGistId }}>
         <ControlPanel
           diagramId={id}

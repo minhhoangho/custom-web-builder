@@ -2,22 +2,17 @@ import React, { createContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Action, ObjectType } from '@constants/editor';
 import { toast } from '@components/common';
+import { DEnum } from 'src/data/interface';
 import { useUndoRedo } from '../hooks';
 
 export const EnumsContext = createContext<{
-  enums: { id?: number; name: string; values: string[] }[];
+  enums: DEnum[];
   setEnums: React.Dispatch<
     React.SetStateAction<{ name: string; values: string[] }[]>
   >;
-  addEnum: (
-    data: { id: number; name: string; values: string[] } | null,
-    addToHistory?: boolean,
-  ) => void;
+  addEnum: (data: DEnum | null, addToHistory?: boolean) => void;
   deleteEnum: (id: number, addToHistory?: boolean) => void;
-  updateEnum: (
-    id: number,
-    values: { name?: string; values?: string[] },
-  ) => void;
+  updateEnum: (id: number, values: DEnum) => void;
 }>({
   enums: [],
   setEnums: () => {},
@@ -40,10 +35,7 @@ export default function EnumsContextProvider({
   >([]);
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
-  const addEnum = (
-    data: { id: number; name: string; values: string[] } | null,
-    addToHistory = true,
-  ) => {
+  const addEnum = (data: DEnum | null, addToHistory = true) => {
     if (data) {
       setEnums((prev) => {
         const temp = prev.slice();
