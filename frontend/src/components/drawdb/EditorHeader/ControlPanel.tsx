@@ -1395,17 +1395,18 @@ export default function ControlPanel({
         {layout.header && (
           <div className="flex justify-between items-center me-7">
             {header()}
-            {window.name.split(' ')[0] !== 't' && (
-              <Button
-                color="primary"
-                className="text-base me-2 pe-6 ps-5 py-[18px] rounded-md"
-                size="medium"
-                startIcon={<Iconify icon="mdi:share-outline" />}
-                onClick={() => setModal(MODAL.SHARE)}
-              >
-                {t('share')}
-              </Button>
-            )}
+            {typeof window !== 'undefined' &&
+              window.name.split(' ')[0] === 't' && (
+                <Button
+                  color="primary"
+                  className="text-base me-2 pe-6 ps-5 py-[18px] rounded-md"
+                  size="medium"
+                  startIcon={<Iconify icon="mdi:share-outline" />}
+                  onClick={() => setModal(MODAL.SHARE)}
+                >
+                  {t('share')}
+                </Button>
+              )}
           </div>
         )}
         {layout.toolbar && toolbar()}
@@ -1748,7 +1749,11 @@ export default function ControlPanel({
                 }}
                 onClick={() => setModal(MODAL.RENAME)}
               >
-                {window.name.split(' ')[0] === 't' ? 'Templates/' : 'Diagrams/'}
+                {/*{window.name.split(' ')[0] === 't' ? 'Templates/' : 'Diagrams/'}*/}
+                {typeof window !== 'undefined' &&
+                window.name.split(' ')[0] === 't'
+                  ? 'Templates/'
+                  : 'Diagrams/'}
                 {title}
               </div>
               {(showEditName || modal === MODAL.RENAME) && (

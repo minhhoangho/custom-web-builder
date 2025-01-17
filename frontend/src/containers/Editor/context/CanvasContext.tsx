@@ -9,17 +9,17 @@ import {
 import { useEventListener, useResizeObserver } from 'usehooks-ts';
 import { useTransform } from '../hooks';
 
-const defaultDOMRect = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  toJSON: () => ({}),
-};
+// const defaultDOMRect = {
+//   x: 0,
+//   y: 0,
+//   width: 0,
+//   height: 0,
+//   top: 0,
+//   right: 0,
+//   bottom: 0,
+//   left: 0,
+//   toJSON: () => ({}),
+// };
 
 export const CanvasContext = createContext({
   canvas: {
@@ -27,8 +27,8 @@ export const CanvasContext = createContext({
       x: 0,
       y: 0,
     },
-    // viewBox: new DOMRect(),
-    viewBox: defaultDOMRect,
+    viewBox: null,
+    // viewBox: defaultDOMRect,
   },
   coords: {
     toDiagramSpace(coords) {
@@ -58,7 +58,7 @@ export function CanvasContextProvider({ children, ...attrs }) {
   const [isClient, setIsClient] = useState(false);
 
   const canvasWrapRef = useRef(null);
-  console.log(canvasWrapRef);
+  console.log('canvasWrapRef >> ', canvasWrapRef);
   const { transform } = useTransform();
   const canvasSize = useResizeObserver({
     ref: canvasWrapRef,
@@ -67,6 +67,9 @@ export function CanvasContextProvider({ children, ...attrs }) {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const [viewBox, setViewBox] = useState<DOMRect | null>(null);
+
   const screenSize = useMemo(
     () => ({
       x: canvasSize.width ?? 0,
@@ -81,58 +84,87 @@ export function CanvasContextProvider({ children, ...attrs }) {
     }),
     [screenSize.x, screenSize.y, transform.zoom],
   );
-  const viewBox = useMemo(
-    () =>
-      isClient
-        ? new DOMRect(
-            transform.pan.x - viewBoxSize.x / 2,
-            transform.pan.y - viewBoxSize.y / 2,
-            viewBoxSize.x,
-            viewBoxSize.y,
-          )
-        : defaultDOMRect,
-    [transform.pan.x, transform.pan.y, viewBoxSize.x, viewBoxSize.y, isClient],
-  );
+
+  useEffect(() => {
+    if (typeof DOMRect !== 'undefined') {
+      // const viewBoxSize = {
+      //   x: screenSize.x / transform.zoom,
+      //   y: screenSize.y / transform.zoom,
+      // };
+
+      setViewBox(
+        new DOMRect(
+          transform.pan.x - viewBoxSize.x / 2,
+          transform.pan.y - viewBoxSize.y / 2,
+          viewBoxSize.x,
+          viewBoxSize.y,
+        ),
+      );
+    }
+  }, [screenSize, transform]);
+
+  // const viewBox = useMemo(
+  //   () =>
+  //     isClient
+  //       ? new DOMRect(
+  //           transform.pan.x - viewBoxSize.x / 2,
+  //           transform.pan.y - viewBoxSize.y / 2,
+  //           viewBoxSize.x,
+  //           viewBoxSize.y,
+  //         )
+  //       : defaultDOMRect,
+  //   [transform.pan.x, transform.pan.y, viewBoxSize.x, viewBoxSize.y, isClient],
+  // );
+  // const viewBox = useMemo(
+  //   () =>
+  //     new DOMRect(
+  //       transform.pan.x - viewBoxSize.x / 2,
+  //       transform.pan.y - viewBoxSize.y / 2,
+  //       viewBoxSize.x,
+  //       viewBoxSize.y,
+  //     ),
+  //   [transform.pan.x, transform.pan.y, viewBoxSize.x, viewBoxSize.y],
+  // );
 
   const toDiagramSpace = useCallback(
     (coord) => ({
       x:
-        typeof coord.x === 'number'
+        typeof coord.x === 'number' && viewBox
           ? (coord.x / screenSize.x) * viewBox.width + viewBox.left
           : undefined,
       y:
-        typeof coord.y === 'number'
+        typeof coord.y === 'number' && viewBox
           ? (coord.y / screenSize.y) * viewBox.height + viewBox.top
           : undefined,
     }),
     [
       screenSize.x,
       screenSize.y,
-      viewBox.height,
-      viewBox.left,
-      viewBox.top,
-      viewBox.width,
+      viewBox?.height,
+      viewBox?.left,
+      viewBox?.top,
+      viewBox?.width,
     ],
   );
 
   const toScreenSpace = useCallback(
     (coord) => ({
       x:
-        typeof coord.x === 'number'
+        typeof coord.x === 'number' && viewBox
           ? ((coord.x - viewBox.left) / viewBox.width) * screenSize.x
           : undefined,
       y:
-        typeof coord.y === 'number'
+        typeof coord.y === 'number' && viewBox
           ? ((coord.y - viewBox.top) / viewBox.height) * screenSize.y
           : undefined,
     }),
     [
       screenSize.x,
       screenSize.y,
-      viewBox.height,
-      viewBox.left,
-      viewBox.top,
-      viewBox.width,
+      viewBox?.height,
+      viewBox?.left,
+      viewBox?.top,
+      viewBox?.width,
     ],
   );
 
@@ -151,6 +183,8 @@ export function CanvasContextProvider({ children, ...attrs }) {
    */
   function detectPointerMovement(e) {
     console.log('detectPointerMovement >> e >> ', e);
+    console.log('canvasWrapRef >> ', canvasWrapRef);
+
     const targetElm = /** @type {HTMLElement | null} */ e.currentTarget;
     if (!e.isPrimary || !targetElm) return;
     console.log('targetElm >> ', targetElm);

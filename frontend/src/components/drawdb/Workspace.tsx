@@ -3,7 +3,6 @@ import { createContext, useCallback, useEffect, useState } from 'react';
 import { Button, Modal } from '@mui/material';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
-import { AnyObject } from '@common/interfaces';
 import { db } from 'src/data/db';
 import { CanvasContextProvider } from 'src/containers/Editor/context/CanvasContext';
 import { DB, State } from '@constants/editor';
@@ -26,6 +25,7 @@ import SidePanel from './EditorSidePanel/SidePanel';
 import Canvas from './EditorCanvas/Canvas';
 import ControlPanel from './EditorHeader/ControlPanel';
 import { DDiagram, DTemplate } from '../../data/interface';
+import { useSearchParams } from 'next/navigation';
 
 export const IdContext = createContext<{
   gistId: string;
@@ -35,39 +35,40 @@ export const IdContext = createContext<{
   setGistId: () => {},
 });
 
-const useSearchParams = () => {
-  const router = useRouter();
-  const [searchParams, setSearchParams] = useState(() => {
-    const params = new URLSearchParams(window?.location.search);
-    return Object.fromEntries(params.entries());
-  });
-
-  const updateSearchParams = (newParams: AnyObject) => {
-    const updatedParams = new URLSearchParams(searchParams);
-    Object.entries(newParams).forEach(([key, value]) => {
-      if (value === undefined) {
-        updatedParams.delete(key);
-      } else {
-        updatedParams.set(key, value);
-      }
-    });
-    router.push(`?${updatedParams.toString()}`, undefined, { shallow: true });
-  };
-
-  useEffect(() => {
-    const handleRouteChange = () => {
-      const params = new URLSearchParams(window?.location.search);
-      setSearchParams(Object.fromEntries(params.entries()));
-    };
-
-    window.addEventListener('popstate', handleRouteChange);
-    return () => {
-      window.removeEventListener('popstate', handleRouteChange);
-    };
-  }, []);
-
-  return [searchParams, updateSearchParams];
-};
+// const useSearchParams = () => {
+//   const router = useRouter();
+//   // const [searchParams, setSearchParams] = useState(() => {
+//   //   const params = new URLSearchParams(window?.location.search);
+//   //   return Object.fromEntries(params.entries());
+//   // });
+//   const searchParams = useSearchParams();
+//
+//   const updateSearchParams = (newParams: AnyObject) => {
+//     const updatedParams = new URLSearchParams(searchParams);
+//     Object.entries(newParams).forEach(([key, value]) => {
+//       if (value === undefined) {
+//         updatedParams.delete(key);
+//       } else {
+//         updatedParams.set(key, value);
+//       }
+//     });
+//     router.push(`?${updatedParams.toString()}`, undefined, { shallow: true });
+//   };
+//
+//   useEffect(() => {
+//     const handleRouteChange = () => {
+//       const params = new URLSearchParams(window?.location.search);
+//       setSearchParams(Object.fromEntries(params.entries()));
+//     };
+//
+//     window.addEventListener('popstate', handleRouteChange);
+//     return () => {
+//       window.removeEventListener('popstate', handleRouteChange);
+//     };
+//   }, []);
+//
+//   return [searchParams, updateSearchParams];
+// };
 
 export default function WorkSpace() {
   const [id, setId] = useState(0);
@@ -99,7 +100,11 @@ export default function WorkSpace() {
   const { undoStack, redoStack, setUndoStack, setRedoStack } = useUndoRedo();
   // const { t, i18n } = useTranslation();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const shareId = searchParams.get('shareId');
+
+  const router = useRouter();
   const handleResize = (e: any) => {
     if (!resize) return;
     // const w = isRtl(i18n.language) ? window.innerWidth - e.clientX : e.clientX;
@@ -115,8 +120,9 @@ export default function WorkSpace() {
     const saveAsDiagram = window.name === '' || op === 'd' || op === 'lt';
 
     if (saveAsDiagram) {
-      searchParams?.delete('shareId');
-      setSearchParams(searchParams);
+      // searchParams.delete('shareId');
+      // setSearchParams(searchParams);
+      router.replace({ search: null });
       if ((id === 0 && window.name === '') || op === 'lt') {
         await db.diagrams
           .add({
@@ -189,7 +195,7 @@ export default function WorkSpace() {
     }
   }, [
     searchParams,
-    setSearchParams,
+    // setSearchParams,
     tables,
     relationships,
     notes,
@@ -330,7 +336,6 @@ export default function WorkSpace() {
       console.log('This function is not supported');
     };
 
-    const shareId = searchParams?.['shareId'];
     if (shareId) {
       const existingDiagram = await db.diagrams.get({
         loadedFromGistId: shareId,

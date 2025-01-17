@@ -12,8 +12,16 @@ import EnumsContextProvider from './context/EnumsContext';
 import SaveStateContextProvider from './context/SaveStateContext';
 import TablesContextProvider from './context/DiagramContext';
 import SettingsContextProvider from './context/SettingsContext';
+import { useEffect, useState } from 'react';
 
 export function DrawDBEditor() {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  if (!isClient) {
+    return null;
+  }
   return (
     <BaseLayout>
       {/*<PrivateLayout>*/}
@@ -29,7 +37,7 @@ export function DrawDBEditor() {
                         <EnumsContextProvider>
                           <TablesContextProvider>
                             <SaveStateContextProvider>
-                              <WorkSpace/>
+                              <WorkSpace />
                             </SaveStateContextProvider>
                           </TablesContextProvider>
                         </EnumsContextProvider>
