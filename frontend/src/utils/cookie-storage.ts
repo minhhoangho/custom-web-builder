@@ -1,5 +1,5 @@
 import Cookies, { CookieSetOptions } from 'universal-cookie';
-import addSeconds from 'date-fns/addSeconds';
+import { addSeconds } from 'date-fns';
 import { getCurrentDomain } from 'src/utils';
 import { CookieKey } from '@constants/storage';
 

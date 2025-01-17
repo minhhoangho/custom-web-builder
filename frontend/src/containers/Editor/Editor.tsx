@@ -29,7 +29,7 @@ export function DrawDBEditor() {
                         <EnumsContextProvider>
                           <TablesContextProvider>
                             <SaveStateContextProvider>
-                              <WorkSpace />
+                              <WorkSpace/>
                             </SaveStateContextProvider>
                           </TablesContextProvider>
                         </EnumsContextProvider>
