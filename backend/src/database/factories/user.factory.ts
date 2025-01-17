@@ -4,7 +4,7 @@ import { User } from '@app/entity';
 import { hashPassword } from '@utils';
 import { define } from 'typeorm-seeding';
 
-define(User, (faker: typeof fakerEN, context: { email: string }): User => {
+define(User, (faker, context: { email: string }) => {
   const user = new User();
 
   user.firstName = fakerEN.person.firstName();

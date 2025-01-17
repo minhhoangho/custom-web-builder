@@ -4,7 +4,7 @@ import { Post } from '@app/entity';
 import { define } from 'typeorm-seeding';
 import { PostStatus } from '@app/post/constants';
 
-define(Post, (_faker: typeof fakerEN): Post => {
+define(Post, (_faker): Post => {
   const post = new Post();
   post.title = fakerEN.music.songName();
   post.description = fakerEN.lorem.paragraph(5);

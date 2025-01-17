@@ -109,11 +109,15 @@ const config = {
       },
     ];
   },
-  webpack(webpackConfig) {
-    // https://formatjs.io/docs/guides/advanced-usage#react-intl-without-parser-40-smaller
-    webpackConfig.resolve.alias['@formatjs/icu-messageformat-parser'] =
-      '@formatjs/icu-messageformat-parser/no-parser';
-    return webpackConfig;
+  experimental: {
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
 };
 
