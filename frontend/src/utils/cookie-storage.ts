@@ -1,4 +1,4 @@
-import Cookies from 'universal-cookie';
+import Cookies, { CookieSetOptions } from 'universal-cookie';
 import addSeconds from 'date-fns/addSeconds';
 import { getCurrentDomain } from 'src/utils';
 import { CookieKey } from '@constants/storage';
@@ -19,7 +19,7 @@ export const CookieStorage = {
     const expires = expirationTime
       ? addSeconds(new Date(), expirationTime)
       : undefined;
-    return cookies.set(key, data, { domain, expires, path: path ?? '/' });
+    return cookies.set(key, data, { domain, expires, path: path ?? '/' } as CookieSetOptions);
   },
 
   clearCookieData(key: string, path = '/') {
