@@ -1,26 +1,27 @@
-import { Cancel } from "@mui/icons-material";
-import { Stack, TextField, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import { useRef, useState } from "react";
+import { Stack, TextField, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+import { useRef, useState } from 'react';
+import { Iconify } from '@components/common';
 
 const Tags = ({ data, handleDelete }) => {
   return (
     <Box
       sx={{
-        background: "#283240",
-        height: "100%",
-        display: "flex",
-        padding: "0.4rem",
-        margin: "0 0.5rem 0 0",
-        justifyContent: "center",
-        alignContent: "center",
-        color: "#ffffff",
+        background: '#283240',
+        height: '100%',
+        display: 'flex',
+        padding: '0.4rem',
+        margin: '0 0.5rem 0 0',
+        justifyContent: 'center',
+        alignContent: 'center',
+        color: '#ffffff',
       }}
     >
-      <Stack direction='row' gap={1}>
+      <Stack direction="row" gap={1}>
         <Typography>{data}</Typography>
-        <Cancel
-          sx={{ cursor: "pointer" }}
+        <Iconify
+          icon="material-symbols:cancel"
+          sx={{ cursor: 'pointer' }}
           onClick={() => {
             handleDelete(data);
           }}
@@ -30,7 +31,6 @@ const Tags = ({ data, handleDelete }) => {
   );
 };
 
-
 type TagInputProps = {
   separator?: string;
   placeholder?: string;
@@ -39,11 +39,15 @@ type TagInputProps = {
   onBlur?: (e?: any) => void;
   value?: string[];
   className?: string;
-}
+};
 
 export function TagInput({
-                           placeholder, onInputChange, value,className, ...rest
-                         }: TagInputProps) {
+  placeholder,
+  onInputChange,
+  value,
+  className,
+  ...rest
+}: TagInputProps) {
   const [tags, setTags] = useState<string[]>(value);
   const tagRef = useRef();
 
@@ -54,7 +58,7 @@ export function TagInput({
   const handleOnSubmit = (e) => {
     e.preventDefault();
     setTags([...tags, tagRef.current.value]);
-    tagRef.current.value = "";
+    tagRef.current.value = '';
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -62,20 +66,20 @@ export function TagInput({
         <TextField
           inputRef={tagRef}
           fullWidth
-          variant='standard'
-          size='small'
-          sx={{ margin: "1rem 0" }}
+          variant="standard"
+          size="small"
+          sx={{ margin: '1rem 0' }}
           className={className}
-          margin='none'
+          margin="none"
           placeholder={placeholder}
           onChange={(e) => onInputChange?.(e.target.value)}
           {...rest}
           InputProps={{
             startAdornment: (
-              <Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
+              <Box sx={{ margin: '0 0.2rem 0 0', display: 'flex' }}>
                 {tags.map((data, index) => {
                   return (
-                    <Tags data={data} handleDelete={handleDelete} key={index}/>
+                    <Tags data={data} handleDelete={handleDelete} key={index} />
                   );
                 })}
               </Box>

@@ -48,16 +48,16 @@ export function overrides(theme: Theme) {
         },
       },
     },
-    MuiBackdrop: {
-      styleOverrides: {
-        root: {
-          backgroundColor: alpha(theme.palette.grey[900], 0.8),
-        },
-        invisible: {
-          background: 'transparent',
-        },
-      },
-    },
+    // MuiBackdrop: {
+    //   styleOverrides: {
+    //     root: {
+    //       backgroundColor: alpha(theme.palette.grey[900], 0.8),
+    //     },
+    //     invisible: {
+    //       background: 'transparent',
+    //     },
+    //   },
+    // },
     MuiButton: {
       styleOverrides: {
         containedInherit: {
@@ -103,11 +103,11 @@ export function overrides(theme: Theme) {
         },
       },
     },
-    MuiPaper: {
-      defaultProps: {
-        elevation: 0,
-      },
-    },
+    // MuiPaper: {
+    //   defaultProps: {
+    //     elevation: 0,
+    //   },
+    // },
     MuiTableCell: {
       styleOverrides: {
         head: {

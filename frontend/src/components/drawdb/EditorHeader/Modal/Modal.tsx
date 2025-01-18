@@ -1,19 +1,18 @@
-// import {
-//   Spin,
-//   Input,
-//   Image,
-//   Toast,
-//   Modal as SemiUIModal,
-// } from '@douyinfe/semi-ui';
-import { Button, Dialog, DialogActions } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Paper,
+} from '@mui/material';
 import Image from 'next/image';
 import * as React from 'react'; // import { isRtl } from '../../../i18n/utils/rtl';
 import { useState } from 'react';
 import { saveAs } from 'file-saver';
 import { Parser } from 'node-sql-parser';
 import { useTranslation } from 'react-i18next';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+
 import { getModalTitle, getOkText } from 'src/utils/model';
 import { Input } from '@components/form/Input'; // import { isRtl } from '../../../i18n/utils/rtl';
 import { DB, MODAL, STATUS } from '@constants/editor';
@@ -387,11 +386,16 @@ export default function Modal({
 
   return (
     <Dialog
+      sx={{
+        width: 500,
+      }}
+      fullScreen={false}
       fullWidth
       maxWidth="md"
       open={modal !== MODAL.NONE}
       aria-labelledby="modal-dialog-title"
       aria-describedby="modal-dialog-description"
+      PaperComponent={Paper}
       // onOk={getModalOnOk}
       onClose={() => {
         setExportData(() => ({
