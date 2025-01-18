@@ -1,9 +1,11 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { State } from '@constants/editor';
 
 export const SaveStateContext = createContext<{
   saveState: (typeof State)[keyof typeof State];
-  setSaveState: (state: (typeof State)[keyof typeof State]) => void;
+  setSaveState: React.Dispatch<
+    React.SetStateAction<(typeof State)[keyof typeof State]>
+  >;
 }>({
   saveState: State.NONE,
   setSaveState: () => {},

@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { createContext, useCallback, useMemo, useRef, useState } from 'react';
 import { useEventListener, useResizeObserver } from 'usehooks-ts';
 import { useTransform } from '../hooks';
 
@@ -21,7 +14,39 @@ import { useTransform } from '../hooks';
 //   toJSON: () => ({}),
 // };
 
-export const CanvasContext = createContext({
+export const CanvasContext = createContext<{
+  canvas: {
+    screenSize: {
+      x: number;
+      y: number;
+    };
+    viewBox: DOMRect | null;
+  };
+  coords: {
+    toDiagramSpace(coords: { x: number; y: number }): {
+      x: number | undefined;
+      y: number | undefined;
+    };
+    toScreenSpace(coords: { x: number; y: number }): {
+      x: number | undefined;
+      y: number | undefined;
+    };
+  };
+  pointer: {
+    spaces: {
+      screen: {
+        x: number;
+        y: number;
+      };
+      diagram: {
+        x: number | undefined;
+        y: number | undefined;
+      };
+    };
+    style: string;
+    setStyle(style: string): void;
+  };
+}>({
   canvas: {
     screenSize: {
       x: 0,
@@ -54,21 +79,19 @@ export const CanvasContext = createContext({
   },
 });
 
-export function CanvasContextProvider({ children, ...attrs }) {
-  const [isClient, setIsClient] = useState(false);
-
+export function CanvasContextProvider({
+  children,
+  ...attrs
+}: {
+  children: React.ReactNode;
+  [key: string]: any;
+}) {
   const canvasWrapRef = useRef(null);
-  console.log('canvasWrapRef >> ', canvasWrapRef);
   const { transform } = useTransform();
   const canvasSize = useResizeObserver({
     ref: canvasWrapRef,
     box: 'content-box',
   });
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const [viewBox, setViewBox] = useState<DOMRect | null>(null);
 
   const screenSize = useMemo(
     () => ({
@@ -85,49 +108,19 @@ export function CanvasContextProvider({ children, ...attrs }) {
     [screenSize.x, screenSize.y, transform.zoom],
   );
 
-  useEffect(() => {
-    if (typeof DOMRect !== 'undefined') {
-      // const viewBoxSize = {
-      //   x: screenSize.x / transform.zoom,
-      //   y: screenSize.y / transform.zoom,
-      // };
-
-      setViewBox(
-        new DOMRect(
-          transform.pan.x - viewBoxSize.x / 2,
-          transform.pan.y - viewBoxSize.y / 2,
-          viewBoxSize.x,
-          viewBoxSize.y,
-        ),
-      );
-    }
-  }, [screenSize, transform]);
-
-  // const viewBox = useMemo(
-  //   () =>
-  //     isClient
-  //       ? new DOMRect(
-  //           transform.pan.x - viewBoxSize.x / 2,
-  //           transform.pan.y - viewBoxSize.y / 2,
-  //           viewBoxSize.x,
-  //           viewBoxSize.y,
-  //         )
-  //       : defaultDOMRect,
-  //   [transform.pan.x, transform.pan.y, viewBoxSize.x, viewBoxSize.y, isClient],
-  // );
-  // const viewBox = useMemo(
-  //   () =>
-  //     new DOMRect(
-  //       transform.pan.x - viewBoxSize.x / 2,
-  //       transform.pan.y - viewBoxSize.y / 2,
-  //       viewBoxSize.x,
-  //       viewBoxSize.y,
-  //     ),
-  //   [transform.pan.x, transform.pan.y, viewBoxSize.x, viewBoxSize.y],
-  // );
+  const viewBox = useMemo(
+    () =>
+      new DOMRect(
+        transform.pan.x - viewBoxSize.x / 2,
+        transform.pan.y - viewBoxSize.y / 2,
+        viewBoxSize.x,
+        viewBoxSize.y,
+      ),
+    [transform.pan.x, transform.pan.y, viewBoxSize.x, viewBoxSize.y],
+  );
 
   const toDiagramSpace = useCallback(
-    (coord) => ({
+    (coord: { x: number; y: number }) => ({
       x:
         typeof coord.x === 'number' && viewBox
           ? (coord.x / screenSize.x) * viewBox.width + viewBox.left
@@ -148,7 +141,7 @@ export function CanvasContextProvider({ children, ...attrs }) {
   );
 
   const toScreenSpace = useCallback(
-    (coord) => ({
+    (coord: { x: number; y: number }) => ({
       x:
         typeof coord.x === 'number' && viewBox
           ? ((coord.x - viewBox.left) / viewBox.width) * screenSize.x
@@ -182,12 +175,9 @@ export function CanvasContextProvider({ children, ...attrs }) {
    * @param {PointerEvent} e
    */
   function detectPointerMovement(e) {
-    console.log('detectPointerMovement >> e >> ', e);
-    console.log('canvasWrapRef >> ', canvasWrapRef);
-
-    const targetElm = /** @type {HTMLElement | null} */ e.currentTarget;
+    const targetElm =
+      /** @type {HTMLElement | null} */ e.currentTarget as HTMLElement | null;
     if (!e.isPrimary || !targetElm) return;
-    console.log('targetElm >> ', targetElm);
 
     const canvasBounds = targetElm?.getBoundingClientRect();
 
@@ -199,7 +189,6 @@ export function CanvasContextProvider({ children, ...attrs }) {
 
   // Important for touch screen devices!
   useEventListener('pointerdown', detectPointerMovement, canvasWrapRef);
-
   useEventListener('pointermove', detectPointerMovement, canvasWrapRef);
 
   const contextValue = {
@@ -220,10 +209,6 @@ export function CanvasContextProvider({ children, ...attrs }) {
       setStyle: setPointerStyle,
     },
   };
-
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <CanvasContext.Provider value={contextValue}>

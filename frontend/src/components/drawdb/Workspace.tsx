@@ -452,7 +452,6 @@ export default function WorkSpace() {
           e.target.releasePointerCapture(e.pointerId);
         }}
         // style={isRtl(i18n.language) ? { direction: 'rtl' } : {}}
-        style={{ direction: 'rtl' }}
       >
         {layout.sidebar && (
           <SidePanel resize={resize} setResize={setResize} width={width} />

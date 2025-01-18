@@ -5,7 +5,7 @@
 //   Toast,
 //   Modal as SemiUIModal,
 // } from '@douyinfe/semi-ui';
-import { Box, Button, Modal as MuiModal } from '@mui/material';
+import { Button, Dialog, DialogActions } from '@mui/material';
 import Image from 'next/image';
 import * as React from 'react'; // import { isRtl } from '../../../i18n/utils/rtl';
 import { useState } from 'react';
@@ -37,6 +37,8 @@ import ImportDiagram from './ImportDiagram';
 import ImportSource from './ImportSource';
 import SetTableWidth from './SetTableWidth';
 import Code from './Code';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
 type ModalProps = {
   modal: (typeof MODAL)[keyof typeof MODAL];
@@ -51,7 +53,7 @@ type ModalProps = {
   };
   setExportData: React.Dispatch<
     React.SetStateAction<{
-      data: never | null;
+      data: never | null | string;
       extension: string;
       filename: string;
     }>
@@ -355,6 +357,7 @@ export default function Modal({
       ((modal === MODAL.IMG || modal === MODAL.CODE) && !exportData.data) ||
       (modal === MODAL.SAVEAS && saveAsTitle === '') ||
       (modal === MODAL.IMPORT_SRC && importSource.src === '');
+
     return (
       <div>
         <Button
@@ -381,11 +384,13 @@ export default function Modal({
       </div>
     );
   };
+
   return (
-    <MuiModal
-      // style={{ direction: 'rtl' }}
-      title={getModalTitle(modal)}
+    <Dialog
+      maxWidth="md"
       open={modal !== MODAL.NONE}
+      aria-labelledby="modal-dialog-title"
+      aria-describedby="modal-dialog-description"
       // onOk={getModalOnOk}
       onClose={() => {
         setExportData(() => ({
@@ -403,19 +408,10 @@ export default function Modal({
           overwrite: true,
         });
       }}
-      centered
-
-      // xs={{
-      //   maxHeight: window.innerHeight - 280,
-      //   overflow:
-      //     modal === MODAL.CODE || modal === MODAL.IMG ? 'hidden' : 'auto',
-      //   direction: 'ltr',
-      // }}
     >
-      <Box>
-        {getModalBody()}
-        {getModelAction()}
-      </Box>
-    </MuiModal>
+      <DialogTitle>{getModalTitle(modal)}</DialogTitle>
+      <DialogContent>{getModalBody()}</DialogContent>
+      <DialogActions>{getModelAction()}</DialogActions>
+    </Dialog>
   );
 }
