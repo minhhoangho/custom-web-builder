@@ -12,6 +12,8 @@ import { useState } from 'react';
 import { saveAs } from 'file-saver';
 import { Parser } from 'node-sql-parser';
 import { useTranslation } from 'react-i18next';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import { getModalTitle, getOkText } from 'src/utils/model';
 import { Input } from '@components/form/Input'; // import { isRtl } from '../../../i18n/utils/rtl';
 import { DB, MODAL, STATUS } from '@constants/editor';
@@ -37,8 +39,6 @@ import ImportDiagram from './ImportDiagram';
 import ImportSource from './ImportSource';
 import SetTableWidth from './SetTableWidth';
 import Code from './Code';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 
 type ModalProps = {
   modal: (typeof MODAL)[keyof typeof MODAL];
@@ -47,13 +47,13 @@ type ModalProps = {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setDiagramId: React.Dispatch<React.SetStateAction<number>>;
   exportData: {
-    data: never | null;
+    data: string | null;
     extension: string;
     filename: string;
   };
   setExportData: React.Dispatch<
     React.SetStateAction<{
-      data: never | null | string;
+      data: null | string;
       extension: string;
       filename: string;
     }>
