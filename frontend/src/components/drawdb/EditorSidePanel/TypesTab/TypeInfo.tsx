@@ -30,7 +30,7 @@ export default function TypeInfo({ index, data }) {
             value={data.name}
             // validateStatus={data.name === '' ? 'error' : 'default'}
             placeholder={t('name')}
-            className="ms-2"
+            className="ml-2"
             onInputChange={(value) => {
               updateType(index, { name: value });
               tables.forEach((table, i) => {

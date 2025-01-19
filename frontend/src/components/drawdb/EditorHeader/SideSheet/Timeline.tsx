@@ -20,7 +20,7 @@ export default function Timeline() {
           >
             <div className="flex items-center py-1 w-full">
               <i className="block fa-regular fa-circle fa-xs" />
-              <div className="ms-2">{e.message}</div>
+              <div className="ml-2">{e.message}</div>
             </div>
           </ListItem>
         ))}

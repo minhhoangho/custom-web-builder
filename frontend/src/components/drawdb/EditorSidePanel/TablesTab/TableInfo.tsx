@@ -34,7 +34,7 @@ export default function TableInfo({ data }) {
           value={data.name}
           validateStatus={data.name.trim() === '' ? 'error' : 'default'}
           placeholder={t('name')}
-          className="ms-2"
+          className="ml-2"
           onChange={(value) => updateTable(data.id, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {

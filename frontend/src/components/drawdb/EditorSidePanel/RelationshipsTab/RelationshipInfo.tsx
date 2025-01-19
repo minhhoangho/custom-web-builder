@@ -122,7 +122,7 @@ export default function RelationshipInfo({ data }) {
           <span className="font-semibold">{t('foreign')}: </span>
           {tables[data.startTableId].name}
         </div>
-        <div className="ms-1">
+        <div className="ml-1">
           <Popover
             buttonElement={
               <Button

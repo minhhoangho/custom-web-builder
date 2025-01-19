@@ -186,7 +186,7 @@ export default function Note({ data, onPointerDown }) {
                   // showArrow
                 >
                   <div className="popover-theme">
-                    <div className="font-semibold mb-2 ms-1">{t('edit')}</div>
+                    <div className="font-semibold mb-2 ml-1">{t('edit')}</div>
                     <div className="w-[280px] flex items-center mb-2">
                       <Input
                         value={data.title}

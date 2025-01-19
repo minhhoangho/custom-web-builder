@@ -24,7 +24,7 @@ export default function Sidesheet({ type, onClose }) {
               className="w-7"
               alt="chat icon"
             />
-            <div className="ms-3 text-lg">{t('timeline')}</div>
+            <div className="ml-3 text-lg">{t('timeline')}</div>
           </div>
         );
       case SIDESHEET.TODO:
@@ -35,7 +35,7 @@ export default function Sidesheet({ type, onClose }) {
               className="w-7"
               alt="todo icon"
             />
-            <div className="ms-3 text-lg">{t('to_do')}</div>
+            <div className="ml-3 text-lg">{t('to_do')}</div>
           </div>
         );
       default:

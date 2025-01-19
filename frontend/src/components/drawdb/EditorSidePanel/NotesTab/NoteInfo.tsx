@@ -91,7 +91,7 @@ export default function NoteInfo({ data, nid }) {
           }}
           rows={3}
         />
-        <div className="ms-2">
+        <div className="ml-2">
           <Popover
             buttonElement={
               <div

@@ -8,10 +8,12 @@ import { Validator } from 'jsonschema';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { Iconify, Spinner, toast } from '@components/common';
 import { Input } from '@components/form/Input';
 import { areaSchema, noteSchema, tableSchema } from 'src/data/drawdb-schema';
 import { db } from 'src/data/db';
+
 import {
   jsonToMariaDB,
   jsonToMySQL,
@@ -1393,7 +1395,7 @@ export default function ControlPanel({
     <>
       <div>
         {layout.header && (
-          <div className="flex justify-between items-center me-7">
+          <div className="flex justify-between items-center mr-7">
             {header()}
             {typeof window !== 'undefined' &&
               window.name.split(' ')[0] === 't' && (
@@ -1717,19 +1719,22 @@ export default function ControlPanel({
       <nav className="flex justify-between pt-1 items-center whitespace-nowrap">
         <div className="flex justify-start items-center">
           <Link href="/">
-            <img
+            <Image
               width={54}
+              height={54}
               src="/static/images/database/icon_dark_64.png"
               alt="logo"
-              className="ms-7 min-w-[54px]"
+              className="ml-7 min-w-[54px]"
             />
           </Link>
-          <div className="ms-1 mt-1">
-            <div className="flex items-center ms-3 gap-2">
-              {databases[database].image && (
-                <img
-                  src={databases[database].image}
-                  className="h-5"
+          <div className="ml-1 mt-1">
+            <div className="flex items-center ml-3 gap-2">
+              {databases[database]?.image && (
+                <Image
+                  src={databases[database]?.image}
+                  width={20}
+                  height={20}
+                  // className="h-5"
                   style={{
                     filter:
                       'opacity(0.4) drop-shadow(0 0 0 white) drop-shadow(0 0 0 white)',
