@@ -1,11 +1,4 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Paper,
-} from '@mui/material';
+import { Button, Dialog, DialogTitle } from '@mui/material';
 import Image from 'next/image';
 import * as React from 'react'; // import { isRtl } from '../../../i18n/utils/rtl';
 import { useState } from 'react';
@@ -358,18 +351,11 @@ export default function Modal({
       (modal === MODAL.IMPORT_SRC && importSource.src === '');
 
     return (
-      <div>
-        <Button
-          className="btn wd-140 btn-sm btn-outline-light"
-          // type="submit"
-          disabled={isDisable}
-          onClick={getModalOnOk}
-        >
-          {getOkText(modal)}
-        </Button>
+      <div className="flex space-x-4">
         {modal !== MODAL.SHARE && (
           <Button
-            className="btn wd-140 btn-sm btn-outline-light"
+            className="btn wd-140 btn-sm btn-outline-light "
+            variant="outlined"
             // type="submit"
             disabled={isDisable}
             onClick={() => {
@@ -380,6 +366,15 @@ export default function Modal({
             Cancel
           </Button>
         )}
+        <Button
+          className="btn wd-140 btn-sm btn-outline-light"
+          variant="contained"
+          // type="submit"
+          disabled={isDisable}
+          onClick={getModalOnOk}
+        >
+          {getOkText(modal)}
+        </Button>
       </div>
     );
   };
@@ -388,11 +383,9 @@ export default function Modal({
     <Dialog
       fullScreen={false}
       fullWidth
-      maxWidth="md"
       open={modal !== MODAL.NONE}
       aria-labelledby="modal-dialog-title"
       aria-describedby="modal-dialog-description"
-      PaperComponent={Paper}
       // onOk={getModalOnOk}
       onClose={() => {
         setExportData(() => ({
@@ -411,9 +404,13 @@ export default function Modal({
         });
       }}
     >
-      <DialogTitle>{getModalTitle(modal)}</DialogTitle>
-      <DialogContent>{getModalBody()}</DialogContent>
-      <DialogActions>{getModelAction()}</DialogActions>
+      <div className="flex flex-col">
+        <DialogTitle>{getModalTitle(modal)}</DialogTitle>
+        <div className="modal-content mx-6">{getModalBody()}</div>
+        <div className="modal-footer my-6 px-6 flex justify-end w-full">
+          {getModelAction()}
+        </div>
+      </div>
     </Dialog>
   );
 }

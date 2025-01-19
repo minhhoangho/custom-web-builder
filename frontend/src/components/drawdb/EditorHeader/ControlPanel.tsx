@@ -1699,12 +1699,13 @@ export default function ControlPanel({
                   <div className="w-full flex items-center justify-between">
                     <div>{t(item)}</div>
                     <div className="flex items-center gap-1">
-                      {menu[category][item].shortcut && (
+                      {menu[category]?.[item].shortcut && (
                         <div className="text-gray-400">
                           {menu[category][item].shortcut}
                         </div>
                       )}
-                      {menu[category][item].state && menu[category][item].state}
+                      {menu[category]?.[item].state &&
+                        menu[category][item].state}
                     </div>
                   </div>
                 </MenuItem>
