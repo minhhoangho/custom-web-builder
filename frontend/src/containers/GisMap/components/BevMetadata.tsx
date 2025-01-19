@@ -7,14 +7,14 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import _snakeCase from 'lodash/snakeCase';
 import _isEmpty from 'lodash/isEmpty';
-import { FormInput } from '../../../components/Form';
+import { FormInput } from '@components/form';
+import { saveBevMetadata } from '@api/view-point';
+import { toast } from '@components/common';
 import {
   BEVMetadataPayloadRequest,
   ViewPointCameraData,
   ViewPointData,
 } from '../models';
-import { saveBevMetadata } from '../../../api/view-point';
-import { toast } from '@components/common';
 import { isEmptyMatrix } from '../../../utils';
 import { MapWithRectangle } from '../OpenLayerMap';
 

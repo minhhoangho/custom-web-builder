@@ -1,10 +1,10 @@
 import { alpha } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
-import { Theme } from '@mui/material';
+import { CustomThemeType } from './types';
 
 // ----------------------------------------------------------------------
 
-export function overrides(theme: Theme) {
+export function overrides(theme: CustomThemeType) {
   return {
     MuiCssBaseline: {
       styleOverrides: {
@@ -48,16 +48,16 @@ export function overrides(theme: Theme) {
         },
       },
     },
-    // MuiBackdrop: {
-    //   styleOverrides: {
-    //     root: {
-    //       backgroundColor: alpha(theme.palette.grey[900], 0.8),
-    //     },
-    //     invisible: {
-    //       background: 'transparent',
-    //     },
-    //   },
-    // },
+    MuiBackdrop: {
+      styleOverrides: {
+        root: {
+          backgroundColor: alpha(theme.palette.grey[900], 0.8),
+        },
+        invisible: {
+          background: 'transparent',
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         containedInherit: {
@@ -75,12 +75,13 @@ export function overrides(theme: Theme) {
     },
     MuiCard: {
       styleOverrides: {
-        root: {
+        root: ({ ownerState }: { ownerState: any }) => ({
+          ...ownerState,
           boxShadow: theme.customShadows.card,
           borderRadius: Number(theme.shape.borderRadius) * 2,
           position: 'relative',
           zIndex: 0, // Fix Safari overflow: hidden with border radius
-        },
+        }),
       },
     },
     MuiCardHeader: {
@@ -103,11 +104,11 @@ export function overrides(theme: Theme) {
         },
       },
     },
-    // MuiPaper: {
-    //   defaultProps: {
-    //     elevation: 0,
-    //   },
-    // },
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
+      },
+    },
     MuiTableCell: {
       styleOverrides: {
         head: {

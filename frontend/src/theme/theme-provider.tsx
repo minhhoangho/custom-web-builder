@@ -4,13 +4,13 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from '@mui/material/styles';
-import { Theme } from '@mui/material';
 import * as React from 'react';
 import { overrides } from './overrides';
 import { customShadows } from './custom-shadows';
 import { shadows } from './shadows';
 import { palette } from './palette';
 import { typography } from './typography';
+import { CustomThemeType } from './types';
 
 type Props = {
   children: React.ReactNode;
@@ -28,7 +28,7 @@ export function ThemeProvider({ children }: Props) {
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const theme: Theme = createTheme(memoizedValue);
+  const theme: CustomThemeType = createTheme(memoizedValue) as CustomThemeType;
 
   theme.components = overrides(theme);
 
