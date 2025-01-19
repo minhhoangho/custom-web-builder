@@ -1,8 +1,15 @@
 import * as React from 'react';
 import { createContext, useCallback, useEffect, useState } from 'react';
-import { Button, Modal } from '@mui/material';
-import { Box } from '@mui/system';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { db } from 'src/data/db';
 import { CanvasContextProvider } from 'src/containers/Editor/context/CanvasContext';
 import { DB, State } from '@constants/editor';
@@ -25,7 +32,6 @@ import SidePanel from './EditorSidePanel/SidePanel';
 import Canvas from './EditorCanvas/Canvas';
 import ControlPanel from './EditorHeader/ControlPanel';
 import { DDiagram, DTemplate } from '../../data/interface';
-import { useSearchParams } from 'next/navigation';
 
 export const IdContext = createContext<{
   gistId: string;
@@ -89,6 +95,8 @@ export default function WorkSpace() {
   const { saveState, setSaveState } = useSaveState();
   const { transform, setTransform } = useTransform();
   const { enums, setEnums } = useEnum();
+  console.log('selectedDb >> ', selectedDb);
+  console.log('databases >> ', databases);
   const {
     tables,
     relationships,
@@ -467,7 +475,9 @@ export default function WorkSpace() {
           )}
         </div>
       </div>
-      <Modal
+      <Dialog
+        fullWidth
+        maxWidth="md"
         // centered
         // size="medium"
         // closable={false}
@@ -478,9 +488,11 @@ export default function WorkSpace() {
         // onOk={}
         // okButtonProps={{ disabled: selectedDb === '' }}
       >
-        <Box>
+        <DialogTitle>
           <div>Pick Database</div>
-          <div className="grid grid-cols-3 gap-4 place-content-center">
+        </DialogTitle>
+        <DialogContent>
+          <div className="grid grid-cols-3 gap-4 place-content-center cursor-pointer">
             {Object.values(databases).map((x) => (
               <div
                 key={x.name}
@@ -489,12 +501,15 @@ export default function WorkSpace() {
                   settings.mode === 'dark'
                     ? 'bg-zinc-700 hover:bg-zinc-600'
                     : 'bg-zinc-100 hover:bg-zinc-200'
-                } ${selectedDb === x.label ? 'border-zinc-400' : 'border-transparent'}`}
+                } ${selectedDb === x.label ? 'border-zinc-400 border-solid' : 'border-transparent'}`}
               >
                 <div className="font-semibold">{x.name}</div>
                 {x.image && (
-                  <img
+                  <Image
                     src={x.image}
+                    alt={x.label}
+                    width={40}
+                    height={40}
                     className="h-10"
                     style={{
                       filter:
@@ -506,6 +521,8 @@ export default function WorkSpace() {
               </div>
             ))}
           </div>
+        </DialogContent>
+        <DialogActions>
           <Button
             className="btn wd-140 btn-sm btn-outline-light"
             // type="submit"
@@ -518,8 +535,8 @@ export default function WorkSpace() {
           >
             Confirm
           </Button>
-        </Box>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

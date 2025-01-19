@@ -386,9 +386,6 @@ export default function Modal({
 
   return (
     <Dialog
-      sx={{
-        width: 500,
-      }}
       fullScreen={false}
       fullWidth
       maxWidth="md"
