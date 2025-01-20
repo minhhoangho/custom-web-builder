@@ -8,12 +8,13 @@ export type InputProps = {
   type?: string;
   placeholder: string;
   isRequired?: boolean;
+  defaultValue?: string;
   disabled?: boolean;
   className?: string;
   inputElementClassName?: string;
   value?: string;
   labelClassName?: string;
-  onInputChange?: (e?: any) => void;
+  onInputChange?: (value: string) => void;
   onFocus?: (e?: any) => void;
   onBlur?: (e?: any) => void;
   errorMessage?: string;
@@ -39,6 +40,7 @@ export const Input = React.forwardRef<
       errorMessage,
       isTextarea,
       autoComplete,
+      defaultValue,
       ...rest
     }: InputProps &
       React.TextareaHTMLAttributes<HTMLTextAreaElement> &
@@ -64,7 +66,7 @@ export const Input = React.forwardRef<
             inputElementClassName,
           )}
           autoComplete={autoComplete}
-          value={value ?? ''}
+          value={value ?? defaultValue}
           onChange={(event) => onInputChange?.(event.target.value)}
           placeholder={placeholder}
         />
@@ -81,7 +83,7 @@ export const Input = React.forwardRef<
               inputElementClassName,
             )}
             autoComplete={autoComplete}
-            value={value ?? ''}
+            value={value ?? defaultValue}
             onChange={(event) => onInputChange?.(event.target.value)}
             placeholder={placeholder}
           />

@@ -644,8 +644,8 @@ export default function ControlPanel({
       case ObjectType.TABLE:
         addTable({
           ...tables[selectedElement.id],
-          x: (tables[selectedElement.id].x ?? 0) + 20,
-          y: (tables[selectedElement.id].y ?? 0) + 20,
+          x: (tables?.[selectedElement?.id]?.x ?? 0) + 20,
+          y: (tables?.[selectedElement?.id]?.y ?? 0) + 20,
           id: tables.length,
         });
         break;

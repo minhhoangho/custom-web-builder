@@ -72,7 +72,7 @@ export default function Modal({
   const { setTasks } = useTasks();
   const { setTransform } = useTransform();
   const { setUndoStack, setRedoStack } = useUndoRedo();
-  const [uncontrolledTitle, setUncontrolledTitle] = useState(title);
+  const [uncontrolledTitle, setUncontrolledTitle] = useState<string>(title);
   const [importSource, setImportSource] = useState({
     src: '',
     overwrite: true,

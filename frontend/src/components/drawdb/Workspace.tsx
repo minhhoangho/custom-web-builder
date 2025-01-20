@@ -78,25 +78,43 @@ export const IdContext = createContext<{
 
 export default function WorkSpace() {
   const [id, setId] = useState(0);
+  console.log('----------------------');
+  console.log('id:', id);
   const [gistId, setGistId] = useState('');
+  console.log('gistId:', gistId);
   const [loadedFromGistId, setLoadedFromGistId] = useState('');
-  const [title, setTitle] = useState('Untitled Diagram');
+  console.log('loadedFromGistId:', loadedFromGistId);
+  const [title, setTitle] = useState<string>('Untitled Diagram');
+  console.log('title:', title);
   const [resize, setResize] = useState(false);
+  console.log('resize:', resize);
   const [width, setWidth] = useState(340);
+  console.log('width:', width);
   const [lastSaved, setLastSaved] = useState('');
+  console.log('lastSaved:', lastSaved);
   const [showSelectDbModal, setShowSelectDbModal] = useState(false);
+  console.log('showSelectDbModal:', showSelectDbModal);
   const [selectedDb, setSelectedDb] = useState('');
+  console.log('selectedDb:', selectedDb);
   const { layout } = useLayout();
+  console.log('layout:', layout);
   const { settings } = useSettings();
+  console.log('settings:', settings);
   const { types, setTypes } = useType();
+  console.log('types:', types);
   const { areas, setAreas } = useArea();
+  console.log('areas:', areas);
   const { tasks, setTasks } = useTasks();
+  console.log('tasks:', tasks);
   const { notes, setNotes } = useNote();
+  console.log('notes:', notes);
   const { saveState, setSaveState } = useSaveState();
+  console.log('saveState:', saveState);
   const { transform, setTransform } = useTransform();
+  console.log('transform:', transform);
   const { enums, setEnums } = useEnum();
-  console.log('selectedDb >> ', selectedDb);
-  console.log('databases >> ', databases);
+  console.log('enums:', enums);
+
   const {
     tables,
     relationships,
@@ -105,7 +123,13 @@ export default function WorkSpace() {
     database,
     setDatabase,
   } = useDiagram();
+  console.log('tables:', tables);
+  console.log('relationships:', relationships);
+  console.log('database:', database);
   const { undoStack, redoStack, setUndoStack, setRedoStack } = useUndoRedo();
+  console.log('undoStack:', undoStack);
+  console.log('redoStack:', redoStack);
+  console.log('----------------------');
   // const { t, i18n } = useTranslation();
 
   // const [searchParams, setSearchParams] = useSearchParams();
