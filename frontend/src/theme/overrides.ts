@@ -1,5 +1,4 @@
 import { alpha } from '@mui/material/styles';
-import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import { CustomThemeType } from './types';
 
 // ----------------------------------------------------------------------
@@ -96,13 +95,13 @@ export function overrides(theme: CustomThemeType) {
       },
     },
     MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          [`& .${outlinedInputClasses.notchedOutline}`]: {
-            borderColor: alpha(theme.palette.grey[500], 0.24),
-          },
-        },
-      },
+      // styleOverrides: {
+      //   root: {
+      //     [`& .${outlinedInputClasses.notchedOutline}`]: {
+      //       borderColor: alpha(theme.palette.grey[500], 0.24),
+      //     },
+      //   },
+      // },
     },
     MuiPaper: {
       defaultProps: {
