@@ -82,7 +82,11 @@ export default function ControlPanel({
   const [sidesheet, setSidesheet] = useState(SIDESHEET.NONE);
   const [showEditName, setShowEditName] = useState(false);
   const [importDb, setImportDb] = useState('');
-  const [exportData, setExportData] = useState({
+  const [exportData, setExportData] = useState<{
+    data: null | string;
+    extension: string;
+    filename: string;
+  }>({
     data: null,
     filename: `${title}_${new Date().toISOString()}`,
     extension: '',
@@ -1641,7 +1645,7 @@ export default function ControlPanel({
       return (
         <div key={_index}>
           <div
-            className="px-3 py-1 hover:bg-gray-300 rounded"
+            className="px-3 py-1 hover:bg-gray-300 rounded cursor-pointer"
             onClick={handleClickHeader}
           >
             {t(category)}
@@ -1669,7 +1673,7 @@ export default function ControlPanel({
                       onClose={handleCloseHeader}
                     >
                       {menu[category][item].children.map((e, i) => (
-                        <MenuItem key={i} onClick={Object.values(e)[0]}>
+                        <MenuItem key={i} onClick={Object.values(e)?.[0]}>
                           {t(Object.keys(e)[0])}
                         </MenuItem>
                       ))}
@@ -1776,7 +1780,7 @@ export default function ControlPanel({
               </div>
               <Button size="small" color="primary" variant="outlined">
                 {saveState === State.LOADING || saveState === State.SAVING ? (
-                  <Spinner />
+                  <Spinner className="w-3 h-3 mr-3" />
                 ) : null}
                 {getState()}
               </Button>
