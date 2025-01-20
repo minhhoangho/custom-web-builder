@@ -28,7 +28,7 @@ export const Iconify = forwardRef(
     <Box
       ref={ref}
       component={Icon}
-      className="component-iconify"
+      className={`component-iconify ${other.className ?? ''}`}
       icon={icon}
       sx={{ width, height, ...sx }}
       {...other}

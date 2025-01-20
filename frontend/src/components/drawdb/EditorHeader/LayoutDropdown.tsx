@@ -21,10 +21,10 @@ export default function LayoutDropdown() {
   return (
     <div>
       <div
-        className="py-1 px-2 hover-2 rounded flex items-center justify-center"
+        className="py-1 mx-2 px-1 hover:bg-gray-300 rounded flex items-center justify-center"
         onClick={handleClick}
       >
-        <Iconify icon="ph:rows" />
+        <Iconify icon="mynaui:rows" width={24} height={24} />
         <div>
           <Iconify icon="mdi:caret-down" />
         </div>

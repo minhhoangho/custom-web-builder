@@ -14,7 +14,7 @@ export type InputProps = {
   inputElementClassName?: string;
   value?: string;
   labelClassName?: string;
-  onInputChange?: (value: string) => void;
+  onInputChange?: (value: any) => void;
   onFocus?: (e?: any) => void;
   onBlur?: (e?: any) => void;
   errorMessage?: string;

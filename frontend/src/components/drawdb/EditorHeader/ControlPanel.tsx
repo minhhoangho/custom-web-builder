@@ -129,7 +129,7 @@ export default function ControlPanel({
     setAnchorElHeader(null);
   };
 
-  const invertLayout = (component) =>
+  const invertLayout = (component: string) =>
     setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
 
   const undo = () => {
@@ -1432,13 +1432,12 @@ export default function ControlPanel({
 
   function toolbar() {
     return (
-      <div className="py-1.5 px-5 flex justify-between items-center rounded-xl my-1 sm:mx-1 xl:mx-6 select-none overflow-hidden toolbar-theme">
+      <div className="py-1.5 px-5 flex justify-between items-center rounded-xl my-1 sm:mx-1 xl:mx-6 select-none overflow-hidden bg-gray-200">
         <div className="flex justify-start items-center">
           <LayoutDropdown />
           <Divider orientation="vertical" flexItem />
-
           <div className="control-panel-dropdown" onClick={handleClickToolbar}>
-            <div className="py-1 px-2 hover-2 rounded flex items-center justify-center">
+            <div className="py-1 px-1 mx-2 hover:bg-gray-300 rounded flex items-center justify-center">
               <div className="w-[40px]">
                 {Math.floor(transform.zoom * 100)}%
               </div>
@@ -1477,7 +1476,7 @@ export default function ControlPanel({
                   onInputChange={(v: number) =>
                     setTransform((prev) => ({
                       ...prev,
-                      zoom: parseFloat(v) * 0.01,
+                      zoom: parseFloat(Number(v).toString()) * 0.01,
                     }))
                   }
                 />
@@ -1485,54 +1484,54 @@ export default function ControlPanel({
             </Menu>
           </div>
           <Tooltip title={t('zoom_in')} placement="bottom">
-            <button
-              className="py-1 px-2 hover-2 rounded text-lg"
+            <Iconify
+              icon="mdi:zoom-in"
+              width={32}
+              height={32}
+              className="p-1 mx-1 hover:bg-gray-300 rounded text-lg cursor-pointer"
               onClick={() =>
                 setTransform((prev) => ({ ...prev, zoom: prev.zoom * 1.2 }))
               }
-            >
-              <i className="fa-solid fa-magnifying-glass-plus" />
-            </button>
+            />
           </Tooltip>
           <Tooltip title={t('zoom_out')} placement="bottom">
-            <button
-              className="py-1 px-2 hover-2 rounded text-lg"
+            <Iconify
+              icon="mdi:zoom-out"
+              width={32}
+              height={32}
+              className="p-1 mx-1 hover:bg-gray-300 rounded text-lg cursor-pointer"
               onClick={() =>
                 setTransform((prev) => ({ ...prev, zoom: prev.zoom / 1.2 }))
               }
-            >
-              <i className="fa-solid fa-magnifying-glass-minus" />
-            </button>
+            />
           </Tooltip>
           <Divider orientation="vertical" flexItem />
           <Tooltip title={t('undo')} placement="bottom">
-            <button
-              className="py-1 px-2 hover-2 rounded flex items-center"
+            <Iconify
+              icon="mdi:undo"
+              width={32}
+              height={32}
+              sx={{ color: undoStack.length === 0 ? '#9598a6' : '' }}
+              className="p-1 mx-1 hover:bg-gray-300 rounded flex items-center cursor-pointer"
               onClick={undo}
-            >
-              <Iconify
-                icon="mdi:undo"
-                sx={{ color: undoStack.length === 0 ? '#9598a6' : '' }}
-              />
-            </button>
+            />
           </Tooltip>
           <Tooltip title={t('redo')} placement="bottom">
-            <button
-              className="py-1 px-2 hover-2 rounded flex items-center"
+            <Iconify
+              className="p-1 mx-1 hover:bg-gray-300 rounded flex items-center cursor-pointer"
+              icon="mdi:redo"
+              width={32}
+              height={32}
+              sx={{
+                color: redoStack.length === 0 ? '#9598a6' : '',
+              }}
               onClick={redo}
-            >
-              <Iconify
-                icon="mdi:redo"
-                sx={{
-                  color: redoStack.length === 0 ? '#9598a6' : '',
-                }}
-              />
-            </button>
+            />
           </Tooltip>
           <Divider orientation="vertical" flexItem />
           <Tooltip title={t('add_table')} placement="bottom">
             <button
-              className="flex items-center py-1 px-2 hover-2 rounded"
+              className="flex items-center p-1 mx-2 hover:bg-gray-300 rounded bg-gray-200 border-0 cursor-pointer"
               onClick={() => addTable()}
             >
               <IconAddTable />
@@ -1540,7 +1539,7 @@ export default function ControlPanel({
           </Tooltip>
           <Tooltip title={t('add_area')} placement="bottom">
             <button
-              className="py-1 px-2 hover-2 rounded flex items-center"
+              className="p-1 mx-2 hover:bg-gray-300 rounded flex items-center bg-gray-200 border-0 cursor-pointer"
               onClick={() => addArea()}
             >
               <IconAddArea />
@@ -1548,7 +1547,7 @@ export default function ControlPanel({
           </Tooltip>
           <Tooltip title={t('add_note')} placement="bottom">
             <button
-              className="py-1 px-2 hover-2 rounded flex items-center"
+              className="p-1 mx-2 hover:bg-gray-300 rounded flex items-center bg-gray-200 border-0 cursor-pointer"
               onClick={() => addNote()}
             >
               <IconAddNote />
@@ -1557,24 +1556,28 @@ export default function ControlPanel({
           <Divider orientation="vertical" flexItem />
           <Tooltip title={t('save')} placement="bottom">
             <button
-              className="py-1 px-2 hover-2 rounded flex items-center"
+              className="p-1 mx-2 hover:bg-gray-300 rounded flex items-center bg-gray-200 border-0 cursor-pointer"
               onClick={save}
             >
-              <Iconify icon="mi:save" />
+              <Iconify icon="mdi:content-save-outline" width={32} height={32} />
             </button>
           </Tooltip>
           <Tooltip title={t('to_do')} placement="bottom">
-            <button
-              className="py-1 px-2 hover-2 rounded text-xl -mt-0.5"
+            <Iconify
+              icon="mdi:calendar-check"
+              width={36}
+              height={36}
+              className="p-1 mx-1 hover:bg-gray-300 rounded text-xl bg-gray-200  cursor-pointer"
               onClick={() => setSidesheet(SIDESHEET.TODO)}
-            >
-              <i className="fa-regular fa-calendar-check" />
-            </button>
+            />
           </Tooltip>
           <Divider orientation="vertical" flexItem />
           <Tooltip title={t('theme')} placement="bottom">
-            <button
-              className="py-1 px-2 hover-2 rounded text-xl -mt-0.5"
+            <Iconify
+              icon="fluent:dark-theme-20-regular"
+              width={32}
+              height={32}
+              className="p-1 mx-1 hover:bg-gray-300 rounded text-xl cursor-pointer"
               onClick={() => {
                 const body = document.body;
                 if (body.hasAttribute('theme-mode')) {
@@ -1585,14 +1588,12 @@ export default function ControlPanel({
                   }
                 }
               }}
-            >
-              <i className="fa-solid fa-circle-half-stroke" />
-            </button>
+            />
           </Tooltip>
         </div>
         <button
           onClick={() => invertLayout('header')}
-          className="flex items-center"
+          className="flex items-center bg-gray-200 border-0 cursor-pointer"
         >
           {layout.header ? (
             <Iconify icon="mdi:chevron-up" />
@@ -1640,7 +1641,7 @@ export default function ControlPanel({
       return (
         <div key={_index}>
           <div
-            className="px-3 py-1 hover-2 rounded"
+            className="px-3 py-1 hover:bg-gray-300 rounded"
             onClick={handleClickHeader}
           >
             {t(category)}
