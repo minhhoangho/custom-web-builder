@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { MouseEvent, useState } from 'react';
-import { Divider, Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import { useLayout } from 'src/containers/Editor/hooks';
 import { Iconify } from '@components/common';
 
@@ -15,7 +15,7 @@ export default function LayoutDropdown() {
     setAnchorEl(null);
   };
 
-  const invertLayout = (component) =>
+  const invertLayout = (component: string) =>
     setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
 
   return (
@@ -30,43 +30,37 @@ export default function LayoutDropdown() {
         </div>
       </div>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem
-          icon={
-            layout.header ? (
-              <Iconify icon="mdi:checkbox-outline" />
+        <MenuItem onClick={() => invertLayout('header')}>
+          <div className="flex items-center">
+            {layout.header ? (
+              <Iconify icon="mdi:tick" className="mr-1" />
             ) : (
               <div className="px-2" />
-            )
-          }
-          onClick={() => invertLayout('header')}
-        >
-          {t('header')}
+            )}
+            <span>{t('header')}</span>
+          </div>
         </MenuItem>
-        <MenuItem
-          icon={
-            layout.sidebar ? (
-              <Iconify icon="mdi:checkbox-outline" />
+        <MenuItem onClick={() => invertLayout('sidebar')}>
+          <div className="flex items-center">
+            {layout.sidebar ? (
+              <Iconify icon="mdi:tick" className="mr-1" />
             ) : (
               <div className="px-2" />
-            )
-          }
-          onClick={() => invertLayout('sidebar')}
-        >
-          {t('sidebar')}
+            )}
+            <span>{t('sidebar')}</span>
+          </div>
         </MenuItem>
-        <MenuItem
-          icon={
-            layout.issues ? (
-              <Iconify icon="mdi:checkbox-outline" />
+        <MenuItem onClick={() => invertLayout('issues')}>
+          <div className="flex items-center">
+            {layout.issues ? (
+              <Iconify icon="mdi:tick" className="mr-1" />
             ) : (
               <div className="px-2" />
-            )
-          }
-          onClick={() => invertLayout('issues')}
-        >
-          {t('issues')}
+            )}
+            <span>{t('issues')}</span>
+          </div>
         </MenuItem>
-        <Divider />
+        {/*<Divider />*/}
       </Menu>
     </div>
   );

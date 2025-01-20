@@ -305,7 +305,7 @@ export default function Modal({
           return (
             <>
               {modal === MODAL.IMG ? (
-                <Image src={exportData.data} alt="Diagram" height={280} />
+                <Image src={exportData.data ?? ''} alt="Diagram" height={280} />
               ) : (
                 <Code value={exportData.data} language={exportData.extension} />
               )}
