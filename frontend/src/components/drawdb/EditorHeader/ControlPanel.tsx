@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import clsx from 'clsx';
 import { Iconify, Spinner, toast } from '@components/common';
 import { Input } from '@components/form/Input';
 import { areaSchema, noteSchema, tableSchema } from 'src/data/drawdb-schema';
@@ -56,12 +57,83 @@ import LayoutDropdown from './LayoutDropdown';
 import { IconAddArea, IconAddNote, IconAddTable } from '../icons';
 import { IdContext } from '../Workspace';
 
+type BasicMenuProps = {
+  prefix?: React.ReactNode | string;
+  postfix?: React.ReactNode | string;
+  title: string;
+  onMenuClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  children: React.ReactNode;
+  className?: string;
+};
+
+function BasicMenu({
+  prefix,
+  postfix,
+  title,
+  onMenuClick,
+  className,
+  children,
+}: BasicMenuProps) {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+    onMenuClick?.(event);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <button
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        className={clsx(
+          'hover:bg-gray-200 rounded !justify-between !items-center w-full !text-neutral-900 bg-transparent !border-0 px-3 py-1 text-base !flex cursor-pointer',
+          className,
+        )}
+      >
+        {prefix}
+        <div>{title}</div>
+        {postfix}
+      </button>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        {children}
+      </Menu>
+    </div>
+  );
+}
+
 type ControlPanelProps = {
   diagramId: number;
   setDiagramId: React.Dispatch<React.SetStateAction<number>>;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   lastSaved: string;
+};
+
+type MenuConstType = {
+  [key: string]: MenuItemConstType;
+};
+type MenuItemConstType = {
+  function: () => void;
+  warning?: {
+    title: string;
+    message: string;
+  };
+  shortcut?: string;
+  state?: React.ReactElement;
+  children?: any[];
 };
 
 export default function ControlPanel({
@@ -74,9 +146,7 @@ export default function ControlPanel({
   const [anchorElToolbar, setAnchorElToolbar] = useState<null | HTMLElement>(
     null,
   );
-  const [anchorElHeader, setAnchorElHeader] = useState<null | HTMLElement>(
-    null,
-  );
+
   const confirmBox = useConfirm();
   const [modal, setModal] = useState(MODAL.NONE);
   const [sidesheet, setSidesheet] = useState(SIDESHEET.NONE);
@@ -125,12 +195,6 @@ export default function ControlPanel({
   };
   const handleCloseToolbar = () => {
     setAnchorElToolbar(null);
-  };
-  const handleClickHeader = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorElHeader(event.currentTarget);
-  };
-  const handleCloseHeader = () => {
-    setAnchorElHeader(null);
   };
 
   const invertLayout = (component: string) =>
@@ -558,9 +622,13 @@ export default function ControlPanel({
   const resetView = () =>
     setTransform((prev) => ({ ...prev, zoom: 1, pan: { x: 0, y: 0 } }));
   const fitWindow = () => {
-    const diagram = document.getElementById('diagram')?.getBoundingClientRect();
-    const canvas = document.getElementById('canvas')?.getBoundingClientRect();
-
+    const diagram: DOMRect | undefined = document
+      .getElementById('diagram')
+      ?.getBoundingClientRect();
+    const canvas: DOMRect | undefined = document
+      .getElementById('canvas')
+      ?.getBoundingClientRect();
+    if (!diagram || !canvas) return;
     const scaleX = canvas.width / diagram.width;
     const scaleY = canvas.height / diagram.height;
     const scale = Math.min(scaleX, scaleY);
@@ -618,7 +686,7 @@ export default function ControlPanel({
         if (selectedElement.currentTab !== Tab.NOTES) return;
         document
           .getElementById(`scroll_note_${selectedElement.id}`)
-          .scrollIntoView({ behavior: 'smooth' });
+          ?.scrollIntoView({ behavior: 'smooth' });
       } else {
         setSelectedElement((prev) => ({
           ...prev,
@@ -736,17 +804,20 @@ export default function ControlPanel({
   const saveDiagramAs = () => setModal(MODAL.SAVEAS);
   // const fullscreen = useFullscreen();
 
-  const menu = {
+  const menu: {
+    [key: string]: MenuConstType;
+  } = {
     file: {
       new: {
         function: () => setModal(MODAL.NEW),
       },
-      new_window: {
-        function: () => {
-          const newWindow = window.open('/editor', '_blank');
-          newWindow.name = window.name;
-        },
-      },
+      // new_window: {
+      //   function: () => {
+      //     const newWindow = window.open('/editor', '_blank');
+      //     if (!newWindow) return;
+      //     newWindow.name = window.name;
+      //   },
+      // },
       open: {
         function: open,
         shortcut: 'Ctrl+O',
@@ -770,8 +841,8 @@ export default function ControlPanel({
               notes: notes,
               subjectAreas: areas,
               custom: 1,
-              ...(databases[database]?.hasEnums && { enums: enums }),
-              ...(databases[database]?.hasTypes && { types: types }),
+              ...(databases?.[database]?.hasEnums && { enums: enums }),
+              ...(databases?.[database]?.hasTypes && { types: types }),
             })
             .then(() => {
               toast('success', 'Template saved');
@@ -958,7 +1029,10 @@ export default function ControlPanel({
         children: [
           {
             PNG: () => {
-              toPng(document.getElementById('canvas')).then(function (dataUrl) {
+              const canvas: HTMLElement | null =
+                document.getElementById('canvas');
+              if (!canvas) return;
+              toPng(canvas).then(function (dataUrl) {
                 setExportData((prev) => ({
                   ...prev,
                   data: dataUrl,
@@ -970,15 +1044,16 @@ export default function ControlPanel({
           },
           {
             JPEG: () => {
-              toJpeg(document.getElementById('canvas'), { quality: 0.95 }).then(
-                function (dataUrl) {
-                  setExportData((prev) => ({
-                    ...prev,
-                    data: dataUrl,
-                    extension: 'jpeg',
-                  }));
-                },
-              );
+              const canvas: HTMLElement | null =
+                document.getElementById('canvas');
+              if (!canvas) return;
+              toJpeg(canvas, { quality: 0.95 }).then(function (dataUrl) {
+                setExportData((prev) => ({
+                  ...prev,
+                  data: dataUrl,
+                  extension: 'jpeg',
+                }));
+              });
               setModal(MODAL.IMG);
             },
           },
@@ -992,8 +1067,8 @@ export default function ControlPanel({
                   notes: notes,
                   subjectAreas: areas,
                   database: database,
-                  ...(databases[database].hasTypes && { types: types }),
-                  ...(databases[database].hasEnums && { enums: enums }),
+                  ...(databases?.[database]?.hasTypes && { types: types }),
+                  ...(databases?.[database]?.hasEnums && { enums: enums }),
                   title: title,
                 },
                 null,
@@ -1008,34 +1083,38 @@ export default function ControlPanel({
           },
           {
             SVG: () => {
-              const filter = (node) => node.tagName !== 'i';
-              toSvg(document.getElementById('canvas'), { filter: filter }).then(
-                function (dataUrl) {
-                  setExportData((prev) => ({
-                    ...prev,
-                    data: dataUrl,
-                    extension: 'svg',
-                  }));
-                },
-              );
+              const filter = (node: any) => node.tagName !== 'i';
+              const canvas: HTMLElement | null =
+                document.getElementById('canvas');
+              if (!canvas) return;
+              toSvg(canvas, { filter: filter }).then(function (dataUrl) {
+                setExportData((prev) => ({
+                  ...prev,
+                  data: dataUrl,
+                  extension: 'svg',
+                }));
+              });
               setModal(MODAL.IMG);
             },
           },
           {
             PDF: () => {
-              const canvas = document.getElementById('canvas');
+              const canvas: HTMLElement | null =
+                document.getElementById('canvas');
+              if (!canvas) return;
               toJpeg(canvas).then(function (dataUrl) {
                 const doc = new jsPDF('l', 'px', [
-                  canvas.offsetWidth,
-                  canvas.offsetHeight,
+                  canvas?.offsetWidth ?? 0,
+                  canvas?.offsetHeight ?? 0,
                 ]);
+                if (!doc) return;
                 doc.addImage(
                   dataUrl,
                   'jpeg',
                   0,
                   0,
-                  canvas.offsetWidth,
-                  canvas.offsetHeight,
+                  canvas?.offsetWidth ?? 0,
+                  canvas?.offsetHeight ?? 0,
                 );
                 doc.save(`${exportData.filename}.pdf`);
               });
@@ -1053,8 +1132,8 @@ export default function ControlPanel({
                   notes: notes,
                   subjectAreas: areas,
                   database: database,
-                  ...(databases[database].hasTypes && { types: types }),
-                  ...(databases[database].hasEnums && { enums: enums }),
+                  ...(databases?.[database]?.hasTypes && { types: types }),
+                  ...(databases?.[database]?.hasEnums && { enums: enums }),
                 },
                 null,
                 2,
@@ -1093,8 +1172,8 @@ export default function ControlPanel({
                 subjectAreas: areas,
                 database: database,
                 title: title,
-                ...(databases[database].hasTypes && { types: types }),
-                ...(databases[database].hasEnums && { enums: enums }),
+                ...(databases?.[database]?.hasTypes && { types: types }),
+                ...(databases?.[database]?.hasEnums && { enums: enums }),
               });
               setExportData((prev) => ({
                 ...prev,
@@ -1337,10 +1416,11 @@ export default function ControlPanel({
           message: t('are_you_sure_flush_storage'),
         },
         function: async () => {
-          db.delete()
+          await db
+            .delete()
             .then(() => {
               toast('success', t('storage_flushed'));
-              window.location.reload(false);
+              window.location.reload();
             })
             .catch(() => {
               toast('error', 'Something went wrong');
@@ -1563,7 +1643,7 @@ export default function ControlPanel({
               className="p-1 mx-2 hover:bg-gray-300 rounded flex items-center bg-gray-200 border-0 cursor-pointer"
               onClick={save}
             >
-              <Iconify icon="mdi:content-save-outline" width={32} height={32} />
+              <Iconify icon="mdi:content-save-outline" width={30} height={30} />
             </button>
           </Tooltip>
           <Tooltip title={t('to_do')} placement="bottom">
@@ -1629,8 +1709,8 @@ export default function ControlPanel({
   }
 
   function header() {
-    const renderMenuHeader = (category, _index) => {
-      const handleOnClickMenuItem = (menuItem) => {
+    const renderMenuHeader = (category: string, _index: number) => {
+      const handleOnClickMenuItem = (menuItem: MenuItemConstType) => {
         if (menuItem.warning) {
           return confirmBox.confirm({
             title: menu[category][item].warning.title,
@@ -1644,79 +1724,60 @@ export default function ControlPanel({
 
       return (
         <div key={_index}>
-          <div
-            className="px-3 py-1 hover:bg-gray-300 rounded cursor-pointer"
-            onClick={handleClickHeader}
-          >
-            {t(category)}
-          </div>
-          <Menu open={Boolean(anchorElHeader)} onClose={handleCloseHeader}>
+          <BasicMenu title={t(category)}>
             {Object.keys(menu[category]).map((item, index) => {
               if (menu[category][item].children) {
                 return (
-                  <div key={index}>
-                    <MenuItem
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}
-                      // onClick={menu[category][item].function}
-                      onClick={() =>
-                        handleOnClickMenuItem(menu[category][item])
-                      }
-                    >
-                      {t(item)}
-                    </MenuItem>
-                    <Menu
-                      open={Boolean(anchorElHeader)}
-                      onClose={handleCloseHeader}
+                  <div key={_index}>
+                    <BasicMenu
+                      postfix={<Iconify icon="mdi:chevron-right" />}
+                      title={t(item)}
+                      className="!px-4 !py-1.5 round-0 !justify-between !items-center w-full !text-sm !text-neutral-900"
                     >
                       {menu[category][item].children.map((e, i) => (
                         <MenuItem key={i} onClick={Object.values(e)?.[0]}>
                           {t(Object.keys(e)[0])}
                         </MenuItem>
                       ))}
-                    </Menu>
+                    </BasicMenu>
                   </div>
                 );
               }
-              // if (menu[category][item].warning) {
-              //   return confirmBox.confirm({
-              //     title: menu[category][item].warning.title,
-              //     message: menu[category][item].warning.message,
-              //     confirmButtonLabel: t('confirm'),
-              //   });
-              // }
               return (
                 <MenuItem
                   key={index}
                   // onClick={menu[category][item].function}
-                  onClick={() => handleOnClickMenuItem(menu[category][item])}
-                  style={
-                    menu[category][item].shortcut && {
+                  onClick={() => {
+                    if (menu?.[category]?.[item]) {
+                      handleOnClickMenuItem(menu[category][item]);
+                    }
+                  }}
+                  sx={
+                    menu[category]?.[item]?.shortcut &&
+                    ({
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                    }
+                    } as any)
                   }
+                  className="w-[280px]"
                 >
                   <div className="w-full flex items-center justify-between">
                     <div>{t(item)}</div>
                     <div className="flex items-center gap-1">
-                      {menu[category]?.[item].shortcut && (
+                      {menu[category]?.[item]?.shortcut && (
                         <div className="text-gray-400">
                           {menu[category][item].shortcut}
                         </div>
                       )}
-                      {menu[category]?.[item].state &&
+                      {menu[category]?.[item]?.state &&
                         menu[category][item].state}
                     </div>
                   </div>
                 </MenuItem>
               );
             })}
-          </Menu>
+          </BasicMenu>
         </div>
       );
     };
@@ -1756,7 +1817,7 @@ export default function ControlPanel({
                 onPointerDown={(e) => {
                   // Required for onPointerLeave to trigger when a touch pointer leaves
                   // https://stackoverflow.com/a/70976017/1137077
-                  e.target.releasePointerCapture(e.pointerId);
+                  e.target?.releasePointerCapture(e.pointerId);
                 }}
                 onClick={() => setModal(MODAL.RENAME)}
               >

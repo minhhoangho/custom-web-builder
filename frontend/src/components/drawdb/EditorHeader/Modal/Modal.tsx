@@ -382,6 +382,7 @@ export default function Modal({
   return (
     <Dialog
       fullScreen={false}
+      maxWidth="md"
       fullWidth
       open={modal !== MODAL.NONE}
       aria-labelledby="modal-dialog-title"
