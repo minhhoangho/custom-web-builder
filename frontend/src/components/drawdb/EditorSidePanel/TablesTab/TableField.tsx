@@ -59,7 +59,7 @@ export default function TableField({ data, tid, index }) {
         <Select
           className="w-full"
           options={[
-            ...Object.keys(dbToTypes[database]).map((value) => ({
+            ...Object.keys(dbToTypes?.[database] ?? {})?.map((value) => ({
               label: value,
               value: value,
             })),
@@ -169,9 +169,8 @@ export default function TableField({ data, tid, index }) {
       </Grid>
       <Grid item xs={2}>
         <Button
-          type={data.primary ? 'primary' : 'tertiary'}
-          title={t('primary')}
-          theme={data.primary ? 'solid' : 'light'}
+          variant={data.primary ? 'text' : 'contained'}
+          // theme={data.primary ? 'solid' : 'light'}
           onClick={() => {
             setUndoStack((prev) => [
               ...prev,
@@ -193,25 +192,25 @@ export default function TableField({ data, tid, index }) {
             updateField(tid, index, { primary: !data.primary });
           }}
           startIcon={<Iconify icon="mdi:key-outline" />}
-        />
+        >
+          {t('primary')}
+        </Button>
       </Grid>
       <Grid item xs={2}>
         <Popover
           buttonElement={
             <Button
-              type="tertiary"
-              startIcon={<Iconify icon="ic:round-more-vert"/>}
+              variant="outlined"
+              startIcon={<Iconify icon="ic:round-more-vert" />}
             />
           }
           // trigger="click"
           position="right"
           // showArrow
         >
-
           <div className="px-1 w-[240px] popover-theme">
-            <FieldDetails data={data} index={index} tid={tid}/>
+            <FieldDetails data={data} index={index} tid={tid} />
           </div>
-
         </Popover>
       </Grid>
     </Grid>

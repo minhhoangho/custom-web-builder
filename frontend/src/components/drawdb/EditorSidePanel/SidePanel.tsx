@@ -2,8 +2,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 import { useTranslation } from 'react-i18next';
-import { useMemo } from 'react';
-import { Box } from '@mui/material';
+import { useMemo, useState } from 'react';
 import { databases } from 'src/data/database';
 import { useDiagram, useLayout, useSelect } from 'src/containers/Editor/hooks';
 import { Tab as TabConst } from '@constants/editor';
@@ -18,21 +17,21 @@ import EnumsTab from './EnumsTab/EnumsTab';
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
-  value: number;
+  value: string;
+  itemKey: string;
 }
 
 function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, itemKey } = props;
 
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
+      hidden={value !== itemKey}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === itemKey && children}
     </div>
   );
 }
@@ -44,11 +43,27 @@ function a11yProps(index: number) {
   };
 }
 
-export default function SidePanel({ width, resize, setResize }) {
+type SidePanelProps = {
+  width: number;
+  resize: boolean;
+  setResize: React.Dispatch<React.SetStateAction<boolean>>;
+};
+type TabType = {
+  tab: string;
+  itemKey: string;
+  component: React.ReactNode;
+};
+
+export default function SidePanel({
+  width,
+  resize,
+  setResize,
+}: SidePanelProps) {
   const { layout } = useLayout();
   const { selectedElement, setSelectedElement } = useSelect();
   const { database } = useDiagram();
   const { t } = useTranslation();
+  const [selectedTab, setSelectedTab] = useState(selectedElement.currentTab);
 
   const tabList = useMemo(() => {
     const tabs = [
@@ -66,7 +81,7 @@ export default function SidePanel({ width, resize, setResize }) {
       { tab: t('notes'), itemKey: TabConst.NOTES, component: <NotesTab /> },
     ];
 
-    if (databases[database].hasTypes) {
+    if (databases?.[database]?.hasTypes) {
       tabs.push({
         tab: t('types'),
         itemKey: TabConst.TYPES,
@@ -74,7 +89,7 @@ export default function SidePanel({ width, resize, setResize }) {
       });
     }
 
-    if (databases[database].hasEnums) {
+    if (databases?.[database]?.hasEnums) {
       tabs.push({
         tab: t('enums'),
         itemKey: TabConst.ENUMS,
@@ -92,36 +107,33 @@ export default function SidePanel({ width, resize, setResize }) {
         style={{ width: `${width}px` }}
       >
         <div className="h-full flex-1 overflow-y-auto">
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs
-              value={selectedElement.currentTab}
-              onChange={(key) =>
-                setSelectedElement((prev) => ({ ...prev, currentTab: key }))
-              }
-            >
-              {tabList.length &&
-                tabList.map((tab, _index) => (
-                  <Tab
-                    key={tab.itemKey}
-                    value={tab.itemKey}
-                    {...a11yProps(_index)}
-                  >
-                    {tab.tab}
-                  </Tab>
-                ))}
-            </Tabs>
-          </Box>
-
-          {tabList.length &&
-            tabList.map((tab, _index) => (
-              <CustomTabPanel
+          <Tabs
+            value={selectedTab}
+            onChange={(_e, key) => {
+              setSelectedElement((prev) => ({ ...prev, currentTab: key }));
+              setSelectedTab(key as string);
+            }}
+          >
+            {tabList?.map((tab: TabType, _index) => (
+              <Tab
                 key={tab.itemKey}
                 value={tab.itemKey}
-                index={_index}
-              >
-                <div className="p-2">{tab.component}</div>
-              </CustomTabPanel>
+                {...a11yProps(_index)}
+                label={tab.tab}
+              ></Tab>
             ))}
+          </Tabs>
+
+          {tabList?.map((tab: TabType, _index) => (
+            <CustomTabPanel
+              key={tab.itemKey}
+              itemKey={tab.itemKey}
+              value={selectedTab}
+              index={_index}
+            >
+              <div className="">{tab.component} </div>
+            </CustomTabPanel>
+          ))}
         </div>
         {layout.issues && (
           <div className="mt-auto border-t-2 border-color shadow-inner">

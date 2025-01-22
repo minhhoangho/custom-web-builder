@@ -3,6 +3,7 @@ import { MouseEvent, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import { useLayout } from 'src/containers/Editor/hooks';
 import { Iconify } from '@components/common';
+import { EditorLayoutInterface } from 'src/containers/Editor/interfaces';
 
 export default function LayoutDropdown() {
   const { layout, setLayout } = useLayout();
@@ -15,7 +16,7 @@ export default function LayoutDropdown() {
     setAnchorEl(null);
   };
 
-  const invertLayout = (component: string) =>
+  const invertLayout = (component: keyof EditorLayoutInterface) =>
     setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
 
   return (

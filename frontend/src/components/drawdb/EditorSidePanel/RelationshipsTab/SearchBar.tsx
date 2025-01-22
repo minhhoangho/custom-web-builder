@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 // import { IconSearch } from "@douyinfe/semi-icons";
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useDiagram } from 'src/containers/Editor/hooks';
+import { Iconify } from '@components/common';
 
 export default function SearchBar() {
   const { relationships } = useDiagram();
   const [searchText, setSearchText] = useState('');
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const [filteredResult, setFilteredResult] = useState(
     relationships.map((t) => t.name),
@@ -14,7 +16,7 @@ export default function SearchBar() {
 
   const handleStringSearch = (value: string) => {
     setFilteredResult(
-      relationships.map((t) => t.title).filter((i) => i.includes(value)),
+      relationships.map((t) => t.name).filter((i) => i.includes(value)),
     );
   };
   useEffect(() => {
@@ -24,10 +26,19 @@ export default function SearchBar() {
     return () => clearTimeout(timer);
   }, [searchText]);
 
+  const renderInput = (props) => (
+    <TextField
+      prefix={<Iconify icon="mdi:search" />}
+      {...props}
+      label={t('search')}
+    />
+  );
+
   return (
     <Autocomplete
       options={filteredResult}
       value={searchText}
+      renderInput={renderInput}
       // showClear
       // prefix={<Iconify icon="mdi:search"}/>}
       // placeholder={t("search")}

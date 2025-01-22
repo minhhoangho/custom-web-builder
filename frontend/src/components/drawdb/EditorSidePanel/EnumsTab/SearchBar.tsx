@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 import { useEnum } from 'src/containers/Editor/hooks';
+import { Iconify } from '@components/common';
 
 export default function SearchBar() {
   const { enums } = useEnum();
@@ -25,10 +26,18 @@ export default function SearchBar() {
     return () => clearTimeout(timer);
   }, [value]);
 
+  const renderInput = (props) => (
+    <TextField
+      prefix={<Iconify icon="mdi:search" />}
+      {...props}
+      label={t('search')}
+    />
+  );
   return (
     <Autocomplete
       options={filteredResult}
       inputValue={value}
+      renderInput={renderInput}
       // showClear
       // prefix={<Iconify icon="mdi:search-web"}/>}
       placeholder={t('search')}

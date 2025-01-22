@@ -14,7 +14,7 @@ export default function TablesTab() {
 
   return (
     <>
-      <div className="flex gap-2">
+      <div className="flex gap-2 justify-between">
         <SearchBar tables={tables} />
         <div>
           <Button
@@ -35,8 +35,8 @@ export default function TablesTab() {
               ? `${selectedElement.id}`
               : ''
           }
-          keepDOM
-          lazyRender
+          // keepDOM
+          // lazyRender
           onChange={(k) =>
             setSelectedElement((prev) => ({
               ...prev,
@@ -45,7 +45,7 @@ export default function TablesTab() {
               element: ObjectType.TABLE,
             }))
           }
-          accordion
+          // accordion
         >
           {tables.map((t) => (
             <div id={`scroll_table_${t.id}`} key={t.id}>

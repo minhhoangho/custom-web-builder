@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { TreeItem, TreeView } from '@mui/x-tree-view';
 import { useSelect } from 'src/containers/Editor/hooks';
-// import { TreeSelect } from "@douyinfe/semi-ui";
-// import { IconSearch } from "@douyinfe/semi-icons";
 import { ObjectType } from '@constants/editor';
+import { DTable } from 'src/data/interface';
 
 interface RenderTree {
   id: string;
@@ -11,7 +10,7 @@ interface RenderTree {
   children?: readonly RenderTree[];
 }
 
-export default function SearchBar({ tables }) {
+export default function SearchBar({ tables }: { tables: DTable[] }) {
   const { setSelectedElement } = useSelect();
   // const { t } = useTranslation();
 
@@ -36,10 +35,11 @@ export default function SearchBar({ tables }) {
     });
   }, [tables]);
 
-  const renderTree = (nodes: RenderTree) => (
-    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.label}>
-      {Array.isArray(nodes.children)
-        ? nodes.children.map((node) => renderTree(node))
+  console.log('TreeData', treeData);
+  const renderTree = (node: RenderTree) => (
+    <TreeItem key={node.id} nodeId={node.id} label={node.label}>
+      {Array.isArray(node.children)
+        ? node.children.map((node) => renderTree(node))
         : null}
     </TreeItem>
   );
@@ -53,7 +53,9 @@ export default function SearchBar({ tables }) {
       // emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
       // filterTreeNode
       // placeholder={t("search")}
-      onNodeSelect={(node) => {
+      onNodeFocus={(_e, _nodeId) => {
+        const node = treeData.find((n) => n.id === _nodeId);
+        if (!node) return;
         const { tableId, id, children } = node;
 
         setSelectedElement((prev) => ({
@@ -64,16 +66,16 @@ export default function SearchBar({ tables }) {
         }));
         document
           .getElementById(`scroll_table_${tableId}`)
-          .scrollIntoView({ behavior: 'smooth' });
+          ?.scrollIntoView({ behavior: 'smooth' });
 
         if (!children) {
           document
             .getElementById(`scroll_table_${tableId}_input_${id}`)
-            .focus();
+            ?.focus();
         }
       }}
       // onChangeWithObject
-      className="w-full"
+      className="max-w-xl min-w-[150px]"
     >
       {treeData.map((node: RenderTree) => renderTree(node))}
     </TreeView>
