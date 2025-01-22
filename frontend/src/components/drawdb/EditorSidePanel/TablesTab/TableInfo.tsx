@@ -11,16 +11,18 @@ import {
   Popover,
 } from 'src/components/common';
 import { Input } from '@components/form/Input';
+import { DTable } from 'src/data/interface';
 import TableField from './TableField';
 import IndexDetails from './IndexDetails';
 
-export default function TableInfo({ data }) {
+export default function TableInfo({ data }: { data: DTable }) {
   const { t } = useTranslation();
+  console.log('TableInfo data', data);
   const [indexActiveKey, setIndexActiveKey] = useState('');
   const { deleteTable, updateTable, updateField, setRelationships, database } =
     useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
-  const [editField, setEditField] = useState({});
+  const [editField, setEditField] = useState<any>({});
   const [drag, setDrag] = useState({
     draggingElementIndex: null,
     draggingOverIndexList: [],
@@ -32,10 +34,10 @@ export default function TableInfo({ data }) {
         <div className="text-md font-semibold break-keep">{t('name')}:</div>
         <Input
           value={data.name}
-          validateStatus={data.name.trim() === '' ? 'error' : 'default'}
+          // validateStatus={data.name.trim() === '' ? 'error' : 'default'}
           placeholder={t('name')}
           className="ml-2"
-          onChange={(value) => updateTable(data.id, { name: value })}
+          onInputChange={(value) => updateTable(data.id, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {
             if (e.target.value === editField.name) return;
@@ -195,7 +197,7 @@ export default function TableInfo({ data }) {
               value={data.comment}
               // autosize
               placeholder={t('comment')}
-              rows={1}
+              // rows={1}
               onInputChange={(value) =>
                 updateTable(data.id, { comment: value }, false)
               }

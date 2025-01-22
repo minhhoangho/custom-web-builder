@@ -1,20 +1,20 @@
 import { useMemo } from 'react';
-import { TreeItem, TreeView } from '@mui/x-tree-view';
+import { TreeNode, TreeView } from '@components/common';
 import { useSelect } from 'src/containers/Editor/hooks';
 import { ObjectType } from '@constants/editor';
 import { DTable } from 'src/data/interface';
 
-interface RenderTree {
-  id: string;
-  label: string;
-  children?: readonly RenderTree[];
-}
+// interface RenderTree {
+//   id: string;
+//   label: string;
+//   children?: readonly RenderTree[];
+// }
 
 export default function SearchBar({ tables }: { tables: DTable[] }) {
   const { setSelectedElement } = useSelect();
   // const { t } = useTranslation();
 
-  const treeData = useMemo(() => {
+  const treeData: TreeNode[] = useMemo(() => {
     return tables.map(({ id, name: parentName, fields }, i) => {
       const children = fields.map(({ name }, j) => ({
         tableId: id,
@@ -36,25 +36,26 @@ export default function SearchBar({ tables }: { tables: DTable[] }) {
   }, [tables]);
 
   console.log('TreeData', treeData);
-  const renderTree = (node: RenderTree) => (
-    <TreeItem key={node.id} nodeId={node.id} label={node.label}>
-      {Array.isArray(node.children)
-        ? node.children.map((node) => renderTree(node))
-        : null}
-    </TreeItem>
-  );
+  // const renderTree = (node: RenderTree) => (
+  //   <TreeItem key={node.id} nodeId={node.id} label={node.label}>
+  //     {Array.isArray(node.children)
+  //       ? node.children.map((node) => renderTree(node))
+  //       : null}
+  //   </TreeItem>
+  // );
 
   return (
     <TreeView
       // searchPosition="trigger"
-      sx={{ maxHeight: 400, overflow: 'auto' }}
+
       // treeData={treeData}
       // prefix={<Iconify icon="mdi:search"}/>}
       // emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
       // filterTreeNode
       // placeholder={t("search")}
-      onNodeFocus={(_e, _nodeId) => {
-        const node = treeData.find((n) => n.id === _nodeId);
+      data={treeData}
+      onNodeFocus={(nodeData: TreeNode) => {
+        const node = treeData.find((n) => n.id === nodeData.id);
         if (!node) return;
         const { tableId, id, children } = node;
 
@@ -75,9 +76,7 @@ export default function SearchBar({ tables }: { tables: DTable[] }) {
         }
       }}
       // onChangeWithObject
-      className="max-w-xl min-w-[150px]"
-    >
-      {treeData.map((node: RenderTree) => renderTree(node))}
-    </TreeView>
+      // className="max-w-xl min-w-[150px] "
+    ></TreeView>
   );
 }

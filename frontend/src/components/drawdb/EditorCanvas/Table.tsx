@@ -8,13 +8,6 @@ import {
   tableFieldHeight,
   tableHeaderHeight,
 } from '@constants/editor'; // import {
-//   IconEdit,
-//   IconMore,
-//   IconMinus,
-//   IconDeleteStroked,
-//   IconKeyStroked,
-// } from "@douyinfe/semi-icons";
-// import { Popover, Tag, Button, SideSheet } from "@douyinfe/semi-ui";
 import { dbToTypes } from 'src/data/datatypes';
 import { Iconify, Popover } from '@components/common';
 import {
@@ -23,11 +16,27 @@ import {
   useSelect,
   useSettings,
 } from 'src/containers/Editor/hooks';
-import TableInfo from '../EditorSidePanel/TablesTab/TableInfo'; // import { isRtl } from '../../i18n/utils/rtl';
+import { DTable } from 'src/data/interface'; // import { isRtl } from '../../i18n/utils/rtl';
+import TableInfo from '../EditorSidePanel/TablesTab/TableInfo';
 // import { isRtl } from '../../i18n/utils/rtl';
 // import i18n from '../../i18n/i18n';
 
-export default function Table(props) {
+type TableProps = {
+  tableData: DTable;
+  onPointerDown: (e: React.PointerEvent) => void;
+  setHoveredTable: (data: { tableId: number; field: number }) => void;
+  handleGripField: (field: number) => void;
+  setLinkingLine: (data: {
+    startFieldId: number;
+    startTableId: number;
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+  }) => void;
+};
+
+export default function Table(props: TableProps) {
   const [hoveredField, setHoveredField] = useState(-1);
   const { database } = useDiagram();
   const {
@@ -64,7 +73,7 @@ export default function Table(props) {
       if (selectedElement.currentTab !== Tab.TABLES) return;
       document
         .getElementById(`scroll_table_${tableData.id}`)
-        .scrollIntoView({ behavior: 'smooth' });
+        ?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -83,15 +92,15 @@ export default function Table(props) {
           onDoubleClick={openEditor}
           className={`border-2 hover:border-dashed hover:border-blue-500
                select-none rounded-lg w-full ${
-            settings.mode === 'light'
-              ? 'bg-zinc-100 text-zinc-800'
-              : 'bg-zinc-800 text-zinc-200'
-          } ${
-            selectedElement.id === tableData.id &&
-            selectedElement.element === ObjectType.TABLE
-              ? 'border-solid border-blue-500'
-              : 'border-zinc-500'
-          }`}
+                 settings.mode === 'light'
+                   ? 'bg-zinc-100 text-zinc-800'
+                   : 'bg-zinc-800 text-zinc-200'
+               } ${
+                 selectedElement.id === tableData.id &&
+                 selectedElement.element === ObjectType.TABLE
+                   ? 'border-solid border-blue-500'
+                   : 'border-zinc-500'
+               }`}
           style={{ direction: 'ltr' }}
         >
           <div
@@ -109,9 +118,8 @@ export default function Table(props) {
             <div className="hidden group-hover:block">
               <div className="flex justify-end items-center mx-2">
                 <Button
-                  startIcon={<Iconify icon="lucide:edit"/>}
+                  startIcon={<Iconify icon="lucide:edit" />}
                   size="small"
-                  theme="solid"
                   style={{
                     backgroundColor: '#2f68adb3',
                     marginRight: '6px',
@@ -122,8 +130,7 @@ export default function Table(props) {
                   key={tableData.key}
                   buttonElement={
                     <Button
-                      startIcon={<Iconify icon="ic:round-more-vert"/>}
-                      type="tertiary"
+                      startIcon={<Iconify icon="ic:round-more-vert" />}
                       size="small"
                       style={{
                         backgroundColor: '#808080b3',
@@ -136,8 +143,6 @@ export default function Table(props) {
                   // trigger="click"
                   style={{ width: '200px', wordBreak: 'break-word' }}
                 >
-
-
                   <div className="popover-theme">
                     <div className="mb-2">
                       <strong>{t('comment')}:</strong>{' '}
@@ -182,7 +187,7 @@ export default function Table(props) {
                       )}
                     </div>
                     <Button
-                      startIcon={<Iconify icon="typcn:delete"/>}
+                      startIcon={<Iconify icon="typcn:delete" />}
                       color="error"
                       style={{ marginTop: '8px' }}
                       onClick={() => deleteTable(tableData.id)}
@@ -198,9 +203,7 @@ export default function Table(props) {
             return settings.showFieldSummary ? (
               <Popover
                 key={i}
-                buttonElement={
-                  field(e, i)
-                }
+                buttonElement={field(e, i)}
                 position="right"
                 // showArrow
                 // style={
@@ -217,34 +220,42 @@ export default function Table(props) {
                     <p className="me-4 font-bold">{e.name}</p>
                     <p className="ms-4">
                       {e.type +
-                        ((dbToTypes[database][e.type].isSized ||
-                          dbToTypes[database][e.type].hasPrecision) &&
+                        ((dbToTypes?.[database]?.[e?.type]?.isSized ||
+                          dbToTypes?.[database]?.[e?.type]?.hasPrecision) &&
                         e.size &&
                         e.size !== ''
                           ? '(' + e.size + ')'
                           : '')}
                     </p>
                   </div>
-                  <hr/>
+                  <hr />
                   {e.primary && (
-                    <Chip color="blue" className="me-2 my-2">
-                      {t('primary')}
-                    </Chip>
+                    <Chip
+                      color="primary"
+                      className="me-2 my-2"
+                      label={t('primary')}
+                    />
                   )}
                   {e.unique && (
-                    <Chip color="amber" className="me-2 my-2">
-                      {t('unique')}
-                    </Chip>
+                    <Chip
+                      color="secondary"
+                      className="me-2 my-2"
+                      label={t('unique')}
+                    />
                   )}
                   {e.notNull && (
-                    <Chip color="purple" className="me-2 my-2">
-                      {t('not_null')}
-                    </Chip>
+                    <Chip
+                      color="info"
+                      className="me-2 my-2"
+                      label={t('not_null')}
+                    />
                   )}
                   {e.increment && (
-                    <Chip color="green" className="me-2 my-2">
-                      {t('autoincrement')}
-                    </Chip>
+                    <Chip
+                      color="success"
+                      className="me-2 my-2"
+                      label={t('autoincrement')}
+                    />
                   )}
                   <p>
                     <strong>{t('default_value')}: </strong>
@@ -263,7 +274,7 @@ export default function Table(props) {
         </div>
       </foreignObject>
       <Drawer
-        title='Edit'
+        title="Edit"
         // size="small"
         open={
           selectedElement.element === ObjectType.TABLE &&
@@ -271,7 +282,7 @@ export default function Table(props) {
           selectedElement.open &&
           !layout.sidebar
         }
-        onCancel={() =>
+        onClose={() =>
           setSelectedElement((prev) => ({
             ...prev,
             open: !prev.open,
@@ -280,7 +291,7 @@ export default function Table(props) {
         style={{ paddingBottom: '16px' }}
       >
         <div className="sidesheet-theme">
-          <TableInfo data={tableData}/>
+          <TableInfo data={tableData} />
         </div>
       </Drawer>
     </>
@@ -359,17 +370,17 @@ export default function Table(props) {
               style={{
                 backgroundColor: '#d42020b3',
               }}
-              startIcon={<Iconify icon="ic:baseline-minus"/>}
+              startIcon={<Iconify icon="ic:baseline-minus" />}
               onClick={() => deleteField(fieldData, tableData.id)}
             />
           ) : (
             <div className="flex gap-1 items-center">
-              {fieldData.primary && <Iconify icon="material-symbols:key-off"/>}
+              {fieldData.primary && <Iconify icon="material-symbols:key-off" />}
               {!fieldData.notNull && <span>?</span>}
               <span>
                 {fieldData.type +
-                  ((dbToTypes[database][fieldData.type].isSized ||
-                    dbToTypes[database][fieldData.type].hasPrecision) &&
+                  ((dbToTypes?.[database]?.[fieldData?.type]?.isSized ||
+                    dbToTypes?.[database]?.[fieldData?.type]?.hasPrecision) &&
                   fieldData.size &&
                   fieldData.size !== ''
                     ? '(' + fieldData.size + ')'

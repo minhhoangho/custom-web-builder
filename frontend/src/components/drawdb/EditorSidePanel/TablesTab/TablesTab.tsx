@@ -14,11 +14,13 @@ export default function TablesTab() {
 
   return (
     <>
-      <div className="flex gap-2 justify-between">
+      <div className="flex gap-2 justify-between items-center">
         <SearchBar tables={tables} />
         <div>
           <Button
             startIcon={<Iconify icon="mdi:plus" />}
+            variant="contained"
+            className="rounded"
             // block
             onClick={() => addTable()}
           >

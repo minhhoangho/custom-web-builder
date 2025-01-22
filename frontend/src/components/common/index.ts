@@ -14,3 +14,4 @@ export * from './Text';
 export * from './Toast';
 export * from './Collapse';
 export * from './Popover';
+export * from './TreeView';
