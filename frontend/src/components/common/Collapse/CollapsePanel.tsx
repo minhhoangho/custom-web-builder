@@ -17,7 +17,7 @@ type CollapsePanelProps = {
 
 export function CollapsePanel({
   children,
-  header,
+                                header,
   itemKey,
   className,
 }: CollapsePanelProps) {
@@ -28,6 +28,23 @@ export function CollapsePanel({
       collapseContext.onChange(itemKey, e);
     }
   };
+
+  console.log("collapseContext >> ", collapseContext)
+  console.log("props >> ", {
+    children,
+    header,
+    itemKey,
+    className,
+  })
+  console.log("Header >> ", header)
+  const renderHeader = () => {
+    if (typeof header === 'string') {
+      console.log("Typeof header >> ", typeof header)
+      return <Typography>{header}</Typography>;
+    }
+    return 'hahah'
+    // return header;
+  }
   return (
     <Accordion
       key={itemKey}
@@ -35,7 +52,7 @@ export function CollapsePanel({
       className={className}
     >
       <AccordionSummary>
-        <Typography component="span">{header}</Typography>
+        hello
       </AccordionSummary>
       <AccordionDetails>{children}</AccordionDetails>
     </Accordion>

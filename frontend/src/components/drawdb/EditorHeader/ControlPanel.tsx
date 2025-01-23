@@ -1841,7 +1841,7 @@ export default function ControlPanel({
               </div>
               <Button size="small" color="primary" variant="outlined">
                 {saveState === State.LOADING || saveState === State.SAVING ? (
-                  <Spinner className="w-3 h-3 mr-3" />
+                  <Spinner className="!w-3 !h-3 !mr-3" />
                 ) : null}
                 {getState()}
               </Button>

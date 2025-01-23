@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Action, defaultBlue, ObjectType } from '@constants/editor';
@@ -165,10 +165,10 @@ export default function TableInfo({ data }: { data: DTable }) {
             activeKey={indexActiveKey}
             // keepDOM
             // lazyRender
-            onChange={(itemKey) => setIndexActiveKey(itemKey)}
+            onChange={(itemKey, _e) => setIndexActiveKey(itemKey)}
             // accordion
           >
-            <Collapse.Panel header={t('indices')} itemKey="1">
+            <Collapse.Panel header="indices" itemKey="1">
               {data.indices.map((idx: number, k: string) => (
                 <IndexDetails
                   key={'index_' + k}
@@ -190,16 +190,14 @@ export default function TableInfo({ data }: { data: DTable }) {
         sx={{ marginTop: '12px', marginBottom: '12px' }}
         // headerLine={false}
       >
-        <Collapse
-        // keepDOM lazyRender
-        >
-          <Collapse.Panel header={t('comment')} itemKey="1">
+        <Collapse>
+          <Collapse.Panel header="comment" itemKey="1">
             <Input
               isTextarea
               name="comment"
               value={data.comment}
               // autosize
-              placeholder={t('comment')}
+              placeholder="comment"
               // rows={1}
               onInputChange={(value) =>
                 updateTable(data.id, { comment: value }, false)
@@ -235,7 +233,7 @@ export default function TableInfo({ data }: { data: DTable }) {
               <div
                 className="h-[32px] w-[32px] rounded"
                 style={{ backgroundColor: data.color }}
-              />
+              /> as React.ReactNode
             }
             // trigger="click"
             position="bottomLeft"

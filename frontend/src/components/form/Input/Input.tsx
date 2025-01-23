@@ -47,10 +47,10 @@ export const Input = React.forwardRef<
       React.InputHTMLAttributes<HTMLInputElement>,
     ref,
   ): React.ReactElement => (
-    <div className={classNames('relative w-full ', className)}>
+    <div className={classNames('relative w-full' as any, className)}>
       {label && (
         <label
-          className={classNames('block text-sm mb-1', labelClassName)}
+          className={classNames('block text-sm mb-1' as any, labelClassName)}
           htmlFor={name}
         >
           {label} {isRequired && <sup className="text-red-500 text-xs">*</sup>}
@@ -62,8 +62,8 @@ export const Input = React.forwardRef<
           ref={ref as React.RefObject<HTMLTextAreaElement>}
           style={{ border: '1px solid #e0e0e0' }}
           className={classNames(
-            'border-1 px-3 py-3 placeholder-blueGray-300 rounded-xl text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150',
-            inputElementClassName,
+            'border-1 px-3 py-3 placeholder-blueGray-300 rounded-xl text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150' as any,
+            inputElementClassName as any,
           )}
           autoComplete={autoComplete}
           value={value ?? defaultValue}
@@ -78,9 +78,9 @@ export const Input = React.forwardRef<
             // style={{ border: '1px solid #e0e0e0' }}
             className={classNames(
               // 'border-1 px-3 py-3 placeholder-blueGray-300 rounded-xl text-sm shadow-sm focus:outline-none focus:ring focus:border-0 w-full ease-linear transition-all duration-150',
-              'w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border  rounded-md px-3 py-2 transition duration-300 ease shadow-sm ',
+              'w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border  rounded-md px-3 py-2 transition duration-300 ease shadow-sm' as any,
               styles['input'],
-              inputElementClassName,
+              inputElementClassName as any,
             )}
             autoComplete={autoComplete}
             value={value ?? defaultValue}
