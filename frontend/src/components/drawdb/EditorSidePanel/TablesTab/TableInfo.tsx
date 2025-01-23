@@ -11,7 +11,7 @@ import {
   Popover,
 } from 'src/components/common';
 import { Input } from '@components/form/Input';
-import { DTable } from 'src/data/interface';
+import { DField, DTable } from 'src/data/interface';
 import TableField from './TableField';
 import IndexDetails from './IndexDetails';
 
@@ -104,14 +104,17 @@ export default function TableInfo({ data }: { data: DTable }) {
               return;
             }
 
-            const a = data.fields[index];
-            const b = data.fields[j];
+            const a: DField | undefined = data.fields[index];
+            const b: DField | undefined = data.fields[j];
+            if (!a || !b) return;
 
             updateField(data.id, index, {
               ...b,
-              ...(!dbToTypes[database][b.type].isSized && { size: '' }),
-              ...(!dbToTypes[database][b.type].hasCheck && { check: '' }),
-              ...(dbToTypes[database][b.type].noDefault && { default: '' }),
+              ...(!dbToTypes?.[database]?.[b.type]?.isSized && { size: '' }),
+              ...(!dbToTypes?.[database]?.[b.type]?.hasCheck && { check: '' }),
+              ...(dbToTypes?.[database]?.[b.type]?.noDefault && {
+                default: '',
+              }),
               id: index,
             });
             updateField(data.id, j, {
@@ -236,7 +239,7 @@ export default function TableInfo({ data }: { data: DTable }) {
             }
             // trigger="click"
             position="bottomLeft"
-            showArrow
+            // showArrow
           >
             <div className="popover-theme">
               <ColorPalette
@@ -285,7 +288,7 @@ export default function TableInfo({ data }: { data: DTable }) {
         </div>
         <div className="flex gap-1">
           <Button
-            block
+            // block
             onClick={() => {
               setIndexActiveKey('1');
               setUndoStack((prev) => [
@@ -351,7 +354,7 @@ export default function TableInfo({ data }: { data: DTable }) {
                 ],
               });
             }}
-            block
+            // block
           >
             {t('add_field')}
           </Button>

@@ -203,7 +203,7 @@ export default function Table(props: TableProps) {
             return settings.showFieldSummary ? (
               <Popover
                 key={i}
-                buttonElement={field(e, i)}
+                buttonElement={<div>{field(e, i)}</div>}
                 position="right"
                 // showArrow
                 // style={
