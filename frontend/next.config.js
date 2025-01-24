@@ -19,15 +19,9 @@ const config = {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'camera-detection.s3.amazonaws.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
         protocol: 'http',
         hostname: '127.0.0.1',
-        port: '8085',
+        port: '*',
         pathname: '/**',
       },
     ],

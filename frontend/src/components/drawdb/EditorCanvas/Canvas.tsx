@@ -617,10 +617,10 @@ export default function Canvas() {
             </thead>
             <tbody>
               <tr>
-                <td>{viewBox.left.toFixed(2)}</td>
-                <td>{viewBox.top.toFixed(2)}</td>
-                <td>{viewBox.width.toFixed(2)}</td>
-                <td>{viewBox.height.toFixed(2)}</td>
+                <td>{viewBox?.left.toFixed(2)}</td>
+                <td>{viewBox?.top.toFixed(2)}</td>
+                <td>{viewBox?.width.toFixed(2)}</td>
+                <td>{viewBox?.height.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
@@ -643,8 +643,8 @@ export default function Canvas() {
               </tr>
               <tr>
                 <td>{t('coordinate_space_diagram')}</td>
-                <td>{pointer.spaces.diagram.x.toFixed(2)}</td>
-                <td>{pointer.spaces.diagram.y.toFixed(2)}</td>
+                <td>{pointer.spaces.diagram?.x?.toFixed(2)}</td>
+                <td>{pointer.spaces.diagram?.y?.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>

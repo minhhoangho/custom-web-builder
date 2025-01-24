@@ -23,7 +23,7 @@ import TableInfo from '../EditorSidePanel/TablesTab/TableInfo';
 
 type TableProps = {
   tableData: DTable;
-  onPointerDown: (e: React.PointerEvent) => void;
+  onPointerDown: (e: any) => void;
   setHoveredTable: (data: { tableId: number; field: number }) => void;
   handleGripField: (field: number) => void;
   setLinkingLine: (data: {
@@ -292,6 +292,8 @@ export default function Table(props: TableProps) {
                     </div>
                     <Button
                       startIcon={<Iconify icon="typcn:delete" />}
+                      size="small"
+                      variant="contained"
                       color="error"
                       style={{ marginTop: '8px' }}
                       onClick={() => deleteTable(tableData.id)}
@@ -324,8 +326,8 @@ export default function Table(props: TableProps) {
                     <p className="me-4 font-bold">{e.name}</p>
                     <p className="ms-4">
                       {e.type +
-                        ((dbToTypes?.[database]?.[e?.type]?.isSized ||
-                          dbToTypes?.[database]?.[e?.type]?.hasPrecision) &&
+                        ((dbToTypes[database][e?.type]?.isSized ||
+                          dbToTypes[database][e?.type]?.hasPrecision) &&
                         e.size &&
                         e.size !== ''
                           ? '(' + e.size + ')'

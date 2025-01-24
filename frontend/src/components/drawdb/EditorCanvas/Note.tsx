@@ -223,7 +223,7 @@ export default function Note({ data, onPointerDown }) {
                           />
                         }
                         position="topRight"
-                        showArrow
+                        // showArrow
                       >
                         <div className="popover-theme">
                           <div className="font-medium mb-1">{t('theme')}</div>

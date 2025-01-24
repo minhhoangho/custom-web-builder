@@ -1,5 +1,6 @@
 import { Popover as MuiPopover, PopoverOrigin } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 
 type PopoverProps = {
   className?: string;
@@ -83,14 +84,14 @@ const mapPositionToAnchorOrigin = (
 };
 
 export function Popover({
-                          children,
-                          position,
-                          buttonElement,
-                          visible,
-                          onClickOutSide,
-                          className,
-                          style
-                        }: PopoverProps) {
+  children,
+  position,
+  buttonElement,
+  visible,
+  onClickOutSide,
+  className,
+  style,
+}: PopoverProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -119,7 +120,7 @@ export function Popover({
   }, [onClickOutSide]);
 
   return (
-    <div ref={popoverRef} className={className} style={style}>
+    <div ref={popoverRef} style={style}>
       <div onClick={handleClick}>{buttonElement}</div>
       <MuiPopover
         open={visible ?? open}
@@ -127,7 +128,9 @@ export function Popover({
         onClose={handleClose}
         anchorOrigin={mapPositionToAnchorOrigin(position)}
       >
-        {children}
+        <div className={clsx('p-3 text-sm text-wrap w-[200px]', className)}>
+          {children}
+        </div>
       </MuiPopover>
     </div>
   );

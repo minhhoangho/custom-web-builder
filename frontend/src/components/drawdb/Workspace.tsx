@@ -11,7 +11,6 @@ import { useRouter } from 'next/router';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { db } from 'src/data/db';
-import { CanvasContextProvider } from 'src/containers/Editor/context/CanvasContext';
 import { DB, State } from '@constants/editor';
 import {
   useArea,
@@ -27,11 +26,12 @@ import {
   useUndoRedo,
 } from 'src/containers/Editor/hooks';
 import { databases } from 'src/data/database';
+import SidePanel from '@components/drawdb/EditorSidePanel/SidePanel';
+import Canvas from '@components/drawdb/EditorCanvas/Canvas';
 import FloatingControls from './FloatingControls';
-import SidePanel from './EditorSidePanel/SidePanel';
-import Canvas from './EditorCanvas/Canvas';
 import ControlPanel from './EditorHeader/ControlPanel';
 import { DDiagram, DTemplate } from '../../data/interface';
+import { CanvasContextProvider } from '../../containers/Editor/context/CanvasContext';
 
 export const IdContext = createContext<{
   gistId: string;
@@ -116,7 +116,7 @@ export default function WorkSpace() {
   // console.log('showSelectDbModal:', showSelectDbModal);
   // console.log('selectedDb:', selectedDb);
   // console.log('layout:', layout);
-  // console.log('settings:', settings);
+  console.log('settings:', settings);
   // console.log('types:', types);
   // console.log('areas:', areas);
   // console.log('tasks:', tasks);
@@ -432,9 +432,10 @@ export default function WorkSpace() {
     )
       return;
 
-    if (settings.autosave) {
-      setSaveState(State.SAVING);
-    }
+    // if (settings.autosave) {
+    //   console.log('Auto saving...');
+    //   setSaveState(State.SAVING);
+    // }
   }, [
     undoStack,
     redoStack,
@@ -450,6 +451,20 @@ export default function WorkSpace() {
     gistId,
     setSaveState,
   ]);
+
+  console.log('WATCH undoStack', undoStack);
+  console.log('WATCH redoStack', redoStack);
+  console.log('WATCH settings.autosave', settings.autosave);
+  console.log('WATCH tables?.length', tables?.length);
+  console.log('WATCH areas?.length', areas?.length);
+  console.log('WATCH notes?.length', notes?.length);
+  console.log('WATCH types?.length', types?.length);
+  console.log('WATCH relationships?.length', relationships?.length);
+  console.log('WATCH tasks?.length', tasks?.length);
+  console.log('WATCH transform.zoom', transform.zoom);
+  console.log('WATCH title', title);
+  console.log('WATCH gistId', gistId);
+  console.log('WATCH setSaveState', setSaveState);
 
   useEffect(() => {
     save();
@@ -490,8 +505,7 @@ export default function WorkSpace() {
         )}
         <div className="relative w-full h-full overflow-hidden">
           <CanvasContextProvider className="h-full w-full">
-            {/*<Canvas saveState={saveState} setSaveState={setSaveState} />*/}
-            <Canvas />
+            <Canvas saveState={saveState} setSaveState={setSaveState} />
           </CanvasContextProvider>
           {!(layout.sidebar || layout.toolbar || layout.header) && (
             <div className="fixed right-5 bottom-4">
