@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Card } from '@mui/material';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Action, defaultBlue, ObjectType } from '@constants/editor';
-import { dbToTypes } from 'src/data/datatypes';
 import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 import {
   Collapse,
@@ -12,8 +11,9 @@ import {
 } from 'src/components/common';
 import { Input } from '@components/form/Input';
 import { DField, DTable } from 'src/data/interface';
-import TableField from './TableField';
-import IndexDetails from './IndexDetails';
+import { dbToTypes } from 'src/data/datatypes';
+import IndexDetails from '@components/drawdb/EditorSidePanel/TablesTab/IndexDetails';
+import TableField from '@components/drawdb/EditorSidePanel/TablesTab/TableField';
 
 export default function TableInfo({ data }: { data: DTable }) {
   const { t } = useTranslation();
@@ -27,6 +27,11 @@ export default function TableInfo({ data }: { data: DTable }) {
     draggingElementIndex: null,
     draggingOverIndexList: [],
   });
+
+  console.log('DEBUG: TableInfo -> data', data);
+  console.log('DEBUG: TableInfo -> editField', editField);
+  console.log('DEBUG: TableInfo -> drag', drag);
+  console.log('DEBUG: TableInfo -> indexActiveKey', indexActiveKey);
 
   return (
     <div>
@@ -50,10 +55,7 @@ export default function TableInfo({ data }: { data: DTable }) {
                 tid: data.id,
                 undo: editField,
                 redo: { name: e.target.value },
-                message: t('edit_table', {
-                  tableName: e.target.value,
-                  extra: '[name]',
-                }),
+                message: t('edit_table'),
               },
             ]);
             setRedoStack([]);
@@ -64,7 +66,7 @@ export default function TableInfo({ data }: { data: DTable }) {
         <div
           key={'field_' + j}
           className={`cursor-pointer ${drag.draggingOverIndexList.includes(j) ? 'opacity-25' : ''}`}
-          style={{ direction: 'ltr' }}
+          // style={{ direction: 'ltr' }}
           draggable
           onDragStart={() => {
             setDrag((prev) => ({ ...prev, draggingElementIndex: j }));
@@ -79,7 +81,7 @@ export default function TableInfo({ data }: { data: DTable }) {
           }}
           onDragOver={(e) => {
             e.preventDefault();
-            if (drag.draggingElementIndex != null) {
+            if (drag.draggingElementIndex !== null) {
               if (j !== drag.draggingElementIndex) {
                 setDrag((prev) => {
                   if (prev.draggingOverIndexList.includes(j)) {
@@ -100,7 +102,7 @@ export default function TableInfo({ data }: { data: DTable }) {
             e.preventDefault();
             const index = drag.draggingElementIndex;
             setDrag({ draggingElementIndex: null, draggingOverIndexList: [] });
-            if (index == null || index === j) {
+            if (index === null || index === j) {
               return;
             }
 
@@ -156,9 +158,9 @@ export default function TableInfo({ data }: { data: DTable }) {
         </div>
       ))}
       {data.indices.length > 0 && (
-        <Card
+        <div
           // bodyStyle={{ padding: '4px' }}
-          sx={{ marginTop: '12px', marginBottom: '12px' }}
+          style={{ marginTop: '12px', marginBottom: '12px' }}
           // headerLine={false}
         >
           <Collapse
@@ -183,57 +185,58 @@ export default function TableInfo({ data }: { data: DTable }) {
               ))}
             </Collapse.Panel>
           </Collapse>
-        </Card>
+        </div>
       )}
-      <Card
+      <div
         // bodyStyle={{ padding: '4px' }}
-        sx={{ marginTop: '12px', marginBottom: '12px' }}
+        style={{ marginTop: '12px', marginBottom: '12px' }}
         // headerLine={false}
       >
         <Collapse>
           <Collapse.Panel header="comment" itemKey="1">
-            <Input
-              isTextarea
-              name="comment"
-              value={data.comment}
-              // autosize
-              placeholder="comment"
-              // rows={1}
-              onInputChange={(value) =>
-                updateTable(data.id, { comment: value }, false)
-              }
-              onFocus={(e) => setEditField({ comment: e.target.value })}
-              onBlur={(e) => {
-                if (e.target.value === editField.comment) return;
-                setUndoStack((prev) => [
-                  ...prev,
-                  {
-                    action: Action.EDIT,
-                    element: ObjectType.TABLE,
-                    component: 'self',
-                    tid: data.id,
-                    undo: editField,
-                    redo: { comment: e.target.value },
-                    message: t('edit_table', {
-                      tableName: e.target.value,
-                      extra: '[comment]',
-                    }),
-                  },
-                ]);
-                setRedoStack([]);
-              }}
-            />
+            <div>
+              <Input
+                isTextarea
+                name="comment"
+                value={data.comment}
+                // autosize
+                placeholder="comment"
+                // rows={1}
+                onInputChange={(value) =>
+                  updateTable(data.id, { comment: value }, false)
+                }
+                onFocus={(e) => setEditField({ comment: e.target.value })}
+                onBlur={(e) => {
+                  if (e.target.value === editField.comment) return;
+                  setUndoStack((prev) => [
+                    ...prev,
+                    {
+                      action: Action.EDIT,
+                      element: ObjectType.TABLE,
+                      component: 'self',
+                      tid: data.id,
+                      undo: editField,
+                      redo: { comment: e.target.value },
+                      message: t('edit_table'),
+                    },
+                  ]);
+                  setRedoStack([]);
+                }}
+              />
+            </div>
           </Collapse.Panel>
         </Collapse>
-      </Card>
+      </div>
       <div className="flex justify-between items-center gap-1 mb-2">
         <div>
           <Popover
             buttonElement={
-              <div
-                className="h-[32px] w-[32px] rounded"
-                style={{ backgroundColor: data.color }}
-              /> as React.ReactNode
+              (
+                <div
+                  className="h-[32px] w-[32px] rounded"
+                  style={{ backgroundColor: data.color }}
+                />
+              ) as React.ReactNode
             }
             // trigger="click"
             position="bottomLeft"
@@ -252,10 +255,7 @@ export default function TableInfo({ data }: { data: DTable }) {
                       tid: data.id,
                       undo: { color: data.color },
                       redo: { color: defaultBlue },
-                      message: t('edit_table', {
-                        tableName: data.name,
-                        extra: '[color]',
-                      }),
+                      message: t('edit_table'),
                     },
                   ]);
                   setRedoStack([]);
@@ -271,10 +271,7 @@ export default function TableInfo({ data }: { data: DTable }) {
                       tid: data.id,
                       undo: { color: data.color },
                       redo: { color: c },
-                      message: t('edit_table', {
-                        tableName: data.name,
-                        extra: '[color]',
-                      }),
+                      message: t('edit_table'),
                     },
                   ]);
                   setRedoStack([]);
@@ -296,10 +293,7 @@ export default function TableInfo({ data }: { data: DTable }) {
                   element: ObjectType.TABLE,
                   component: 'index_add',
                   tid: data.id,
-                  message: t('edit_table', {
-                    tableName: data.name,
-                    extra: '[add index]',
-                  }),
+                  message: t('edit_table'),
                 },
               ]);
               setRedoStack([]);
@@ -327,10 +321,7 @@ export default function TableInfo({ data }: { data: DTable }) {
                   element: ObjectType.TABLE,
                   component: 'field_add',
                   tid: data.id,
-                  message: t('edit_table', {
-                    tableName: data.name,
-                    extra: '[add field]',
-                  }),
+                  message: t('edit_table'),
                 },
               ]);
               setRedoStack([]);

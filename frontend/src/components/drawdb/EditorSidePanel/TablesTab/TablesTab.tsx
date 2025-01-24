@@ -12,12 +12,12 @@ export default function TablesTab() {
   const { tables, addTable } = useDiagram();
   const { selectedElement, setSelectedElement } = useSelect();
   const { t } = useTranslation();
+  console.log('tables >> ', tables);
 
   return (
     <>
-      <div className="flex gap-2 justify-between items-center">
-        <SearchBar tables={tables} />
-        <div>
+      <div className="flex gap-2 flex-col">
+        <div className="my-2 mx-3">
           <Button
             startIcon={<Iconify icon="mdi:plus" />}
             variant="contained"
@@ -28,50 +28,57 @@ export default function TablesTab() {
             {t('add_table')}
           </Button>
         </div>
+        <SearchBar tables={tables} />
       </div>
-      {tables.length != 100 ? (
+      {tables.length === 0 ? (
         <Empty title={t('no_tables')} text={t('no_tables_text')} />
       ) : (
-        <Collapse
-          activeKey={
-            selectedElement.open && selectedElement.element === ObjectType.TABLE
-              ? `${selectedElement.id}`
-              : ''
-          }
-          // keepDOM
-          // lazyRender
-          onChange={(k) =>
-            setSelectedElement((prev) => ({
-              ...prev,
-              open: true,
-              id: parseInt(k),
-              element: ObjectType.TABLE,
-            }))
-          }
-          // accordion
-        >
-          {tables.map((t: DTable) => (
-            <div id={`scroll_table_${t.id}`} key={t.id}>
-              <Collapse.Panel
-                className="relative"
-                header={
-                  <div>
-                    <div className="overflow-hidden text-ellipsis whitespace-nowrap">
-                      {t.name}
+        <>
+          {tables.map((_table: DTable) => (
+            <Collapse
+              key={_table.id}
+              activeKey={
+                selectedElement.open &&
+                selectedElement.element === ObjectType.TABLE
+                  ? `${selectedElement.id}`
+                  : ''
+              }
+              // keepDOM
+              // lazyRender
+              onChange={(k) => {
+                console.log('OK', k);
+                setSelectedElement((prev) => ({
+                  ...prev,
+                  open: true,
+                  id: parseInt(k),
+                  element: ObjectType.TABLE,
+                }));
+              }}
+              // accordion
+            >
+              <div id={`scroll_table_${_table.id}`} key={_table.id}>
+                <Collapse.Panel
+                  className="relative"
+                  header={
+                    <div>
+                      <div className="overflow-hidden text-ellipsis whitespace-nowrap">
+                        {_table.name}
+                      </div>
+                      <div
+                        className="w-1 h-full absolute top-0 left-0 bottom-0"
+                        style={{ backgroundColor: _table.color }}
+                      />
                     </div>
-                    <div
-                      className="w-1 h-full absolute top-0 left-0 bottom-0"
-                      style={{ backgroundColor: t.color }}
-                    />
-                  </div>
-                }
-                itemKey={`${t.id}`}
-              >
-                <TableInfo data={t} />
-              </Collapse.Panel>
-            </div>
+                  }
+                  itemKey={`${_table.id}`}
+                >
+                  <TableInfo data={_table} />
+                  {/*<div>Table ìno</div>*/}
+                </Collapse.Panel>
+              </div>
+            </Collapse>
           ))}
-        </Collapse>
+        </>
       )}
     </>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Iconify } from '@components/common';
 
 export interface TreeNodeProps {
   node: TreeNode;
@@ -35,13 +36,19 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
 
   return (
     <div>
-      <div className={`flex items-center ${isMatch ? 'font-bold' : ''}`}>
+      <div
+        className={`flex justify-between items-center ${isMatch ? 'font-bold' : ''}`}
+      >
+        <span>{node.label}</span>
         {hasChildren && (
-          <button onClick={() => setIsOpen(!isOpen)} className="mr-2">
-            {isOpen ? '-' : '+'}
+          <button onClick={() => setIsOpen(!isOpen)} className="ml-2">
+            {isOpen ? (
+              <Iconify icon="mdi:chevron-up" />
+            ) : (
+              <Iconify icon="mdi:chevron-down" />
+            )}
           </button>
         )}
-        <span>{node.label}</span>
       </div>
       {isOpen && hasChildren && (
         <div className="ml-4">

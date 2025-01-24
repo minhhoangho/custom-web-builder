@@ -11,7 +11,7 @@ export const UndoRedoContext = createContext<{
   >;
   redoStack: EditorRedoStackInterface[];
   setRedoStack: React.Dispatch<
-    React.SetStateAction<EditorRedoStackInterface[]>
+    React.SetStateAction<Partial<EditorRedoStackInterface>[]>
   >;
 }>({
   undoStack: [],

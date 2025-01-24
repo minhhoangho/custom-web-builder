@@ -311,6 +311,7 @@ export default function Table(props: TableProps) {
                 key={i}
                 buttonElement={<div>{field(e, i)}</div>}
                 position="right"
+                className="w-max max-w-sm"
                 // showArrow
                 // style={
                 //   isRtl(i18n.language)
@@ -320,11 +321,11 @@ export default function Table(props: TableProps) {
               >
                 <div className="popover-theme">
                   <div
-                    className="flex justify-between items-center pb-2"
+                    className="flex justify-between items-center"
                     style={{ direction: 'ltr' }}
                   >
-                    <p className="me-4 font-bold">{e.name}</p>
-                    <p className="ms-4">
+                    <p className="font-bold m-0">{e.name}</p>
+                    <p className="m-0">
                       {e.type +
                         ((dbToTypes[database][e?.type]?.isSized ||
                           dbToTypes[database][e?.type]?.hasPrecision) &&
@@ -334,9 +335,10 @@ export default function Table(props: TableProps) {
                           : '')}
                     </p>
                   </div>
-                  <hr />
+                  <hr className="my-0.5" />
                   {e.primary && (
                     <Chip
+                      size="small"
                       color="primary"
                       className="me-2 my-2"
                       label={t('primary')}
@@ -344,6 +346,7 @@ export default function Table(props: TableProps) {
                   )}
                   {e.unique && (
                     <Chip
+                      size="small"
                       color="secondary"
                       className="me-2 my-2"
                       label={t('unique')}
@@ -351,6 +354,7 @@ export default function Table(props: TableProps) {
                   )}
                   {e.notNull && (
                     <Chip
+                      size="small"
                       color="info"
                       className="me-2 my-2"
                       label={t('not_null')}
@@ -358,6 +362,7 @@ export default function Table(props: TableProps) {
                   )}
                   {e.increment && (
                     <Chip
+                      size="small"
                       color="success"
                       className="me-2 my-2"
                       label={t('autoincrement')}
