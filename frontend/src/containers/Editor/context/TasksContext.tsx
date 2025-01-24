@@ -5,11 +5,7 @@ export const TasksContext = createContext<{
   tasks: EditorTaskInterface[];
   setTasks: React.Dispatch<React.SetStateAction<EditorTaskInterface[]>>;
   updateTask: (id: number, values: Partial<EditorTaskInterface>) => void;
-}>({
-  tasks: [],
-  setTasks: () => {},
-  updateTask: () => {},
-});
+} | null>(null);
 
 export default function TasksContextProvider({
   children,

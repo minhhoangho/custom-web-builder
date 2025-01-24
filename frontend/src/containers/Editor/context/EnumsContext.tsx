@@ -13,13 +13,7 @@ export const EnumsContext = createContext<{
   addEnum: (data: DEnum | null, addToHistory?: boolean) => void;
   deleteEnum: (id: number, addToHistory?: boolean) => void;
   updateEnum: (id: number, values: DEnum) => void;
-}>({
-  enums: [],
-  setEnums: () => {},
-  addEnum: () => {},
-  deleteEnum: () => {},
-  updateEnum: () => {},
-});
+} | null>(null);
 
 export default function EnumsContextProvider({
   children,

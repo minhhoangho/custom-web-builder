@@ -4,13 +4,7 @@ import { EditorTransformInterface } from '../interfaces';
 export const TransformContext = createContext<{
   transform: EditorTransformInterface;
   setTransform: React.Dispatch<React.SetStateAction<EditorTransformInterface>>;
-}>({
-  transform: {
-    zoom: 1,
-    pan: { x: 0, y: 0 },
-  },
-  setTransform: () => {},
-});
+} | null>(null);
 
 export default function TransformContextProvider({
   children,

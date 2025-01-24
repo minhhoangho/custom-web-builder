@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Collapse, Iconify } from '@components/common';
 import { ObjectType } from '@constants/editor';
 import { useDiagram, useSelect } from 'src/containers/Editor/hooks';
+import TableInfo from '@components/drawdb/EditorSidePanel/TablesTab/TableInfo';
 import SearchBar from './SearchBar';
-import TableInfo from './TableInfo';
 import Empty from '../Empty';
+import { DTable } from '../../../../data/interface';
 
 export default function TablesTab() {
   const { tables, addTable } = useDiagram();
@@ -28,7 +29,7 @@ export default function TablesTab() {
           </Button>
         </div>
       </div>
-      {tables.length === 0 ? (
+      {tables.length != 100 ? (
         <Empty title={t('no_tables')} text={t('no_tables_text')} />
       ) : (
         <Collapse
@@ -49,12 +50,12 @@ export default function TablesTab() {
           }
           // accordion
         >
-          {tables.map((t) => (
+          {tables.map((t: DTable) => (
             <div id={`scroll_table_${t.id}`} key={t.id}>
               <Collapse.Panel
                 className="relative"
                 header={
-                  <>
+                  <div>
                     <div className="overflow-hidden text-ellipsis whitespace-nowrap">
                       {t.name}
                     </div>
@@ -62,7 +63,7 @@ export default function TablesTab() {
                       className="w-1 h-full absolute top-0 left-0 bottom-0"
                       style={{ backgroundColor: t.color }}
                     />
-                  </>
+                  </div>
                 }
                 itemKey={`${t.id}`}
               >

@@ -6,20 +6,17 @@ import { CollapseContext } from './context';
 export interface CollapseReactProps extends CollapseProps {
   children: React.ReactNode;
   activeKey?: string;
-  onChange?: (
-    activeKey: string,
-    e: React.MouseEvent,
-  ) => void;
+  onChange?: (activeKey: string, e: React.MouseEvent) => void;
 }
 
 function Collapse({ children, onChange, activeKey }: CollapseReactProps) {
-  console.log("Collapse sssssss >> activeKey", activeKey)
+  console.log('Collapse sssssss >> activeKey', activeKey);
   return (
     <div>
       <CollapseContext.Provider
         value={{
           activeKey,
-          onChange
+          onChange,
         }}
       >
         {children}
@@ -29,6 +26,4 @@ function Collapse({ children, onChange, activeKey }: CollapseReactProps) {
 }
 
 Collapse.Panel = CollapsePanel;
-export {
-  Collapse
-}
+export { Collapse };

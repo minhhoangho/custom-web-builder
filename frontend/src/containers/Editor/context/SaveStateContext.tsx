@@ -1,15 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { State } from '@constants/editor';
 
-export const SaveStateContext = createContext<{
-  saveState: (typeof State)[keyof typeof State];
-  setSaveState: React.Dispatch<
-    React.SetStateAction<(typeof State)[keyof typeof State]>
-  >;
-}>({
-  saveState: State.NONE,
-  setSaveState: () => {},
-});
+export const SaveStateContext = createContext(State.NONE);
 
 export default function SaveStateContextProvider({ children }) {
   const [saveState, setSaveState] = useState<

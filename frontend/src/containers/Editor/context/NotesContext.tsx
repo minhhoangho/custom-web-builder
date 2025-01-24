@@ -11,13 +11,7 @@ export const NotesContext = createContext<{
   updateNote: (id: number, values: DNote) => void;
   addNote: (data?: Partial<DNote> | null, addToHistory?: boolean) => void;
   deleteNote: (id: number, addToHistory?: boolean) => void;
-}>({
-  notes: [],
-  setNotes: () => {},
-  updateNote: () => {},
-  addNote: () => {},
-  deleteNote: () => {},
-});
+} | null>(null);
 
 export default function NotesContextProvider({
   children,

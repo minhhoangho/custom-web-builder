@@ -18,21 +18,7 @@ export const DiagramContext = createContext<{
   deleteRelationship: (id: number, addToHistory?: boolean) => void;
   database: (typeof DB)[keyof typeof DB];
   setDatabase: (dbName: (typeof DB)[keyof typeof DB]) => void;
-}>({
-  tables: [],
-  setTables: () => {},
-  addTable: () => {},
-  updateTable: () => {},
-  updateField: () => {},
-  deleteField: () => {},
-  deleteTable: () => {},
-  relationships: [],
-  setRelationships: () => {},
-  addRelationship: () => {},
-  deleteRelationship: () => {},
-  database: DB.GENERIC,
-  setDatabase: () => {},
-});
+} | null>(null);
 
 export default function DiagramContextProvider({
   children,

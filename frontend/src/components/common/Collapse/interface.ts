@@ -1,9 +1,7 @@
-import React from "react";
-
 export interface CollapseProps {
   activeKey?: string;
   onChange?: (activeKey: string, e: any) => void;
-  children: React.ReactNode;
+  // children: React.ReactNode;
   // expandIcon?: any;
   // collapseIcon?: any;
   // style?: any;

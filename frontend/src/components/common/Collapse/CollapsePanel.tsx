@@ -5,6 +5,8 @@ import {
   AccordionSummary,
   Typography,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import { CollapseContext } from './context';
 
 type CollapsePanelProps = {
@@ -17,7 +19,7 @@ type CollapsePanelProps = {
 
 export function CollapsePanel({
   children,
-                                header,
+  header,
   itemKey,
   className,
 }: CollapsePanelProps) {
@@ -29,32 +31,34 @@ export function CollapsePanel({
     }
   };
 
-  console.log("collapseContext >> ", collapseContext)
-  console.log("props >> ", {
+  console.log('collapseContext >> ', collapseContext);
+  console.log('props >> ', {
     children,
     header,
     itemKey,
     className,
-  })
-  console.log("Header >> ", header)
+  });
+  // console.log('Header >> ', header);
+  // console.log('Children >> ', children);
   const renderHeader = () => {
     if (typeof header === 'string') {
-      console.log("Typeof header >> ", typeof header)
       return <Typography>{header}</Typography>;
     }
-    return 'hahah'
+    return header as React.ReactNode;
     // return header;
-  }
+  };
   return (
     <Accordion
       key={itemKey}
       onClick={(e) => handleClick(itemKey, e)}
       className={className}
     >
-      <AccordionSummary>
-        hello
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        {renderHeader()}
       </AccordionSummary>
-      <AccordionDetails>{children}</AccordionDetails>
+      <AccordionDetails>
+        <div>{children}</div>
+      </AccordionDetails>
     </Accordion>
   );
 }

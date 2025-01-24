@@ -77,6 +77,102 @@ export default function Table(props: TableProps) {
     }
   };
 
+  function field(fieldData, index) {
+    return (
+      <div
+        className={`${
+          index === tableData.fields.length - 1
+            ? ''
+            : 'border-b border-gray-400'
+        } group h-[36px] px-2 py-1 flex justify-between items-center gap-1 w-full overflow-hidden`}
+        onPointerEnter={(e) => {
+          if (!e.isPrimary) return;
+
+          setHoveredField(index);
+          setHoveredTable({
+            tableId: tableData.id,
+            field: index,
+          });
+        }}
+        onPointerLeave={(e) => {
+          if (!e.isPrimary) return;
+
+          setHoveredField(-1);
+        }}
+        onPointerDown={(e) => {
+          // Required for onPointerLeave to trigger when a touch pointer leaves
+          // https://stackoverflow.com/a/70976017/1137077
+          e.target.releasePointerCapture(e.pointerId);
+        }}
+      >
+        <div
+          className={`${
+            hoveredField === index ? 'text-zinc-400' : ''
+          } flex items-center gap-2 overflow-hidden`}
+        >
+          <button
+            className="flex-shrink-0 w-[10px] h-[10px] bg-[#2f68adcc] rounded-full"
+            onPointerDown={(e) => {
+              if (!e.isPrimary) return;
+
+              handleGripField(index);
+              setLinkingLine((prev) => ({
+                ...prev,
+                startFieldId: index,
+                startTableId: tableData.id,
+                startX: tableData.x + 15,
+                startY:
+                  tableData.y +
+                  index * tableFieldHeight +
+                  tableHeaderHeight +
+                  tableColorStripHeight +
+                  12,
+                endX: tableData.x + 15,
+                endY:
+                  tableData.y +
+                  index * tableFieldHeight +
+                  tableHeaderHeight +
+                  tableColorStripHeight +
+                  12,
+              }));
+            }}
+          />
+          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+            {fieldData.name}
+          </span>
+        </div>
+        <div className="text-zinc-400">
+          {hoveredField === index ? (
+            <Button
+              variant={'contained'}
+              // theme="solid"
+              // size="small"
+              style={{
+                backgroundColor: '#d42020b3',
+              }}
+              startIcon={<Iconify icon="ic:baseline-minus" />}
+              onClick={() => deleteField(fieldData, tableData.id)}
+            />
+          ) : (
+            <div className="flex gap-1 items-center">
+              {fieldData.primary && <Iconify icon="material-symbols:key-off" />}
+              {!fieldData.notNull && <span>?</span>}
+              <span>
+                {fieldData.type +
+                  ((dbToTypes?.[database]?.[fieldData?.type]?.isSized ||
+                    dbToTypes?.[database]?.[fieldData?.type]?.hasPrecision) &&
+                  fieldData.size &&
+                  fieldData.size !== ''
+                    ? '(' + fieldData.size + ')'
+                    : '')}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <foreignObject
@@ -115,33 +211,37 @@ export default function Table(props: TableProps) {
             <div className=" px-3 overflow-hidden text-ellipsis whitespace-nowrap">
               {tableData.name}
             </div>
-            <div className="hidden group-hover:block">
+            <div className="group-hover:block">
               <div className="flex justify-end items-center mx-2">
                 <Button
-                  startIcon={<Iconify icon="lucide:edit" />}
                   size="small"
+                  className="!min-w-0 !w-[36px] flex !justify-center"
                   style={{
                     backgroundColor: '#2f68adb3',
                     marginRight: '6px',
                   }}
                   onClick={openEditor}
-                />
+                >
+                  <Iconify icon="lucide:edit" />
+                </Button>
                 <Popover
                   key={tableData.key}
                   buttonElement={
                     <Button
-                      startIcon={<Iconify icon="ic:round-more-vert" />}
                       size="small"
+                      className="!min-w-0 !w-[36px] flex !justify-center"
                       style={{
                         backgroundColor: '#808080b3',
                         color: 'white',
                       }}
-                    />
+                    >
+                      <Iconify icon="ic:round-more-vert" />
+                    </Button>
                   }
                   position="topRight"
                   // showArrow
                   // trigger="click"
-                  style={{ width: '200px', wordBreak: 'break-word' }}
+                  // style={{ width: '200px', wordBreak: 'break-word' }}
                 >
                   <div className="popover-theme">
                     <div className="mb-2">
@@ -176,7 +276,11 @@ export default function Table(props: TableProps) {
                               <i className="fa-solid fa-thumbtack me-2 mt-1 text-slate-500"></i>
                               <div>
                                 {index.fields.map((f) => (
-                                  <Chip color="blue" key={f} className="me-1">
+                                  <Chip
+                                    color="secondary"
+                                    key={f}
+                                    className="me-1"
+                                  >
                                     {f}
                                   </Chip>
                                 ))}
@@ -296,100 +400,4 @@ export default function Table(props: TableProps) {
       </Drawer>
     </>
   );
-
-  function field(fieldData, index) {
-    return (
-      <div
-        className={`${
-          index === tableData.fields.length - 1
-            ? ''
-            : 'border-b border-gray-400'
-        } group h-[36px] px-2 py-1 flex justify-between items-center gap-1 w-full overflow-hidden`}
-        onPointerEnter={(e) => {
-          if (!e.isPrimary) return;
-
-          setHoveredField(index);
-          setHoveredTable({
-            tableId: tableData.id,
-            field: index,
-          });
-        }}
-        onPointerLeave={(e) => {
-          if (!e.isPrimary) return;
-
-          setHoveredField(-1);
-        }}
-        onPointerDown={(e) => {
-          // Required for onPointerLeave to trigger when a touch pointer leaves
-          // https://stackoverflow.com/a/70976017/1137077
-          e.target.releasePointerCapture(e.pointerId);
-        }}
-      >
-        <div
-          className={`${
-            hoveredField === index ? 'text-zinc-400' : ''
-          } flex items-center gap-2 overflow-hidden`}
-        >
-          <button
-            className="flex-shrink-0 w-[10px] h-[10px] bg-[#2f68adcc] rounded-full"
-            onPointerDown={(e) => {
-              if (!e.isPrimary) return;
-
-              handleGripField(index);
-              setLinkingLine((prev) => ({
-                ...prev,
-                startFieldId: index,
-                startTableId: tableData.id,
-                startX: tableData.x + 15,
-                startY:
-                  tableData.y +
-                  index * tableFieldHeight +
-                  tableHeaderHeight +
-                  tableColorStripHeight +
-                  12,
-                endX: tableData.x + 15,
-                endY:
-                  tableData.y +
-                  index * tableFieldHeight +
-                  tableHeaderHeight +
-                  tableColorStripHeight +
-                  12,
-              }));
-            }}
-          />
-          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-            {fieldData.name}
-          </span>
-        </div>
-        <div className="text-zinc-400">
-          {hoveredField === index ? (
-            <Button
-              variant={'contained'}
-              // theme="solid"
-              // size="small"
-              style={{
-                backgroundColor: '#d42020b3',
-              }}
-              startIcon={<Iconify icon="ic:baseline-minus" />}
-              onClick={() => deleteField(fieldData, tableData.id)}
-            />
-          ) : (
-            <div className="flex gap-1 items-center">
-              {fieldData.primary && <Iconify icon="material-symbols:key-off" />}
-              {!fieldData.notNull && <span>?</span>}
-              <span>
-                {fieldData.type +
-                  ((dbToTypes?.[database]?.[fieldData?.type]?.isSized ||
-                    dbToTypes?.[database]?.[fieldData?.type]?.hasPrecision) &&
-                  fieldData.size &&
-                  fieldData.size !== ''
-                    ? '(' + fieldData.size + ')'
-                    : '')}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
 }

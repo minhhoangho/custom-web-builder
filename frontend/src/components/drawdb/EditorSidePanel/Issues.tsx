@@ -10,7 +10,7 @@ import {
 } from 'src/containers/Editor/hooks';
 import { arrayIsEqual } from 'src/utils/common';
 import { getIssues } from 'src/utils/issues';
-import { Collapse } from '@components/common';
+import { Collapse, Iconify } from '@components/common';
 
 export default function Issues() {
   const { types } = useType();
@@ -53,7 +53,7 @@ export default function Issues() {
             className="mt-1"
           >
             <div className="pe-3 select-none">
-              <i className="fa-solid fa-triangle-exclamation me-2 text-yellow-500" />
+              <Iconify icon="twemoji:warning" className="mr-2" />
               {t('issues')}
             </div>
           </Badge>

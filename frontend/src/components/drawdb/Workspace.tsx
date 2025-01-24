@@ -78,42 +78,23 @@ export const IdContext = createContext<{
 
 export default function WorkSpace() {
   const [id, setId] = useState(0);
-  console.log('----------------------');
-  console.log('id:', id);
   const [gistId, setGistId] = useState('');
-  console.log('gistId:', gistId);
   const [loadedFromGistId, setLoadedFromGistId] = useState('');
-  console.log('loadedFromGistId:', loadedFromGistId);
   const [title, setTitle] = useState<string>('Untitled Diagram');
-  console.log('title:', title);
   const [resize, setResize] = useState<boolean>(false);
-  console.log('resize:', resize);
   const [width, setWidth] = useState(340);
-  console.log('width:', width);
   const [lastSaved, setLastSaved] = useState<string>('');
-  console.log('lastSaved:', lastSaved);
   const [showSelectDbModal, setShowSelectDbModal] = useState<boolean>(false);
-  console.log('showSelectDbModal:', showSelectDbModal);
   const [selectedDb, setSelectedDb] = useState<string>('');
-  console.log('selectedDb:', selectedDb);
   const { layout } = useLayout();
-  console.log('layout:', layout);
   const { settings } = useSettings();
-  console.log('settings:', settings);
   const { types, setTypes } = useType();
-  console.log('types:', types);
   const { areas, setAreas } = useArea();
-  console.log('areas:', areas);
   const { tasks, setTasks } = useTasks();
-  console.log('tasks:', tasks);
   const { notes, setNotes } = useNote();
-  console.log('notes:', notes);
   const { saveState, setSaveState } = useSaveState();
-  console.log('saveState:', saveState);
   const { transform, setTransform } = useTransform();
-  console.log('transform:', transform);
   const { enums, setEnums } = useEnum();
-  console.log('enums:', enums);
 
   const {
     tables,
@@ -123,13 +104,32 @@ export default function WorkSpace() {
     database,
     setDatabase,
   } = useDiagram();
-  console.log('tables:', tables);
-  console.log('relationships:', relationships);
-  console.log('database:', database);
   const { undoStack, redoStack, setUndoStack, setRedoStack } = useUndoRedo();
-  console.log('undoStack:', undoStack);
-  console.log('redoStack:', redoStack);
-  console.log('----------------------');
+  // console.log('----------------------');
+  // console.log('id:', id);
+  // console.log('gistId:', gistId);
+  // console.log('loadedFromGistId:', loadedFromGistId);
+  // console.log('title:', title);
+  // console.log('resize:', resize);
+  // console.log('width:', width);
+  // console.log('lastSaved:', lastSaved);
+  // console.log('showSelectDbModal:', showSelectDbModal);
+  // console.log('selectedDb:', selectedDb);
+  // console.log('layout:', layout);
+  // console.log('settings:', settings);
+  // console.log('types:', types);
+  // console.log('areas:', areas);
+  // console.log('tasks:', tasks);
+  // console.log('notes:', notes);
+  // console.log('saveState:', saveState);
+  // console.log('transform:', transform);
+  // console.log('enums:', enums);
+  // console.log('tables:', tables);
+  // console.log('relationships:', relationships);
+  // console.log('database:', database);
+  // console.log('undoStack:', undoStack);
+  // console.log('redoStack:', redoStack);
+  // console.log('----------------------');
   // const { t, i18n } = useTranslation();
 
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -490,7 +490,8 @@ export default function WorkSpace() {
         )}
         <div className="relative w-full h-full overflow-hidden">
           <CanvasContextProvider className="h-full w-full">
-            <Canvas saveState={saveState} setSaveState={setSaveState} />
+            {/*<Canvas saveState={saveState} setSaveState={setSaveState} />*/}
+            <Canvas />
           </CanvasContextProvider>
           {!(layout.sidebar || layout.toolbar || layout.header) && (
             <div className="fixed right-5 bottom-4">

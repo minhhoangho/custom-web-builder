@@ -7,18 +7,7 @@ export const SelectContext = createContext<{
   setSelectedElement: React.Dispatch<
     React.SetStateAction<EditorSelectInterface>
   >;
-}>({
-  selectedElement: {
-    element: ObjectType.NONE,
-    id: -1,
-    openDialogue: false,
-    openCollapse: false,
-    currentTab: Tab.TABLES,
-    open: false,
-    openFromToolbar: false,
-  },
-  setSelectedElement: () => {},
-});
+} | null>(null);
 
 export default function SelectContextProvider({
   children,

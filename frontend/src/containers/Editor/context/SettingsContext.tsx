@@ -14,13 +14,7 @@ const DEFAULT_SETTINGS: EditorSettingsInterface = {
   showDebugCoordinates: false,
 };
 
-export const SettingsContext = createContext<{
-  settings: EditorSettingsInterface;
-  setSettings: React.Dispatch<React.SetStateAction<EditorSettingsInterface>>;
-}>({
-  settings: DEFAULT_SETTINGS,
-  setSettings: () => {},
-});
+export const SettingsContext = createContext(DEFAULT_SETTINGS);
 
 export default function SettingsContextProvider({
   children,

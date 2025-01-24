@@ -11,13 +11,7 @@ export const AreasContext = createContext<{
   updateArea: (id: number, values: Partial<DArea>) => void;
   addArea: (data?: Partial<DArea> | null, addToHistory?: boolean) => void;
   deleteArea: (id: number, addToHistory?: boolean) => void;
-}>({
-  areas: [],
-  setAreas: () => {},
-  updateArea: () => {},
-  addArea: () => {},
-  deleteArea: () => {},
-});
+} | null>(null);
 
 export default function AreasContextProvider({
   children,

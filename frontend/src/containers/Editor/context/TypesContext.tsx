@@ -12,13 +12,7 @@ export const TypesContext = createContext<{
   addType: (data: DType, addToHistory?: boolean) => void;
   updateType: (id: number, values: Partial<DType>) => void;
   deleteType: (id: number, addToHistory?: boolean) => void;
-}>({
-  types: [],
-  setTypes: () => {},
-  addType: () => {},
-  updateType: () => {},
-  deleteType: () => {},
-});
+} | null>(null);
 
 export default function TypesContextProvider({
   children,
