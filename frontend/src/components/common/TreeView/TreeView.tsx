@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Iconify } from '@components/common';
+import { Input } from '@components/form/Input';
 
 export interface TreeNodeProps {
   node: TreeNode;
@@ -8,11 +9,13 @@ export interface TreeNodeProps {
 }
 
 export interface TreeNode {
-  id: number;
+  id: number | string;
   key: string;
   label: string;
   value: string;
   children?: TreeNode[];
+
+  [key: string]: any;
 }
 
 export interface TreeViewProps {
@@ -37,21 +40,22 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
   return (
     <div>
       <div
-        className={`flex justify-between items-center ${isMatch ? 'font-bold' : ''}`}
+        className={`h-7 ease-linear transition-all duration-200 cursor-pointer hover:bg-sky-100 flex items-center ${isMatch ? 'font-bold' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
       >
-        <span>{node.label}</span>
         {hasChildren && (
-          <button onClick={() => setIsOpen(!isOpen)} className="ml-2">
+          <div className="flex items-center p-1 bg-transparent hover:bg-sky-100 rounded  border-0 cursor-pointer">
             {isOpen ? (
-              <Iconify icon="mdi:chevron-up" />
-            ) : (
               <Iconify icon="mdi:chevron-down" />
+            ) : (
+              <Iconify icon="mdi:chevron-right" />
             )}
-          </button>
+          </div>
         )}
+        <div className="text-neutral-900 font-normal">{node.label}</div>
       </div>
       {isOpen && hasChildren && (
-        <div className="ml-4">
+        <div className="h-7 pl-9 hover:bg-sky-100 flex items-center">
           {node.children?.map((childNode: TreeNode) => (
             <TreeNode
               key={childNode.id}
@@ -66,31 +70,79 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
   );
 };
 
+const filterTree = (nodes: TreeNode[], term: string): TreeNode[] => {
+  return nodes
+    .map((node) => {
+      if (!term) return null;
+      if (node.value.toLowerCase().includes(term.toLowerCase())) {
+        return node;
+      }
+
+      if (node.children) {
+        const filteredChildren = filterTree(node.children, term);
+        if (filteredChildren.length > 0) {
+          return { ...node, children: filteredChildren };
+        }
+      }
+
+      return null;
+    })
+    .filter((node) => node !== null);
+};
+
 export const TreeView: React.FC<TreeViewProps> = ({
   data,
   onNodeFocus,
 }: TreeViewProps) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
+  const filteredData = useMemo(
+    () => filterTree(data, searchTerm),
+    [data, filterTree, searchTerm],
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef?.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setSearchTerm('');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [containerRef]);
   return (
-    <div className="my-2 mx-3">
-      <input
-        type="text"
-        placeholder="Search..."
+    <div className="relative" ref={containerRef}>
+      <Input
+        placeholder="Search"
+        onInputChange={(value) => setSearchTerm(value)}
+        className="border-gray-400 hover:border-blue-200 focus:border-blue-200 w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border rounded-md transition duration-300 ease"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="h-9 border-gray-400 hover:border-blue-300 focus:border-blue-500 w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border rounded-md px-3 py-1 transition duration-300 ease shadow-sm"
       />
-      <div>
-        {data.map((node) => (
-          <TreeNode
-            key={node.id}
-            node={node}
-            searchTerm={searchTerm}
-            onNodeFocus={onNodeFocus}
-          />
-        ))}
-      </div>
+      {filteredData.length !== 0 && (
+        <div
+          className="py-2 absolute top-11 w-full z-10 bg-white rounded text-sm"
+          style={{
+            boxShadow:
+              'rgba(0, 0, 0, 0.3) 0px 0px 1px 0px, rgba(0, 0, 0, 0.1) 0px 4px 14px 0px',
+          }}
+        >
+          {filteredData.map((node) => (
+            <TreeNode
+              key={node.id}
+              node={node}
+              searchTerm={searchTerm}
+              onNodeFocus={onNodeFocus}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -120,12 +120,13 @@ export function Popover({
   }, [onClickOutSide]);
 
   return (
-    <div ref={popoverRef} style={style}>
+    <div style={style}>
       <div onClick={handleClick}>{buttonElement}</div>
       <MuiPopover
         open={visible ?? open}
         anchorEl={anchorEl}
         onClose={handleClose}
+        ref={popoverRef}
         anchorOrigin={mapPositionToAnchorOrigin(position)}
       >
         <div className={clsx('p-3 text-sm text-wrap w-[200px]', className)}>

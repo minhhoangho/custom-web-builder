@@ -46,6 +46,8 @@ export const SelectField = ({
         {label} {isRequired && <sup className="text-red-500 text-xs">*</sup>}
       </InputLabel>
       <Select
+        size="small"
+        variant="outlined"
         labelId={labelNameId}
         multiple={multiple}
         name={name}
@@ -53,7 +55,7 @@ export const SelectField = ({
         label={label}
         onChange={onSelectChange}
         className={classNames(
-          'relative w-full',
+          'relative w-full !rounded',
           styles['select-input'],
           selectElementClassName,
         )}

@@ -62,8 +62,8 @@ export const Input = React.forwardRef<
           ref={ref as React.RefObject<HTMLTextAreaElement>}
           style={{ border: '1px solid #e0e0e0' }}
           className={classNames(
-            'border-1 px-3 py-3 placeholder-blueGray-300 rounded-xl text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150' as any,
-            inputElementClassName as any,
+            'border-1 px-3 py-3 placeholder-blueGray-300 rounded-xl text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150' as string,
+            inputElementClassName as string,
           )}
           autoComplete={autoComplete}
           value={value ?? defaultValue}
@@ -78,9 +78,9 @@ export const Input = React.forwardRef<
             // style={{ border: '1px solid #e0e0e0' }}
             className={classNames(
               // 'border-1 px-3 py-3 placeholder-blueGray-300 rounded-xl text-sm shadow-sm focus:outline-none focus:ring focus:border-0 w-full ease-linear transition-all duration-150',
-              'w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border  rounded-md px-3 py-2 transition duration-300 ease shadow-sm' as any,
+              'w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border rounded-md px-2 py-2 transition duration-300 ease shadow-sm' as string,
               styles['input'],
-              inputElementClassName as any,
+              inputElementClassName as string,
             )}
             autoComplete={autoComplete}
             value={value ?? defaultValue}

@@ -1,7 +1,8 @@
 // import { Button, Popover, Select } from '@douyinfe/semi-ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid, Button } from '@mui/material';
+import { Grid } from '@mui/material';
+import clsx from 'clsx';
 import { Iconify, Popover, SelectField as Select } from '@components/common';
 import { Input } from '@components/form/Input';
 import {
@@ -22,10 +23,10 @@ export default function TableField({ data, tid, index }) {
   const { t } = useTranslation();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState({});
-
+  console.log('Table field data ', data);
   return (
-    <Grid container spacing={3} className="hover-1 my-2">
-      <Grid item xs={2}>
+    <Grid container spacing={0.5} className="hover-1 my-2">
+      <Grid item xs={3}>
         <Input
           // id={`scroll_table_${tid}_input_${index}`}
           value={data.name}
@@ -55,9 +56,9 @@ export default function TableField({ data, tid, index }) {
           }}
         />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={4.5}>
         <Select
-          className="w-full"
+          className="w-full h-9"
           options={[
             ...Object.keys(dbToTypes?.[database] ?? {})?.map((value) => ({
               label: value,
@@ -75,8 +76,10 @@ export default function TableField({ data, tid, index }) {
           // filter
           value={data.type}
           // validateStatus={data.type === '' ? 'error' : 'default'}
-          placeholder="Type"
-          onSelectChange={(value) => {
+          // placeholder="Type"
+          onSelectChange={(event) => {
+            const value: string = event.target.value;
+            console.log('Value change select', value);
             if (value === data.type) return;
             setUndoStack((prev) => [
               ...prev,
@@ -139,9 +142,13 @@ export default function TableField({ data, tid, index }) {
           }}
         />
       </Grid>
-      <Grid item xs={2}>
-        <Button
-          color={data.notNull ? 'primary' : 'info'}
+      <Grid item xs={1.5}>
+        <button
+          // color={data.notNull ? 'primary' : 'info'}
+          className={clsx(
+            'p-2 !rounded cursor-pointer hover:shadow font-bold text-md w-9 h-9',
+            data.notNull ? '!bg-blue-600 text-white' : '!bg-gray-200',
+          )}
           // theme={data.notNull ? 'solid' : 'light'}
           onClick={() => {
             setUndoStack((prev) => [
@@ -164,13 +171,17 @@ export default function TableField({ data, tid, index }) {
             updateField(tid, index, { notNull: !data.notNull });
           }}
         >
-          Not null ?
-        </Button>
+          ?
+        </button>
       </Grid>
-      <Grid item xs={2}>
-        <Button
-          variant={data.primary ? 'text' : 'contained'}
+      <Grid item xs={1.5}>
+        <button
+          // variant={data.primary ? 'text' : 'contained'}
           // theme={data.primary ? 'solid' : 'light'}
+          className={clsx(
+            'p-1 !rounded cursor-pointer hover:shadow w-9 h-9',
+            data.primary ? '!bg-blue-600 text-white' : '!bg-gray-200',
+          )}
           onClick={() => {
             setUndoStack((prev) => [
               ...prev,
@@ -191,21 +202,21 @@ export default function TableField({ data, tid, index }) {
             setRedoStack([]);
             updateField(tid, index, { primary: !data.primary });
           }}
-          startIcon={<Iconify icon="mdi:key-outline" />}
+          // startIcon={<Iconify icon="mdi:key-outline" />}
         >
-          {t('primary')}
-        </Button>
+          <Iconify icon="mdi:key-outline" />
+        </button>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={1.5}>
         <Popover
           buttonElement={
-            <Button
-              variant="outlined"
-              startIcon={<Iconify icon="ic:round-more-vert" />}
-            />
+            <button className="p-1 !rounded cursor-pointer hover:shadow w-9 h-9 bg-gray-200">
+              <Iconify icon="ic:round-more-vert" />
+            </button>
           }
           // trigger="click"
           position="right"
+          className="!w-[260px]"
           // showArrow
         >
           <div className="px-1 w-[240px] popover-theme">

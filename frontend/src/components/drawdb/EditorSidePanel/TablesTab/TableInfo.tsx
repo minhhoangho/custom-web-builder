@@ -28,10 +28,10 @@ export default function TableInfo({ data }: { data: DTable }) {
     draggingOverIndexList: [],
   });
 
-  console.log('DEBUG: TableInfo -> data', data);
-  console.log('DEBUG: TableInfo -> editField', editField);
-  console.log('DEBUG: TableInfo -> drag', drag);
-  console.log('DEBUG: TableInfo -> indexActiveKey', indexActiveKey);
+  // console.log('DEBUG: TableInfo -> data', data);
+  // console.log('DEBUG: TableInfo -> editField', editField);
+  // console.log('DEBUG: TableInfo -> drag', drag);
+  // console.log('DEBUG: TableInfo -> indexActiveKey', indexActiveKey);
 
   return (
     <div>
@@ -189,18 +189,18 @@ export default function TableInfo({ data }: { data: DTable }) {
       )}
       <div
         // bodyStyle={{ padding: '4px' }}
-        style={{ marginTop: '12px', marginBottom: '12px' }}
+        className="my-3 p-1 rounded border-[1px] border-gray-200"
         // headerLine={false}
       >
         <Collapse>
-          <Collapse.Panel header="comment" itemKey="1">
+          <Collapse.Panel header={t('comment')} itemKey="1">
             <div>
               <Input
                 isTextarea
                 name="comment"
                 value={data.comment}
                 // autosize
-                placeholder="comment"
+                placeholder={t('comment')}
                 // rows={1}
                 onInputChange={(value) =>
                   updateTable(data.id, { comment: value }, false)
@@ -283,7 +283,8 @@ export default function TableInfo({ data }: { data: DTable }) {
         </div>
         <div className="flex gap-1">
           <Button
-            // block
+            variant="contained"
+            className="!bg-gray-200 !text-blue-500 !px-1.5 !rounded"
             onClick={() => {
               setIndexActiveKey('1');
               setUndoStack((prev) => [
@@ -313,6 +314,8 @@ export default function TableInfo({ data }: { data: DTable }) {
             {t('add_index')}
           </Button>
           <Button
+            variant="contained"
+            className="!bg-gray-200 !text-blue-500 !px-1.5 !rounded"
             onClick={() => {
               setUndoStack((prev) => [
                 ...prev,
@@ -347,11 +350,13 @@ export default function TableInfo({ data }: { data: DTable }) {
           >
             {t('add_field')}
           </Button>
-          <Button
-            startIcon={<Iconify icon="mdi:delete-outline" />}
+          <button
+            className="!bg-gray-200 !text-red-500 !px-1.5 !rounded w-9 cursor-pointer hover:shadow"
             color="error"
             onClick={() => deleteTable(data.id)}
-          />
+          >
+            <Iconify icon="mdi:delete-outline" />
+          </button>
         </div>
       </div>
     </div>

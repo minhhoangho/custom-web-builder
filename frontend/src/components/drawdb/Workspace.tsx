@@ -82,7 +82,7 @@ export default function WorkSpace() {
   const [loadedFromGistId, setLoadedFromGistId] = useState('');
   const [title, setTitle] = useState<string>('Untitled Diagram');
   const [resize, setResize] = useState<boolean>(false);
-  const [width, setWidth] = useState(340);
+  const [width, setWidth] = useState(360);
   const [lastSaved, setLastSaved] = useState<string>('');
   const [showSelectDbModal, setShowSelectDbModal] = useState<boolean>(false);
   const [selectedDb, setSelectedDb] = useState<string>('');
@@ -452,19 +452,19 @@ export default function WorkSpace() {
     setSaveState,
   ]);
 
-  console.log('WATCH undoStack', undoStack);
-  console.log('WATCH redoStack', redoStack);
-  console.log('WATCH settings.autosave', settings.autosave);
-  console.log('WATCH tables?.length', tables?.length);
-  console.log('WATCH areas?.length', areas?.length);
-  console.log('WATCH notes?.length', notes?.length);
-  console.log('WATCH types?.length', types?.length);
-  console.log('WATCH relationships?.length', relationships?.length);
-  console.log('WATCH tasks?.length', tasks?.length);
-  console.log('WATCH transform.zoom', transform.zoom);
-  console.log('WATCH title', title);
-  console.log('WATCH gistId', gistId);
-  console.log('WATCH setSaveState', setSaveState);
+  // console.log('WATCH undoStack', undoStack);
+  // console.log('WATCH redoStack', redoStack);
+  // console.log('WATCH settings.autosave', settings.autosave);
+  // console.log('WATCH tables?.length', tables?.length);
+  // console.log('WATCH areas?.length', areas?.length);
+  // console.log('WATCH notes?.length', notes?.length);
+  // console.log('WATCH types?.length', types?.length);
+  // console.log('WATCH relationships?.length', relationships?.length);
+  // console.log('WATCH tasks?.length', tasks?.length);
+  // console.log('WATCH transform.zoom', transform.zoom);
+  // console.log('WATCH title', title);
+  // console.log('WATCH gistId', gistId);
+  // console.log('WATCH setSaveState', setSaveState);
 
   useEffect(() => {
     save();
@@ -477,7 +477,7 @@ export default function WorkSpace() {
   }, [load]);
 
   return (
-    <div className="h-screen w-full flex flex-col overflow-hidden theme">
+    <div className="h-screen w-full flex flex-col overflow-hidden theme bg-white">
       <IdContext.Provider value={{ gistId, setGistId }}>
         <ControlPanel
           diagramId={id}

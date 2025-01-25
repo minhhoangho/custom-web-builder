@@ -17,7 +17,7 @@ export default function TablesTab() {
   return (
     <>
       <div className="flex gap-2 flex-col">
-        <div className="my-2 mx-3">
+        <div className="">
           <Button
             startIcon={<Iconify icon="mdi:plus" />}
             variant="contained"
@@ -56,25 +56,27 @@ export default function TablesTab() {
               }}
               // accordion
             >
-              <div id={`scroll_table_${_table.id}`} key={_table.id}>
+              <div
+                id={`scroll_table_${_table.id}`}
+                key={_table.id}
+                className="mt-1 relative"
+              >
                 <Collapse.Panel
-                  className="relative"
                   header={
-                    <div>
+                    <div className="h-8">
                       <div className="overflow-hidden text-ellipsis whitespace-nowrap">
                         {_table.name}
                       </div>
-                      <div
-                        className="w-1 h-full absolute top-0 left-0 bottom-0"
-                        style={{ backgroundColor: _table.color }}
-                      />
                     </div>
                   }
                   itemKey={`${_table.id}`}
                 >
                   <TableInfo data={_table} />
-                  {/*<div>Table ìno</div>*/}
                 </Collapse.Panel>
+                <div
+                  className="w-1 h-full absolute top-0 left-0 bottom-0"
+                  style={{ backgroundColor: _table.color }}
+                />
               </div>
             </Collapse>
           ))}

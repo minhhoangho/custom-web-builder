@@ -30,6 +30,7 @@ function CustomTabPanel(props: TabPanelProps) {
       hidden={value !== itemKey}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      className="p-2"
     >
       {value === itemKey && children}
     </div>
@@ -103,12 +104,13 @@ export default function SidePanel({
   return (
     <div className="flex h-full">
       <div
-        className="flex flex-col h-full relative border-r border-color"
+        className="flex flex-col h-full relative border-r border-gray-200"
         style={{ width: `${width}px` }}
       >
         <div className="h-full flex-1 overflow-y-auto">
           <Tabs
             value={selectedTab}
+            className="overflow-x-auto"
             onChange={(_e, key) => {
               setSelectedElement((prev) => ({ ...prev, currentTab: key }));
               setSelectedTab(key as string);
@@ -136,20 +138,20 @@ export default function SidePanel({
           ))}
         </div>
         {layout.issues && (
-          <div className="mt-auto border-t-2 border-color shadow-inner">
+          <div className="mt-auto border-t-2 border-gray-200 shadow-inner">
             <Issues />
           </div>
         )}
       </div>
 
-      <div
-        className={`flex justify-center items-center p-1 h-auto hover:bg-gray-300 cursor-col-resize ${
-          resize && 'bg-semi-grey-2'
-        }`}
-        onPointerDown={(e) => e.isPrimary && setResize(true)}
-      >
-        <div className="w-1 border-x border-color h-1/6" />
-      </div>
+      {/*<div*/}
+      {/*  className={`flex justify-center items-center p-1 h-auto hover:bg-gray-300 cursor-col-resize ${*/}
+      {/*    resize && 'bg-semi-grey-2'*/}
+      {/*  }`}*/}
+      {/*  onPointerDown={(e) => e.isPrimary && setResize(true)}*/}
+      {/*>*/}
+      {/*  <div className="w-1 border-x border-gray-200 h-1/6" />*/}
+      {/*</div>*/}
     </div>
   );
 }

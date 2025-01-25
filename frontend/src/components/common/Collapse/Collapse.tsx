@@ -10,7 +10,6 @@ export interface CollapseReactProps extends CollapseProps {
 }
 
 function Collapse({ children, onChange, activeKey }: CollapseReactProps) {
-  console.log('Collapse sssssss >> activeKey', activeKey);
   return (
     <div>
       <CollapseContext.Provider

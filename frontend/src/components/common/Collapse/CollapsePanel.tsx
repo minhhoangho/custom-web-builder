@@ -1,12 +1,8 @@
 import React from 'react';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Typography,
-} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import clsx from 'clsx';
 import { CollapseContext } from './context';
 
 type CollapsePanelProps = {
@@ -31,30 +27,14 @@ export function CollapsePanel({
     }
   };
 
-  console.log('collapseContext >> ', collapseContext);
-  console.log('props >> ', {
-    children,
-    header,
-    itemKey,
-    className,
-  });
-  // console.log('Header >> ', header);
-  // console.log('Children >> ', children);
-  const renderHeader = () => {
-    if (typeof header === 'string') {
-      return <Typography>{header}</Typography>;
-    }
-    return header as React.ReactNode;
-    // return header;
-  };
   return (
     <Accordion
       key={itemKey}
       onClick={(e) => handleClick(itemKey, e)}
-      className={className}
+      className={clsx('!rounded-none text-sm', className)}
     >
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        {renderHeader()}
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} className="font-bold">
+        {header}
       </AccordionSummary>
       <AccordionDetails>
         <div>{children}</div>
