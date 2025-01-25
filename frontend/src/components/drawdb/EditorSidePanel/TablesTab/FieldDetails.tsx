@@ -7,13 +7,22 @@ import { dbToTypes } from 'src/data/datatypes';
 import { Action, ObjectType } from '@constants/editor';
 import { Iconify } from '@components/common';
 import { Input, TagInput } from '@components/form/Input';
+import { DField } from '../../../../data/interface';
 
-export default function FieldDetails({ data, tid, index }) {
+export default function FieldDetails({
+  data,
+  tid,
+  index,
+}: {
+  data: DField;
+  tid: number;
+  index: number;
+}) {
   const { t } = useTranslation();
   const { tables, database } = useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { updateField, deleteField } = useDiagram();
-  const [editField, setEditField] = useState({});
+  const [editField, setEditField] = useState<DField | any>({});
 
   return (
     <div>
@@ -37,10 +46,11 @@ export default function FieldDetails({ data, tid, index }) {
               fid: index,
               undo: editField,
               redo: { default: e.target.value },
-              message: t('edit_table', {
-                tableName: tables[tid].name,
-                extra: '[field]',
-              }),
+              // message: t('edit_table', {
+              //   tableName: tables[tid].name,
+              //   extra: '[field]',
+              // }),
+              message: t('edit_table'),
             },
           ]);
           setRedoStack([]);
@@ -58,7 +68,7 @@ export default function FieldDetails({ data, tid, index }) {
             // addOnBlur
             className="my-2"
             placeholder={t('use_for_batch_input')}
-            onChange={(v) => updateField(tid, index, { values: v })}
+            onInputChange={(v) => updateField(tid, index, { values: v })}
             onFocus={() => setEditField({ values: data.values })}
             onBlur={() => {
               if (
@@ -75,10 +85,11 @@ export default function FieldDetails({ data, tid, index }) {
                   fid: index,
                   undo: editField,
                   redo: { values: data.values },
-                  message: t('edit_table', {
-                    tableName: tables[tid].name,
-                    extra: '[field]',
-                  }),
+                  message: t('edit_table'),
+                  // message: t('edit_table', {
+                  //   tableName: tables[tid].name,
+                  //   extra: '[field]',
+                  // }),
                 },
               ]);
               setRedoStack([]);
@@ -86,14 +97,14 @@ export default function FieldDetails({ data, tid, index }) {
           />
         </>
       )}
-      {dbToTypes[database][data.type].isSized && (
+      {dbToTypes[database][data.type]?.isSized && (
         <>
           <div className="font-semibold">{t('size')}</div>
           <Input
             type="number"
             className="my-2 w-full"
             placeholder={t('size')}
-            value={data.size}
+            value={data.size as string}
             onInputChange={(value) => updateField(tid, index, { size: value })}
             onFocus={(e) => setEditField({ size: e.target.value })}
             onBlur={(e) => {
@@ -108,10 +119,11 @@ export default function FieldDetails({ data, tid, index }) {
                   fid: index,
                   undo: editField,
                   redo: { size: e.target.value },
-                  message: t('edit_table', {
-                    tableName: tables[tid].name,
-                    extra: '[field]',
-                  }),
+                  message: t('edit_table'),
+                  // message: t('edit_table', {
+                  //   tableName: tables[tid].name,
+                  //   extra: '[field]',
+                  // }),
                 },
               ]);
               setRedoStack([]);
@@ -119,7 +131,7 @@ export default function FieldDetails({ data, tid, index }) {
           />
         </>
       )}
-      {dbToTypes[database][data.type].hasPrecision && (
+      {dbToTypes[database][data.type]?.hasPrecision && (
         <>
           <div className="font-semibold">{t('precision')}</div>
           <Input
@@ -145,10 +157,11 @@ export default function FieldDetails({ data, tid, index }) {
                   fid: index,
                   undo: editField,
                   redo: { size: e.target.value },
-                  message: t('edit_table', {
-                    tableName: tables[tid].name,
-                    extra: '[field]',
-                  }),
+                  message: t('edit_table'),
+                  // message: t('edit_table', {
+                  //   tableName: tables[tid].name,
+                  //   extra: '[field]',
+                  // }),
                 },
               ]);
               setRedoStack([]);
@@ -156,7 +169,7 @@ export default function FieldDetails({ data, tid, index }) {
           />
         </>
       )}
-      {dbToTypes[database][data.type].hasCheck && (
+      {dbToTypes[database][data.type]?.hasCheck && (
         <>
           <div className="font-semibold">{t('check')}</div>
           <Input
@@ -178,10 +191,11 @@ export default function FieldDetails({ data, tid, index }) {
                   fid: index,
                   undo: editField,
                   redo: { check: e.target.value },
-                  message: t('edit_table', {
-                    tableName: tables[tid].name,
-                    extra: '[field]',
-                  }),
+                  message: t('edit_table'),
+                  // message: t('edit_table', {
+                  //   tableName: tables[tid].name,
+                  //   extra: '[field]',
+                  // }),
                 },
               ]);
               setRedoStack([]);
@@ -242,10 +256,11 @@ export default function FieldDetails({ data, tid, index }) {
                 redo: {
                   [checkedValues.target.value]: checkedValues.target.checked,
                 },
-                message: t('edit_table', {
-                  tableName: tables[tid].name,
-                  extra: '[field]',
-                }),
+                message: t('edit_table'),
+                // message: t('edit_table', {
+                //   tableName: tables[tid].name,
+                //   extra: '[field]',
+                // }),
               },
             ]);
             setRedoStack([]);
@@ -277,10 +292,11 @@ export default function FieldDetails({ data, tid, index }) {
                   redo: {
                     [checkedValues.target.value]: checkedValues.target.checked,
                   },
-                  message: t('edit_table', {
-                    tableName: tables[tid].name,
-                    extra: '[field]',
-                  }),
+                  message: t('edit_table'),
+                  // message: t('edit_table', {
+                  //   tableName: tables[tid].name,
+                  //   extra: '[field]',
+                  // }),
                 },
               ]);
               setRedoStack([]);
@@ -316,10 +332,11 @@ export default function FieldDetails({ data, tid, index }) {
                       [checkedValues.target.value]:
                         checkedValues.target.checked,
                     },
-                    message: t('edit_table', {
-                      tableName: tables[tid].name,
-                      extra: '[field]',
-                    }),
+                    message: t('edit_table'),
+                    // message: t('edit_table', {
+                    //   tableName: tables[tid].name,
+                    //   extra: '[field]',
+                    // }),
                   },
                 ]);
                 setRedoStack([]);
@@ -337,7 +354,6 @@ export default function FieldDetails({ data, tid, index }) {
         placeholder={t('comment')}
         value={data.comment}
         // autosize
-        rows={2}
         onInputChange={(value) => updateField(tid, index, { comment: value })}
         onFocus={(e) => setEditField({ comment: e.target.value })}
         onBlur={(e) => {
@@ -352,10 +368,11 @@ export default function FieldDetails({ data, tid, index }) {
               fid: index,
               undo: editField,
               redo: { comment: e.target.value },
-              message: t('edit_table', {
-                tableName: tables[tid].name,
-                extra: '[field]',
-              }),
+              message: t('edit_table'),
+              // message: t('edit_table', {
+              //   tableName: tables[tid].name,
+              //   extra: '[field]',
+              // }),
             },
           ]);
           setRedoStack([]);
@@ -363,9 +380,11 @@ export default function FieldDetails({ data, tid, index }) {
       />
       <Button
         startIcon={<Iconify icon="mdi:delete-outline" />}
+        variant="contained"
         color="error"
         // block
         onClick={() => deleteField(data, tid)}
+        className="w-full"
       >
         {t('delete')}
       </Button>

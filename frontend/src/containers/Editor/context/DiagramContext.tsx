@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react';
 import { toast } from '@components/common';
 import { Action, DB, defaultBlue, ObjectType } from '@constants/editor';
-import { DField, DRelationship, DTable } from 'src/data/interface';
+import { DBType, DField, DRelationship, DTable } from 'src/data/interface';
 import { useSelect, useTransform, useUndoRedo } from '../hooks';
 
 export const DiagramContext = createContext<{
@@ -16,8 +16,8 @@ export const DiagramContext = createContext<{
   setRelationships: (_relationships: DRelationship[]) => void;
   addRelationship: (_data: DRelationship, addToHistory?: boolean) => void;
   deleteRelationship: (id: number, addToHistory?: boolean) => void;
-  database: (typeof DB)[keyof typeof DB];
-  setDatabase: (dbName: (typeof DB)[keyof typeof DB]) => void;
+  database: DBType;
+  setDatabase: (dbName: DBType) => void;
 } | null>(null);
 
 export default function DiagramContextProvider({
@@ -25,9 +25,7 @@ export default function DiagramContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [database, setDatabase] = useState<(typeof DB)[keyof typeof DB]>(
-    DB.GENERIC,
-  );
+  const [database, setDatabase] = useState<DBType>(DB.GENERIC);
   const [tables, setTables] = useState<DTable[]>([]);
   const [relationships, setRelationships] = useState<DRelationship[]>([]);
   const { transform } = useTransform();

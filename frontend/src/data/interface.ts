@@ -1,4 +1,20 @@
-import { ObjectType } from '@constants/editor';
+import { DB, ObjectType } from '@constants/editor';
+import {
+  defaultTypes,
+  mssqlTypes,
+  mysqlTypes,
+  postgresTypes,
+  sqliteTypes,
+} from './datatypes';
+
+export type DDataType =
+  | keyof typeof defaultTypes
+  | keyof typeof mysqlTypes
+  | keyof typeof postgresTypes
+  | keyof typeof sqliteTypes
+  | keyof typeof mssqlTypes;
+
+export type DBType = (typeof DB)[keyof typeof DB];
 
 export interface DType {
   id?: number;
@@ -36,7 +52,7 @@ export interface DArea {
 
 export interface DField {
   name: string;
-  type: string;
+  type: DDataType;
   default: string;
   check: string;
   primary: boolean;
@@ -45,8 +61,9 @@ export interface DField {
   increment: boolean;
   comment: string;
   id: number;
-  size?: number | string; // optional, as not all fields have a size
+  size?: number; // optional, as not all fields have a size
   values?: any[]; // optional, as not all fields have values
+  isArray?: boolean; // optional, as not all fields are arrays
 }
 
 export interface DTable {
@@ -75,7 +92,7 @@ export interface DRelationship {
 
 export interface DTemplate {
   id?: number;
-  database: string;
+  database: DBType;
   tables: DTable[];
   relationships: DRelationship[];
   notes: DNote[]; // assuming notes can be of any type

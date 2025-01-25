@@ -1,5 +1,6 @@
 import { DB } from '@constants/editor';
 import { strHasQuotes } from 'src/utils/common';
+import { DField } from './interface';
 
 const intRegex = /^-?\d*$/;
 const doubleRegex = /^-?\d*.?\d+$/;
@@ -8,7 +9,7 @@ const binaryRegex = /^[01]+$/;
 const defaultTypesBase = {
   INT: {
     type: 'INT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -18,7 +19,7 @@ const defaultTypesBase = {
   },
   SMALLINT: {
     type: 'SMALLINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -28,7 +29,7 @@ const defaultTypesBase = {
   },
   BIGINT: {
     type: 'BIGINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     isSized: false,
@@ -38,7 +39,7 @@ const defaultTypesBase = {
   },
   DECIMAL: {
     type: 'DECIMAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -47,7 +48,7 @@ const defaultTypesBase = {
   },
   NUMERIC: {
     type: 'NUMERIC',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -56,7 +57,7 @@ const defaultTypesBase = {
   },
   FLOAT: {
     type: 'FLOAT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -65,7 +66,7 @@ const defaultTypesBase = {
   },
   DOUBLE: {
     type: 'DOUBLE',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -74,7 +75,7 @@ const defaultTypesBase = {
   },
   REAL: {
     type: 'REAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -83,7 +84,8 @@ const defaultTypesBase = {
   },
   CHAR: {
     type: 'CHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -97,7 +99,8 @@ const defaultTypesBase = {
   },
   VARCHAR: {
     type: 'VARCHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -111,7 +114,7 @@ const defaultTypesBase = {
   },
   TEXT: {
     type: 'TEXT',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: true,
     hasPrecision: false,
@@ -120,7 +123,7 @@ const defaultTypesBase = {
   },
   TIME: {
     type: 'TIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^(?:[01]?\d|2[0-3]):[0-5]?\d:[0-5]?\d$/.test(field.default);
     },
     hasCheck: false,
@@ -130,7 +133,7 @@ const defaultTypesBase = {
   },
   TIMESTAMP: {
     type: 'TIMESTAMP',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -150,7 +153,7 @@ const defaultTypesBase = {
   },
   DATE: {
     type: 'DATE',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^\d{4}-\d{2}-\d{2}$/.test(field.default);
     },
     hasCheck: false,
@@ -160,7 +163,7 @@ const defaultTypesBase = {
   },
   DATETIME: {
     type: 'DATETIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -178,7 +181,7 @@ const defaultTypesBase = {
   },
   BOOLEAN: {
     type: 'BOOLEAN',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return (
         field.default.toLowerCase() === 'false' ||
         field.default.toLowerCase() === 'true' ||
@@ -192,7 +195,8 @@ const defaultTypesBase = {
   },
   BINARY: {
     type: 'BINARY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       return (
         field.default.length <= field.size && binaryRegex.test(field.default)
       );
@@ -205,7 +209,8 @@ const defaultTypesBase = {
   },
   VARBINARY: {
     type: 'VARBINARY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       return (
         field.default.length <= field.size && binaryRegex.test(field.default)
       );
@@ -218,7 +223,7 @@ const defaultTypesBase = {
   },
   BLOB: {
     type: 'BLOB',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -226,7 +231,7 @@ const defaultTypesBase = {
   },
   JSON: {
     type: 'JSON',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -234,7 +239,7 @@ const defaultTypesBase = {
   },
   UUID: {
     type: 'UUID',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -242,7 +247,7 @@ const defaultTypesBase = {
   },
   ENUM: {
     type: 'ENUM',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return field.values.includes(field.default);
     },
     hasCheck: false,
@@ -252,7 +257,7 @@ const defaultTypesBase = {
   },
   SET: {
     type: 'SET',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       const defaultValues = field.default.split(',');
       for (let i = 0; i < defaultValues.length; i++) {
         if (!field.values.includes(defaultValues[i].trim())) return false;
@@ -273,7 +278,7 @@ export const defaultTypes = new Proxy(defaultTypesBase, {
 const mysqlTypesBase = {
   TINYINT: {
     type: 'TINYINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -284,7 +289,7 @@ const mysqlTypesBase = {
   },
   SMALLINT: {
     type: 'SMALLINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -295,7 +300,7 @@ const mysqlTypesBase = {
   },
   MEDIUMINT: {
     type: 'MEDIUMINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -306,7 +311,7 @@ const mysqlTypesBase = {
   },
   INTEGER: {
     type: 'INTEGER',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -317,7 +322,7 @@ const mysqlTypesBase = {
   },
   BIGINT: {
     type: 'BIGINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -328,7 +333,7 @@ const mysqlTypesBase = {
   },
   DECIMAL: {
     type: 'DECIMAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -337,7 +342,7 @@ const mysqlTypesBase = {
   },
   NUMERIC: {
     type: 'NUMERIC',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -346,7 +351,7 @@ const mysqlTypesBase = {
   },
   FLOAT: {
     type: 'FLOAT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -355,7 +360,7 @@ const mysqlTypesBase = {
   },
   DOUBLE: {
     type: 'DOUBLE',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -364,7 +369,7 @@ const mysqlTypesBase = {
   },
   BIT: {
     type: 'BIT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return field.default === '1' || field.default === '0';
     },
     hasCheck: true,
@@ -373,7 +378,7 @@ const mysqlTypesBase = {
   },
   BOOLEAN: {
     type: 'BOOLEAN',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return (
         field.default.toLowerCase() === 'false' ||
         field.default.toLowerCase() === 'true' ||
@@ -387,7 +392,7 @@ const mysqlTypesBase = {
   },
   TIME: {
     type: 'TIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^(?:[01]?\d|2[0-3]):[0-5]?\d:[0-5]?\d$/.test(field.default);
     },
     hasCheck: false,
@@ -397,7 +402,7 @@ const mysqlTypesBase = {
   },
   TIMESTAMP: {
     type: 'TIMESTAMP',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -417,7 +422,7 @@ const mysqlTypesBase = {
   },
   DATE: {
     type: 'DATE',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^\d{4}-\d{2}-\d{2}$/.test(field.default);
     },
     hasCheck: false,
@@ -427,7 +432,7 @@ const mysqlTypesBase = {
   },
   DATETIME: {
     type: 'DATETIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -445,7 +450,7 @@ const mysqlTypesBase = {
   },
   YEAR: {
     type: 'YEAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^\d{4}$/.test(field.default);
     },
     hasCheck: false,
@@ -454,7 +459,8 @@ const mysqlTypesBase = {
   },
   CHAR: {
     type: 'CHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -468,7 +474,8 @@ const mysqlTypesBase = {
   },
   VARCHAR: {
     type: 'VARCHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -482,7 +489,8 @@ const mysqlTypesBase = {
   },
   BINARY: {
     type: 'BINARY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       return (
         field.default.length <= field.size && binaryRegex.test(field.default)
       );
@@ -495,7 +503,8 @@ const mysqlTypesBase = {
   },
   VARBINARY: {
     type: 'VARBINARY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       return (
         field.default.length <= field.size && binaryRegex.test(field.default)
       );
@@ -508,7 +517,7 @@ const mysqlTypesBase = {
   },
   TINYBLOB: {
     type: 'TINYBLOB',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -516,7 +525,7 @@ const mysqlTypesBase = {
   },
   BLOB: {
     type: 'BLOB',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -524,7 +533,7 @@ const mysqlTypesBase = {
   },
   MEDIUMBLOB: {
     type: 'MEDIUMBLOB',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -532,7 +541,7 @@ const mysqlTypesBase = {
   },
   LONGBLOB: {
     type: 'LONGBLOB',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -540,7 +549,8 @@ const mysqlTypesBase = {
   },
   TINYTEXT: {
     type: 'TINYTEXT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -554,7 +564,8 @@ const mysqlTypesBase = {
   },
   TEXT: {
     type: 'TEXT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -568,7 +579,8 @@ const mysqlTypesBase = {
   },
   MEDIUMTEXT: {
     type: 'MEDIUMTEXT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -582,7 +594,8 @@ const mysqlTypesBase = {
   },
   LONGTEXT: {
     type: 'LONGTEXT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -596,8 +609,8 @@ const mysqlTypesBase = {
   },
   ENUM: {
     type: 'ENUM',
-    checkDefault: (field) => {
-      return field.values.includes(field.default);
+    checkDefault: (field: DField) => {
+      return field.values?.includes(field.default);
     },
     hasCheck: false,
     isSized: false,
@@ -606,7 +619,7 @@ const mysqlTypesBase = {
   },
   SET: {
     type: 'SET',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       const defaultValues = field.default.split(',');
       for (let i = 0; i < defaultValues.length; i++) {
         if (!field.values.includes(defaultValues[i].trim())) return false;
@@ -620,7 +633,7 @@ const mysqlTypesBase = {
   },
   GEOMETRY: {
     type: 'GEOMETRY',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -628,7 +641,7 @@ const mysqlTypesBase = {
   },
   POINT: {
     type: 'POINT',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -636,7 +649,7 @@ const mysqlTypesBase = {
   },
   LINESTRING: {
     type: 'LINESTRING',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -644,7 +657,7 @@ const mysqlTypesBase = {
   },
   POLYGON: {
     type: 'POLYGON',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -652,7 +665,7 @@ const mysqlTypesBase = {
   },
   MULTIPOINT: {
     type: 'MULTIPOINT',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -660,7 +673,7 @@ const mysqlTypesBase = {
   },
   MULTILINESTRING: {
     type: 'MULTILINESTRING',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -668,7 +681,7 @@ const mysqlTypesBase = {
   },
   MULTIPOLYGON: {
     type: 'MULTIPOLYGON',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -676,7 +689,7 @@ const mysqlTypesBase = {
   },
   GEOMETRYCOLLECTION: {
     type: 'GEOMETRYCOLLECTION',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -684,7 +697,7 @@ const mysqlTypesBase = {
   },
   JSON: {
     type: 'JSON',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -699,7 +712,7 @@ export const mysqlTypes = new Proxy(mysqlTypesBase, {
 const postgresTypesBase = {
   SMALLINT: {
     type: 'SMALLINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -710,7 +723,7 @@ const postgresTypesBase = {
   },
   INTEGER: {
     type: 'INTEGER',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -727,7 +740,7 @@ const postgresTypesBase = {
   },
   BIGINT: {
     type: 'BIGINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -744,7 +757,7 @@ const postgresTypesBase = {
   },
   DECIMAL: {
     type: 'DECIMAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -753,7 +766,7 @@ const postgresTypesBase = {
   },
   NUMERIC: {
     type: 'NUMERIC',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -762,7 +775,7 @@ const postgresTypesBase = {
   },
   REAL: {
     type: 'REAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -771,7 +784,7 @@ const postgresTypesBase = {
   },
   'DOUBLE PRECISION': {
     type: 'DOUBLE PRECISION',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -780,7 +793,7 @@ const postgresTypesBase = {
   },
   SMALLSERIAL: {
     type: 'SMALLSERIAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -790,7 +803,7 @@ const postgresTypesBase = {
   },
   SERIAL: {
     type: 'SERIAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -806,7 +819,7 @@ const postgresTypesBase = {
   },
   BIGSERIAL: {
     type: 'BIGSERIAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -816,7 +829,7 @@ const postgresTypesBase = {
   },
   MONEY: {
     type: 'MONEY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -825,7 +838,8 @@ const postgresTypesBase = {
   },
   CHAR: {
     type: 'CHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -839,7 +853,8 @@ const postgresTypesBase = {
   },
   VARCHAR: {
     type: 'VARCHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -853,8 +868,9 @@ const postgresTypesBase = {
   },
   TEXT: {
     type: 'TEXT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (strHasQuotes(field.default)) {
+        if (!field.size) return false;
         return field.default.length - 2 <= field.size;
       }
       return field.default.length <= field.size;
@@ -866,7 +882,7 @@ const postgresTypesBase = {
   },
   BYTEA: {
     type: 'BYTEA',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^[0-9a-fA-F]*$/.test(field.default);
     },
     hasCheck: false,
@@ -877,7 +893,7 @@ const postgresTypesBase = {
   },
   DATE: {
     type: 'DATE',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       const specialValues = [
         'epoch',
         'infinity',
@@ -899,7 +915,7 @@ const postgresTypesBase = {
   },
   TIME: {
     type: 'TIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       const specialValues = ['now', 'allballs'];
       return (
         /^(?:[01]?\d|2[0-3]):[0-5]?\d:[0-5]?\d$/.test(field.default) ||
@@ -913,7 +929,7 @@ const postgresTypesBase = {
   },
   TIMETZ: {
     type: 'TIMETZ',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       const specialValues = ['now', 'allballs'];
       return (
         /^(?:[01]?\d|2[0-3]):[0-5]?\d:[0-5]?\d([+-]\d{2}:\d{2})?$/.test(
@@ -928,7 +944,7 @@ const postgresTypesBase = {
   },
   TIMESTAMP: {
     type: 'TIMESTAMP',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       const content = field.default.split(' ');
       const date = content[0].split('-');
       const specialValues = [
@@ -955,7 +971,7 @@ const postgresTypesBase = {
   },
   TIMESTAMPTZ: {
     type: 'TIMESTAMPTZ',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       const specialValues = [
         'epoch',
         'infinity',
@@ -979,7 +995,7 @@ const postgresTypesBase = {
   },
   INTERVAL: {
     type: 'INTERVAL',
-    checkDefault: (field) => /^['"\d\s\\-]+$/.test(field.default),
+    checkDefault: (field: DField) => /^['"\d\s\\-]+$/.test(field.default),
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -987,7 +1003,7 @@ const postgresTypesBase = {
   },
   BOOLEAN: {
     type: 'BOOLEAN',
-    checkDefault: (field) => /^(true|false)$/i.test(field.default),
+    checkDefault: (field: DField) => /^(true|false)$/i.test(field.default),
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -995,7 +1011,7 @@ const postgresTypesBase = {
   },
   POINT: {
     type: 'POINT',
-    checkDefault: (field) => /^\(\d+,\d+\)$/.test(field.default),
+    checkDefault: (field: DField) => /^\(\d+,\d+\)$/.test(field.default),
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1003,7 +1019,8 @@ const postgresTypesBase = {
   },
   LINE: {
     type: 'LINE',
-    checkDefault: (field) => /^(\(\d+,\d+\),)+\(\d+,\d+\)$/.test(field.default),
+    checkDefault: (field: DField) =>
+      /^(\(\d+,\d+\),)+\(\d+,\d+\)$/.test(field.default),
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1011,7 +1028,8 @@ const postgresTypesBase = {
   },
   LSEG: {
     type: 'LSEG',
-    checkDefault: (field) => /^(\(\d+,\d+\),)+\(\d+,\d+\)$/.test(field.default),
+    checkDefault: (field: DField) =>
+      /^(\(\d+,\d+\),)+\(\d+,\d+\)$/.test(field.default),
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1019,7 +1037,7 @@ const postgresTypesBase = {
   },
   BOX: {
     type: 'BOX',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^\(\d+(\.\d+)?,\d+(\.\d+)?\),\(\d+(\.\d+)?,\d+(\.\d+)?\)$/.test(
         field.default,
       ),
@@ -1030,7 +1048,7 @@ const postgresTypesBase = {
   },
   PATH: {
     type: 'PATH',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^\((\d+(\.\d+)?,\d+(\.\d+)?(,\d+(\.\d+)?,\d+(\.\d+)?)*?)\)$/.test(
         field.default,
       ),
@@ -1041,7 +1059,7 @@ const postgresTypesBase = {
   },
   POLYGON: {
     type: 'POLYGON',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^\((\d+(\.\d+)?,\d+(\.\d+)?(,\d+(\.\d+)?,\d+(\.\d+)?)*?)\)$/.test(
         field.default,
       ),
@@ -1052,7 +1070,7 @@ const postgresTypesBase = {
   },
   CIRCLE: {
     type: 'CIRCLE',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^<\(\d+(\.\d+)?,\d+(\.\d+)?\),\d+(\.\d+)?\\>$/.test(field.default),
     hasCheck: false,
     isSized: false,
@@ -1061,7 +1079,7 @@ const postgresTypesBase = {
   },
   CIDR: {
     type: 'CIDR',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^(\d{1,3}\.){3}\d{1,3}\/\d{1,2}$/.test(field.default),
     hasCheck: false,
     isSized: false,
@@ -1070,7 +1088,7 @@ const postgresTypesBase = {
   },
   INET: {
     type: 'INET',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^(\d{1,3}\.){3}\d{1,3}(\/\d{1,2})?$/.test(field.default),
     hasCheck: false,
     isSized: false,
@@ -1079,7 +1097,7 @@ const postgresTypesBase = {
   },
   MACADDR: {
     type: 'MACADDR',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^([A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2}$/.test(field.default),
     hasCheck: false,
     isSized: false,
@@ -1088,7 +1106,7 @@ const postgresTypesBase = {
   },
   MACADDR8: {
     type: 'MACADDR8',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^([A-Fa-f0-9]{2}:){7}[A-Fa-f0-9]{2}$/.test(field.default),
     hasCheck: false,
     isSized: false,
@@ -1097,7 +1115,7 @@ const postgresTypesBase = {
   },
   BIT: {
     type: 'BIT',
-    checkDefault: (field) => /^[01]{1,}$/.test(field.default),
+    checkDefault: (field: DField) => /^[01]{1,}$/.test(field.default),
     hasCheck: true,
     isSized: true,
     hasPrecision: false,
@@ -1106,7 +1124,7 @@ const postgresTypesBase = {
   },
   VARBIT: {
     type: 'VARBIT',
-    checkDefault: (field) => /^[01]*$/.test(field.default),
+    checkDefault: (field: DField) => /^[01]*$/.test(field.default),
     hasCheck: true,
     isSized: true,
     hasPrecision: false,
@@ -1115,7 +1133,7 @@ const postgresTypesBase = {
   },
   VECTOR: {
     type: 'VECTOR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       let elements;
       let elementsStr = field.default;
       try {
@@ -1123,6 +1141,7 @@ const postgresTypesBase = {
           elementsStr = field.default.slice(1, -1);
         }
         elements = JSON.parse(elementsStr);
+        if (!field.size) return false;
         return (
           Array.isArray(elements) &&
           elements.length === field.size &&
@@ -1139,7 +1158,7 @@ const postgresTypesBase = {
   },
   HALFVEC: {
     type: 'HALFVEC',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       let elements;
       let elementsStr = field.default;
       try {
@@ -1147,6 +1166,7 @@ const postgresTypesBase = {
           elementsStr = field.default.slice(1, -1);
         }
         elements = JSON.parse(elementsStr);
+        if (!field.size) return false;
         return (
           Array.isArray(elements) &&
           elements.length === field.size &&
@@ -1163,13 +1183,13 @@ const postgresTypesBase = {
   },
   SPARSEVEC: {
     type: 'SPARSEVEC',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       let elementsStr = field.default;
       if (strHasQuotes(field.default)) {
         elementsStr = field.default.slice(1, -1);
       }
       const lengthStr = elementsStr.split('/')[1];
-      const length = Number.parseInt(lengthStr);
+      const length = Number.parseInt(lengthStr as string);
       return length === field.size;
     },
     hasCheck: true,
@@ -1179,7 +1199,7 @@ const postgresTypesBase = {
   },
   TSVECTOR: {
     type: 'TSVECTOR',
-    checkDefault: (field) => /^[A-Za-z0-9: ]*$/.test(field.default),
+    checkDefault: (field: DField) => /^[A-Za-z0-9: ]*$/.test(field.default),
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1187,7 +1207,8 @@ const postgresTypesBase = {
   },
   TSQUERY: {
     type: 'TSQUERY',
-    checkDefault: (field) => /^[A-Za-z0-9: &|!()]*$/.test(field.default),
+    checkDefault: (field: DField) =>
+      /^[A-Za-z0-9: &|!()]*$/.test(field.default),
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1195,7 +1216,7 @@ const postgresTypesBase = {
   },
   JSON: {
     type: 'JSON',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1204,7 +1225,7 @@ const postgresTypesBase = {
   },
   JSONB: {
     type: 'JSONB',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1213,7 +1234,7 @@ const postgresTypesBase = {
   },
   UUID: {
     type: 'UUID',
-    checkDefault: (field) =>
+    checkDefault: (field: DField) =>
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
         field.default,
       ),
@@ -1225,7 +1246,7 @@ const postgresTypesBase = {
   },
   XML: {
     type: 'XML',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1241,7 +1262,7 @@ export const postgresTypes = new Proxy(postgresTypesBase, {
 const sqliteTypesBase = {
   INTEGER: {
     type: 'INTEGER',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -1251,7 +1272,7 @@ const sqliteTypesBase = {
   },
   REAL: {
     type: 'REAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1260,7 +1281,7 @@ const sqliteTypesBase = {
   },
   NUMERIC: {
     type: 'NUMERIC',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1269,7 +1290,7 @@ const sqliteTypesBase = {
   },
   BOOLEAN: {
     type: 'BOOLEAN',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return (
         field.default.toLowerCase() === 'false' ||
         field.default.toLowerCase() === 'true' ||
@@ -1283,7 +1304,7 @@ const sqliteTypesBase = {
   },
   VARCHAR: {
     type: 'VARCHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -1297,7 +1318,7 @@ const sqliteTypesBase = {
   },
   TEXT: {
     type: 'TEXT',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: true,
     isSized: true,
     hasPrecision: false,
@@ -1306,7 +1327,7 @@ const sqliteTypesBase = {
   },
   BLOB: {
     type: 'BLOB',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -1314,7 +1335,7 @@ const sqliteTypesBase = {
   },
   TIME: {
     type: 'TIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^(?:[01]?\d|2[0-3]):[0-5]?\d:[0-5]?\d$/.test(field.default);
     },
     hasCheck: false,
@@ -1324,7 +1345,7 @@ const sqliteTypesBase = {
   },
   TIMESTAMP: {
     type: 'TIMESTAMP',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -1344,7 +1365,7 @@ const sqliteTypesBase = {
   },
   DATE: {
     type: 'DATE',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^\d{4}-\d{2}-\d{2}$/.test(field.default);
     },
     hasCheck: false,
@@ -1354,7 +1375,7 @@ const sqliteTypesBase = {
   },
   DATETIME: {
     type: 'DATETIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -1379,7 +1400,7 @@ export const sqliteTypes = new Proxy(sqliteTypesBase, {
 const mssqlTypesBase = {
   TINYINT: {
     type: 'TINYINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -1389,7 +1410,7 @@ const mssqlTypesBase = {
   },
   SMALLINT: {
     type: 'SMALLINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -1399,7 +1420,7 @@ const mssqlTypesBase = {
   },
   INTEGER: {
     type: 'INTEGER',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -1409,7 +1430,7 @@ const mssqlTypesBase = {
   },
   BIGINT: {
     type: 'BIGINT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return intRegex.test(field.default);
     },
     hasCheck: true,
@@ -1419,7 +1440,7 @@ const mssqlTypesBase = {
   },
   BIT: {
     type: 'BIT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return field.default === '1' || field.default === '0';
     },
     hasCheck: true,
@@ -1428,7 +1449,7 @@ const mssqlTypesBase = {
   },
   DECIMAL: {
     type: 'DECIMAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1437,7 +1458,7 @@ const mssqlTypesBase = {
   },
   NUMERIC: {
     type: 'NUMERIC',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1446,7 +1467,7 @@ const mssqlTypesBase = {
   },
   FLOAT: {
     type: 'FLOAT',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1455,7 +1476,7 @@ const mssqlTypesBase = {
   },
   DOUBLE: {
     type: 'DOUBLE',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1464,7 +1485,7 @@ const mssqlTypesBase = {
   },
   REAL: {
     type: 'REAL',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1473,7 +1494,7 @@ const mssqlTypesBase = {
   },
   MONEY: {
     type: 'MONEY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1482,7 +1503,7 @@ const mssqlTypesBase = {
   },
   SMALLMONEY: {
     type: 'MONEY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return doubleRegex.test(field.default);
     },
     hasCheck: true,
@@ -1491,7 +1512,7 @@ const mssqlTypesBase = {
   },
   DATE: {
     type: 'DATE',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^\d{4}-\d{2}-\d{2}$/.test(field.default);
     },
     hasCheck: false,
@@ -1501,7 +1522,7 @@ const mssqlTypesBase = {
   },
   DATETIME: {
     type: 'DATETIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -1519,7 +1540,7 @@ const mssqlTypesBase = {
   },
   DATETIME2: {
     type: 'DATETIME2',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -1537,7 +1558,7 @@ const mssqlTypesBase = {
   },
   DATETIMEOFFSET: {
     type: 'DATETIMEOFFSET',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -1559,7 +1580,7 @@ const mssqlTypesBase = {
   },
   SMALLDATETIME: {
     type: 'SMALLDATETIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -1577,7 +1598,7 @@ const mssqlTypesBase = {
   },
   TIME: {
     type: 'TIME',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       return /^(?:[01]?\d|2[0-3]):[0-5]?\d:[0-5]?\d$/.test(field.default);
     },
     hasCheck: false,
@@ -1587,7 +1608,7 @@ const mssqlTypesBase = {
   },
   TIMESTAMP: {
     type: 'TIMESTAMP',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
       if (field.default.toUpperCase() === 'CURRENT_TIMESTAMP') {
         return true;
       }
@@ -1607,7 +1628,8 @@ const mssqlTypesBase = {
   },
   CHAR: {
     type: 'CHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -1621,7 +1643,8 @@ const mssqlTypesBase = {
   },
   VARCHAR: {
     type: 'VARCHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -1635,7 +1658,7 @@ const mssqlTypesBase = {
   },
   TEXT: {
     type: 'TEXT',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: true,
     hasPrecision: false,
@@ -1644,7 +1667,8 @@ const mssqlTypesBase = {
   },
   NCHAR: {
     type: 'CHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -1658,7 +1682,8 @@ const mssqlTypesBase = {
   },
   NVARCHAR: {
     type: 'VARCHAR',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -1672,7 +1697,7 @@ const mssqlTypesBase = {
   },
   NTEXT: {
     type: 'TEXT',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: true,
     hasPrecision: false,
@@ -1681,7 +1706,8 @@ const mssqlTypesBase = {
   },
   BINARY: {
     type: 'BINARY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       return (
         field.default.length <= field.size && binaryRegex.test(field.default)
       );
@@ -1694,7 +1720,8 @@ const mssqlTypesBase = {
   },
   VARBINARY: {
     type: 'VARBINARY',
-    checkDefault: (field) => {
+    checkDefault: (field: DField) => {
+      if (!field.size) return false;
       return (
         field.default.length <= field.size && binaryRegex.test(field.default)
       );
@@ -1707,7 +1734,7 @@ const mssqlTypesBase = {
   },
   IMAGE: {
     type: 'IMAGE',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1716,7 +1743,7 @@ const mssqlTypesBase = {
   },
   UNIQUEIDENTIFIER: {
     type: 'UNIQUEIDENTIFIER',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     isSized: false,
     hasCheck: false,
     hasPrecision: false,
@@ -1724,7 +1751,7 @@ const mssqlTypesBase = {
   },
   XML: {
     type: 'XML',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1733,7 +1760,7 @@ const mssqlTypesBase = {
   },
   CURSOR: {
     type: 'CURSOR',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1742,7 +1769,7 @@ const mssqlTypesBase = {
   },
   SQL_VARIANT: {
     type: 'SQL_VARIANT',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
@@ -1751,7 +1778,7 @@ const mssqlTypesBase = {
   },
   JSON: {
     type: 'JSON',
-    checkDefault: (field) => true,
+    checkDefault: (_field: DField) => true,
     hasCheck: false,
     isSized: false,
     hasPrecision: false,
