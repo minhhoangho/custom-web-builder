@@ -16,7 +16,7 @@ import {
   useSelect,
   useSettings,
 } from 'src/containers/Editor/hooks';
-import { DTable } from 'src/data/interface'; // import { isRtl } from '../../i18n/utils/rtl';
+import { DField, DTable } from 'src/data/interface'; // import { isRtl } from '../../i18n/utils/rtl';
 import TableInfo from '../EditorSidePanel/TablesTab/TableInfo';
 // import { isRtl } from '../../i18n/utils/rtl';
 // import i18n from '../../i18n/i18n';
@@ -77,7 +77,7 @@ export default function Table(props: TableProps) {
     }
   };
 
-  function field(fieldData, index) {
+  function field(fieldData: DField, index: number) {
     return (
       <div
         className={`${
@@ -102,7 +102,7 @@ export default function Table(props: TableProps) {
         onPointerDown={(e) => {
           // Required for onPointerLeave to trigger when a touch pointer leaves
           // https://stackoverflow.com/a/70976017/1137077
-          e.target.releasePointerCapture(e.pointerId);
+          (e.target as any)?.releasePointerCapture(e.pointerId);
         }}
       >
         <div
@@ -155,12 +155,12 @@ export default function Table(props: TableProps) {
             />
           ) : (
             <div className="flex gap-1 items-center">
-              {fieldData.primary && <Iconify icon="material-symbols:key-off" />}
+              {fieldData.primary && <Iconify icon="material-symbols:key" />}
               {!fieldData.notNull && <span>?</span>}
               <span>
                 {fieldData.type +
-                  ((dbToTypes?.[database]?.[fieldData?.type]?.isSized ||
-                    dbToTypes?.[database]?.[fieldData?.type]?.hasPrecision) &&
+                  ((dbToTypes[database][fieldData.type]?.isSized ||
+                    dbToTypes[database][fieldData.type]?.hasPrecision) &&
                   fieldData.size &&
                   fieldData.size !== ''
                     ? '(' + fieldData.size + ')'
@@ -305,7 +305,7 @@ export default function Table(props: TableProps) {
               </div>
             </div>
           </div>
-          {tableData.fields.map((e, i) => {
+          {tableData.fields.map((e: DField, i: number) => {
             return settings.showFieldSummary ? (
               <Popover
                 key={i}

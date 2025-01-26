@@ -46,7 +46,6 @@ export default function TablesTab() {
               // keepDOM
               // lazyRender
               onChange={(k) => {
-                console.log('OK', k);
                 setSelectedElement((prev) => ({
                   ...prev,
                   open: true,

@@ -12,13 +12,22 @@ import {
 } from 'src/containers/Editor/hooks';
 import { Input, TagInput } from '@components/form/Input';
 import { Popover } from '@components/common/Popover';
+import { DDataType, DField } from '../../../../data/interface';
 
-export default function TypeField({ data, tid, fid }) {
+export default function TypeField({
+  data,
+  tid,
+  fid,
+}: {
+  data: DField;
+  tid: number;
+  fid: number;
+}) {
   const { types, updateType } = useType();
   const { enums } = useEnum();
   const { database } = useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
-  const [editField, setEditField] = useState({});
+  const [editField, setEditField] = useState<Partial<DField>>({});
   const { t } = useTranslation();
 
   return (
@@ -30,7 +39,7 @@ export default function TypeField({ data, tid, fid }) {
           placeholder="name"
           onInputChange={(value) =>
             updateType(tid, {
-              fields: types[tid].fields.map((e, id) =>
+              fields: types[tid]?.fields.map((e, id) =>
                 id === fid ? { ...data, name: value } : e,
               ),
             })
@@ -83,7 +92,7 @@ export default function TypeField({ data, tid, fid }) {
           ]}
           value={data.type}
           label="type"
-          onSelectChange={(value) => {
+          onSelectChange={(value: DDataType) => {
             if (value === data.type) return;
             setUndoStack((prev) => [
               ...prev,
@@ -105,7 +114,7 @@ export default function TypeField({ data, tid, fid }) {
             setRedoStack([]);
             if (value === 'ENUM' || value === 'SET') {
               updateType(tid, {
-                fields: types[tid].fields?.map((e, id) =>
+                fields: types[tid]?.fields?.map((e, id) =>
                   id === fid
                     ? {
                         ...data,
@@ -120,7 +129,7 @@ export default function TypeField({ data, tid, fid }) {
               dbToTypes[database][value].hasPrecision
             ) {
               updateType(tid, {
-                fields: types[tid].fields.map((e, id) =>
+                fields: types[tid]?.fields.map((e, id) =>
                   id === fid
                     ? {
                         ...data,
@@ -132,7 +141,7 @@ export default function TypeField({ data, tid, fid }) {
               });
             } else {
               updateType(tid, {
-                fields: types[tid].fields.map((e, id) =>
+                fields: types[tid]?.fields.map((e, id) =>
                   id === fid ? { ...data, type: value } : e,
                 ),
               });
@@ -168,7 +177,7 @@ export default function TypeField({ data, tid, fid }) {
                   placeholder={t('use_for_batch_input')}
                   onInputChange={(v) =>
                     updateType(tid, {
-                      fields: types[tid].fields.map((e, id) =>
+                      fields: types[tid]?.fields.map((e, id) =>
                         id === fid ? { ...data, values: v } : e,
                       ),
                     })
@@ -176,7 +185,7 @@ export default function TypeField({ data, tid, fid }) {
                   onFocus={() => setEditField({ values: data.values })}
                   onBlur={() => {
                     if (
-                      JSON.stringify(editField.values) ===
+                      JSON.stringify(editField?.values ?? {}) ===
                       JSON.stringify(data.values)
                     )
                       return;
@@ -212,8 +221,8 @@ export default function TypeField({ data, tid, fid }) {
                   value={data.size}
                   onInputChange={(value) =>
                     updateType(tid, {
-                      fields: types[tid].fields.map((e, id) =>
-                        id === fid ? { ...data, size: value } : e,
+                      fields: types[tid]?.fields.map((e, id) =>
+                        id === fid ? { ...data, size: Number(value) } : e,
                       ),
                     })
                   }
@@ -257,11 +266,13 @@ export default function TypeField({ data, tid, fid }) {
                   onInputChange={(value) =>
                     updateType(tid, {
                       fields: types[tid].fields.map((e, id) =>
-                        id === fid ? { ...data, size: value } : e,
+                        id === fid ? { ...data, size: Number(value) } : e,
                       ),
                     })
                   }
-                  onFocus={(e) => setEditField({ size: e.target.value })}
+                  onFocus={(e) =>
+                    setEditField({ size: Number(e.target.value) })
+                  }
                   onBlur={(e) => {
                     if (e.target.value === editField.size) return;
                     setUndoStack((prev) => [
@@ -307,7 +318,7 @@ export default function TypeField({ data, tid, fid }) {
                   },
                 ]);
                 updateType(tid, {
-                  fields: types[tid].fields.filter((_, k) => k !== fid),
+                  fields: types[tid]?.fields.filter((_, k) => k !== fid),
                 });
               }}
             >

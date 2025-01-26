@@ -104,8 +104,10 @@ export default function FieldDetails({
             type="number"
             className="my-2 w-full"
             placeholder={t('size')}
-            value={data.size as string}
-            onInputChange={(value) => updateField(tid, index, { size: value })}
+            value={data.size as any}
+            onInputChange={(value) =>
+              updateField(tid, index, { size: Number(value) })
+            }
             onFocus={(e) => setEditField({ size: e.target.value })}
             onBlur={(e) => {
               if (e.target.value === editField.size) return;
@@ -143,7 +145,9 @@ export default function FieldDetails({
             //     : 'error'
             // }
             value={data.size}
-            onInputChange={(value) => updateField(tid, index, { size: value })}
+            onInputChange={(value) =>
+              updateField(tid, index, { size: Number(value) })
+            }
             onFocus={(e) => setEditField({ size: e.target.value })}
             onBlur={(e) => {
               if (e.target.value === editField.size) return;

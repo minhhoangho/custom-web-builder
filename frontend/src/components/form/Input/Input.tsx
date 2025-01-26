@@ -12,7 +12,7 @@ export type InputProps = {
   disabled?: boolean;
   className?: string;
   inputElementClassName?: string;
-  value?: string;
+  value?: string | number | readonly string[];
   labelClassName?: string;
   onInputChange?: (value: any) => void;
   onFocus?: (e?: any) => void;

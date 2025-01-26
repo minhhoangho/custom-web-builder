@@ -1,6 +1,6 @@
 import { DB } from '@constants/editor';
 import { strHasQuotes } from 'src/utils/common';
-import { DField } from './interface';
+import { DField, DDataType, DBType } from './interface';
 
 const intRegex = /^-?\d*$/;
 const doubleRegex = /^-?\d*.?\d+$/;
@@ -170,9 +170,14 @@ const defaultTypesBase = {
       if (!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(field.default)) {
         return false;
       }
-      const c = field.default.split(' ');
-      const d = c[0].split('-');
-      return Number.parseInt(d[0]) >= 1000 && Number.parseInt(d[0]) <= 9999;
+      const c: string[] = field.default.split(' ');
+      if (c.length === 0) return false;
+      const d: string[] = c[0]?.split('-') ?? [];
+      if (d.length === 0) return false;
+      return (
+        Number.parseInt(d[0] ?? '0') >= 1000 &&
+        Number.parseInt(d[0] ?? '0') <= 9999
+      );
     },
     hasCheck: false,
     isSized: false,
@@ -248,6 +253,7 @@ const defaultTypesBase = {
   ENUM: {
     type: 'ENUM',
     checkDefault: (field: DField) => {
+      if (!field.values) return false;
       return field.values.includes(field.default);
     },
     hasCheck: false,
@@ -259,8 +265,12 @@ const defaultTypesBase = {
     type: 'SET',
     checkDefault: (field: DField) => {
       const defaultValues = field.default.split(',');
-      for (let i = 0; i < defaultValues.length; i++) {
-        if (!field.values.includes(defaultValues[i].trim())) return false;
+      // for (let i = 0; i < defaultValues.length; i++) {
+      //   if (!field.values.includes(defaultValues[i].trim())) return false;
+      // }
+      if (!field?.values) return false;
+      for (const value of defaultValues) {
+        if (!field.values.includes(value.trim())) return false;
       }
       return true;
     },
@@ -1791,15 +1801,45 @@ export const mssqlTypes = new Proxy(mssqlTypesBase, {
   get: (target, prop) => (prop in target ? target[prop] : false),
 });
 
-const dbToTypesBase = {
+const dbToTypesBase: {
+  [key in DBType]: {
+    [_key in DDataType]: {
+      type: string;
+      checkDefault: (field: DField) => boolean;
+      hasCheck: boolean;
+      isSized: boolean;
+      hasPrecision: boolean;
+      canIncrement?: boolean;
+      compatibleWith?: DDataType[];
+      defaultSize?: number;
+      hasQuotes?: boolean;
+      noDefault?: boolean;
+    };
+  };
+} = {
   [DB.GENERIC]: defaultTypes,
   [DB.MYSQL]: mysqlTypes,
   [DB.POSTGRES]: postgresTypes,
   [DB.SQLITE]: sqliteTypes,
   [DB.MSSQL]: mssqlTypes,
   [DB.MARIADB]: mysqlTypes,
-};
+} as any;
 
-export const dbToTypes = new Proxy(dbToTypesBase, {
+export const dbToTypes: {
+  [key in DBType]: {
+    [_key in DDataType]: {
+      type: DDataType;
+      checkDefault: (field: DField) => boolean;
+      hasCheck: boolean;
+      isSized: boolean;
+      hasPrecision: boolean;
+      canIncrement?: boolean;
+      compatibleWith?: DDataType[];
+      defaultSize?: number;
+      hasQuotes?: boolean;
+      noDefault?: boolean;
+    };
+  };
+} = new Proxy(dbToTypesBase, {
   get: (target, prop) => (prop in target ? target[prop] : false),
 });
