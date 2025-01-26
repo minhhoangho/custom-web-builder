@@ -265,7 +265,7 @@ export default function TypeField({
                   value={data.size}
                   onInputChange={(value) =>
                     updateType(tid, {
-                      fields: types[tid].fields.map((e, id) =>
+                      fields: types[tid]?.fields.map((e, id) =>
                         id === fid ? { ...data, size: Number(value) } : e,
                       ),
                     })

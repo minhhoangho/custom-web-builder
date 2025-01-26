@@ -56,6 +56,7 @@ import Sidesheet from './SideSheet/Sidesheet';
 import LayoutDropdown from './LayoutDropdown';
 import { IconAddArea, IconAddNote, IconAddTable } from '../icons';
 import { IdContext } from '../Workspace';
+import { DArea, DNote, DRelationship, DTable } from '../../../data/interface';
 
 type BasicMenuProps = {
   prefix?: React.ReactNode | string;
@@ -214,32 +215,34 @@ export default function ControlPanel({
       if (a.element === ObjectType.TABLE) {
         setRedoStack((prev) => [
           ...prev,
-          { ...a, x: tables[a.id].x, y: tables[a.id].y },
+          { ...a, x: tables[a.id ?? 0].x, y: tables[a.id].y },
         ]);
-        updateTable(a.id, { x: a.x, y: a.y });
+        updateTable(a.id ?? 0, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.AREA) {
         setRedoStack((prev) => [
           ...prev,
           { ...a, x: areas[a.id].x, y: areas[a.id].y },
         ]);
-        updateArea(a.id, { x: a.x, y: a.y });
+        updateArea(a.id ?? 0, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.NOTE) {
         setRedoStack((prev) => [
           ...prev,
           { ...a, x: notes[a.id].x, y: notes[a.id].y },
         ]);
-        updateNote(a.id, { x: a.x, y: a.y });
+        updateNote(a.id ?? 0, { x: a.x, y: a.y });
       }
     } else if (a.action === Action.DELETE) {
       if (a.element === ObjectType.TABLE) {
-        a.data.relationship.forEach((x) => addRelationship(x, false));
-        addTable(a.data.table, false);
+        (a.data?.relationship as DRelationship[]).forEach((x: DRelationship) =>
+          addRelationship(x, false),
+        );
+        addTable(a.data?.table as DTable, false);
       } else if (a.element === ObjectType.RELATIONSHIP) {
-        addRelationship(a.data, false);
+        addRelationship(a.data as DRelationship, false);
       } else if (a.element === ObjectType.NOTE) {
-        addNote(a.data, false);
+        addNote(a.data as DNote, false);
       } else if (a.element === ObjectType.AREA) {
-        addArea(a.data, false);
+        addArea(a.data as DArea, false);
       } else if (a.element === ObjectType.TYPE) {
         addType({ id: a.id, ...a.data }, false);
       } else if (a.element === ObjectType.ENUM) {
@@ -250,14 +253,14 @@ export default function ControlPanel({
       if (a.element === ObjectType.AREA) {
         updateArea(a.aid, a.undo);
       } else if (a.element === ObjectType.NOTE) {
-        updateNote(a.nid, a.undo);
+        updateNote(a.nid, a.undo as DNote);
       } else if (a.element === ObjectType.TABLE) {
         if (a.component === 'field') {
           updateField(a.tid, a.fid, a.undo);
         } else if (a.component === 'field_delete') {
           setRelationships((prev) => {
             let temp = [...prev];
-            a.data.relationship.forEach((r) => {
+            a.data.relationship.forEach((r: DRelationship) => {
               temp.splice(r.id, 0, r);
             });
             temp = temp.map((e, i) => {

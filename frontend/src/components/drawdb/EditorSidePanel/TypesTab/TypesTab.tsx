@@ -21,7 +21,7 @@ export default function TypesTab() {
           <Button
             startIcon={<Iconify icon="mdi:plus" />}
             // block
-            onClick={() => addType()}
+            onClick={() => addType(null)}
           >
             {t('add_type')}
           </Button>

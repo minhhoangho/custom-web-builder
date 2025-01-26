@@ -9,7 +9,7 @@ import { EditorUndoStackInterface } from '../interfaces/stack.interface';
 export const TypesContext = createContext<{
   types: DType[];
   setTypes: React.Dispatch<React.SetStateAction<DType[]>>;
-  addType: (data: DType, addToHistory?: boolean) => void;
+  addType: (data: Partial<DType> | null, addToHistory?: boolean) => void;
   updateType: (id: number, values: Partial<DType>) => void;
   deleteType: (id: number, addToHistory?: boolean) => void;
 } | null>(null);
@@ -23,7 +23,7 @@ export default function TypesContextProvider({
   const [types, setTypes] = useState<DType[]>([]);
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
-  const addType = (data: DType, addToHistory = true) => {
+  const addType = (data: Partial<DType> | null, addToHistory = true) => {
     if (data) {
       setTypes((prev) => {
         const temp = prev.slice();
@@ -41,7 +41,7 @@ export default function TypesContextProvider({
       ]);
     }
     if (addToHistory) {
-      setUndoStack((prev: EditorUndoStackInterface[]) => [
+      setUndoStack((prev: Partial<EditorUndoStackInterface>[]) => [
         ...prev,
         {
           action: Action.ADD,
@@ -56,7 +56,7 @@ export default function TypesContextProvider({
   const deleteType = (id: number, addToHistory = true) => {
     if (addToHistory) {
       toast('success', t('type_deleted'));
-      setUndoStack((prev: EditorUndoStackInterface[]) => [
+      setUndoStack((prev: Partial<EditorUndoStackInterface>[]) => [
         ...prev,
         {
           action: Action.DELETE,

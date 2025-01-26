@@ -1,37 +1,74 @@
 import { Action, ObjectType } from '@constants/editor';
-
-interface UndoInterface {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  color: string;
-}
+import {
+  DArea,
+  DField,
+  DNote,
+  DRelationship,
+  DTable,
+} from '../../../data/interface';
 
 export interface EditorRedoStackInterface {
   action: (typeof Action)[keyof typeof Action];
   element: (typeof ObjectType)[keyof typeof ObjectType];
-  aid: string; // Assuming `areaResize.id` is a string
-  undo: Partial<UndoInterface>;
+  tid: number;
+  aid: number;
+  fid: number;
+  nid: number;
+  undo: {
+    [key: string]: any; // To include other properties from `areas[areaResize.id]`
+  };
   redo: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
     [key: string]: any; // To include other properties from `areas[areaResize.id]`
   };
   message: string;
+  data:
+    | Partial<{
+        relationship: DRelationship[];
+        table: DTable;
+        field: DField;
+      }>
+    | DRelationship
+    | DArea
+    | DNote;
+
+  toX: number;
+  toY: number;
+  x: number;
+  y: number;
+  id: number;
+  endFieldId: number;
+  startFieldId: number;
 }
+
 export interface EditorUndoStackInterface {
   action: (typeof Action)[keyof typeof Action];
   element: (typeof ObjectType)[keyof typeof ObjectType];
   component: string;
   tid: number;
   aid: number;
-  undo: Partial<UndoInterface>;
+  fid: number;
+  nid: number;
+  undo: {
+    [key: string]: any; // To include properties from `areas[areaResize.id]`
+  };
   redo: {
-    color: string;
     [key: string]: any; // To include properties from `areas[areaResize.id]`
   };
   message: string;
+  data:
+    | Partial<{
+        relationship: DRelationship[];
+        table: DTable;
+        field: DField;
+      }>
+    | DRelationship
+    | DArea
+    | DNote;
+  toX: number;
+  toY: number;
+  x: number;
+  y: number;
+  id: number;
+  endFieldId: number;
+  startFieldId: number;
 }

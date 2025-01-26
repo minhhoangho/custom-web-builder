@@ -10,7 +10,7 @@ export const EnumsContext = createContext<{
   setEnums: React.Dispatch<
     React.SetStateAction<{ name: string; values: string[] }[]>
   >;
-  addEnum: (data: DEnum | null, addToHistory?: boolean) => void;
+  addEnum: (data: Partial<DEnum> | null, addToHistory?: boolean) => void;
   deleteEnum: (id: number, addToHistory?: boolean) => void;
   updateEnum: (id: number, values: DEnum) => void;
 } | null>(null);
@@ -29,7 +29,7 @@ export default function EnumsContextProvider({
   >([]);
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
-  const addEnum = (data: DEnum | null, addToHistory = true) => {
+  const addEnum = (data: Partial<DEnum> | null, addToHistory = true) => {
     if (data) {
       setEnums((prev) => {
         const temp = prev.slice();

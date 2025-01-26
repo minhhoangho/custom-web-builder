@@ -6,12 +6,19 @@ import { useDiagram, useType, useUndoRedo } from 'src/containers/Editor/hooks';
 import { Action, ObjectType } from '@constants/editor';
 import { Input } from '@components/form/Input';
 import TypeField from './TypeField';
+import { DType } from '../../../../data/interface';
 
-export default function TypeInfo({ index, data }) {
+export default function TypeInfo({
+  index,
+  data,
+}: {
+  index: number;
+  data: DType;
+}) {
   const { deleteType, updateType } = useType();
   const { tables, updateField } = useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
-  const [editField, setEditField] = useState({});
+  const [editField, setEditField] = useState<Partial<DType>>({});
   const { t } = useTranslation();
 
   return (
@@ -45,14 +52,26 @@ export default function TypeInfo({ index, data }) {
             onBlur={(e) => {
               if (e.target.value === editField.name) return;
 
-              const updatedFields = tables.reduce((acc, table) => {
-                table.fields.forEach((field, i) => {
-                  if (field.type.toLowerCase() === data.name.toLowerCase()) {
-                    acc.push({ tid: table.id, fid: i });
-                  }
-                });
-                return acc;
-              }, []);
+              const updatedFields: {
+                tid: number;
+                fid: number;
+              }[] = tables.reduce(
+                (
+                  acc: {
+                    tid: number;
+                    fid: number;
+                  }[],
+                  table,
+                ) => {
+                  table.fields.forEach((field, i) => {
+                    if (field.type.toLowerCase() === data.name.toLowerCase()) {
+                      acc.push({ tid: table.id, fid: i });
+                    }
+                  });
+                  return acc;
+                },
+                [],
+              );
 
               setUndoStack((prev) => [
                 ...prev,
@@ -93,9 +112,10 @@ export default function TypeInfo({ index, data }) {
                 value={data.comment}
                 // autosize
                 placeholder={t('comment')}
-                rows={1}
-                onChange={(value) =>
-                  updateType(index, { comment: value }, false)
+                // rows={1}
+                onInputChange={(value) =>
+                  // updateType(index, { comment: value }, false)
+                  updateType(index, { comment: value })
                 }
                 onFocus={(e) => setEditField({ comment: e.target.value })}
                 onBlur={(e) => {
