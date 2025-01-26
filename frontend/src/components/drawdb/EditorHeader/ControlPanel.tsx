@@ -143,10 +143,6 @@ export default function ControlPanel({
   setTitle,
   lastSaved,
 }: ControlPanelProps) {
-  const [anchorElToolbar, setAnchorElToolbar] = useState<null | HTMLElement>(
-    null,
-  );
-
   const confirmBox = useConfirm();
   const [modal, setModal] = useState(MODAL.NONE);
   const [sidesheet, setSidesheet] = useState(SIDESHEET.NONE);
@@ -189,13 +185,6 @@ export default function ControlPanel({
   const { setGistId } = useContext(IdContext);
   // const navigate = useNavigate();
   const router = useRouter();
-
-  const handleClickToolbar = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorElToolbar(event.currentTarget);
-  };
-  const handleCloseToolbar = () => {
-    setAnchorElToolbar(null);
-  };
 
   const invertLayout = (component: string) =>
     setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
@@ -1520,53 +1509,50 @@ export default function ControlPanel({
         <div className="flex justify-start items-center">
           <LayoutDropdown />
           <Divider orientation="vertical" flexItem />
-          <div className="control-panel-dropdown" onClick={handleClickToolbar}>
-            <div className="py-1 px-1 mx-2 hover:bg-gray-300 rounded flex items-center justify-center">
-              <div className="w-[40px]">
-                {Math.floor(transform.zoom * 100)}%
+          <BasicMenu
+            title={
+              <div className="py-1 px-1 mx-2 hover:bg-gray-300 rounded flex items-center justify-center">
+                <div className="w-[40px]">
+                  {Math.floor(transform.zoom * 100)}%
+                </div>
+                <div>
+                  <Iconify icon="mdi:caret-down" />
+                </div>
               </div>
-              <div>
-                <Iconify icon="mdi:caret-down" />
-              </div>
-            </div>
-            <Menu
-              anchorEl={anchorElToolbar}
-              open={Boolean(anchorElToolbar)}
-              onClose={handleCloseToolbar}
+            }
+          >
+            <MenuItem
+              onClick={fitWindow}
+              style={{ display: 'flex', justifyContent: 'space-between' }}
             >
+              <div>{t('fit_window_reset')}</div>
+              <div className="text-gray-400">Ctrl+Alt+W</div>
+            </MenuItem>
+            {[0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 3.0].map((e, i) => (
               <MenuItem
-                onClick={fitWindow}
-                style={{ display: 'flex', justifyContent: 'space-between' }}
+                key={i}
+                onClick={() => {
+                  setTransform((prev) => ({ ...prev, zoom: e }));
+                }}
               >
-                <div>{t('fit_window_reset')}</div>
-                <div className="text-gray-400">Ctrl+Alt+W</div>
+                {Math.floor(e * 100)}%
               </MenuItem>
-              {[0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 3.0].map((e, i) => (
-                <MenuItem
-                  key={i}
-                  onClick={() => {
-                    setTransform((prev) => ({ ...prev, zoom: e }));
-                  }}
-                >
-                  {Math.floor(e * 100)}%
-                </MenuItem>
-              ))}
-              <MenuItem>
-                <Input
-                  type="number"
-                  name="zoom"
-                  label={t('zoom')}
-                  placeholder={t('zoom')}
-                  onInputChange={(v: number) =>
-                    setTransform((prev) => ({
-                      ...prev,
-                      zoom: parseFloat(Number(v).toString()) * 0.01,
-                    }))
-                  }
-                />
-              </MenuItem>
-            </Menu>
-          </div>
+            ))}
+            <MenuItem>
+              <Input
+                type="number"
+                name="zoom"
+                label={t('zoom')}
+                placeholder={t('zoom')}
+                onInputChange={(v: number) =>
+                  setTransform((prev) => ({
+                    ...prev,
+                    zoom: parseFloat(Number(v).toString()) * 0.01,
+                  }))
+                }
+              />
+            </MenuItem>
+          </BasicMenu>
           <Tooltip title={t('zoom_in')} placement="bottom">
             <Iconify
               icon="mdi:zoom-in"
@@ -1817,7 +1803,7 @@ export default function ControlPanel({
                 onPointerDown={(e) => {
                   // Required for onPointerLeave to trigger when a touch pointer leaves
                   // https://stackoverflow.com/a/70976017/1137077
-                  e.target?.releasePointerCapture(e.pointerId);
+                  (e.target as any)?.releasePointerCapture(e.pointerId);
                 }}
                 onClick={() => setModal(MODAL.RENAME)}
               >
