@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Chip, Drawer } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,24 +16,28 @@ import {
   useSelect,
   useSettings,
 } from 'src/containers/Editor/hooks';
-import { DField, DTable } from 'src/data/interface'; // import { isRtl } from '../../i18n/utils/rtl';
+import { DField, DIndex, DTable } from 'src/data/interface'; // import { isRtl } from '../../i18n/utils/rtl';
 import TableInfo from '../EditorSidePanel/TablesTab/TableInfo';
 // import { isRtl } from '../../i18n/utils/rtl';
 // import i18n from '../../i18n/i18n';
+
+export type LinkingLineType = {
+  startFieldId: number;
+  endFieldId: number;
+  startTableId: number;
+  endTableId: number;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+};
 
 type TableProps = {
   tableData: DTable;
   onPointerDown: (e: any) => void;
   setHoveredTable: (data: { tableId: number; field: number }) => void;
   handleGripField: (field: number) => void;
-  setLinkingLine: (data: {
-    startFieldId: number;
-    startTableId: number;
-    startX: number;
-    startY: number;
-    endX: number;
-    endY: number;
-  }) => void;
+  setLinkingLine: React.Dispatch<React.SetStateAction<LinkingLineType>>;
 };
 
 export default function Table(props: TableProps) {
@@ -55,6 +59,7 @@ export default function Table(props: TableProps) {
   const height =
     tableData.fields.length * tableFieldHeight + tableHeaderHeight + 7;
   const openEditor = () => {
+    console.log('DEBUG >> openEditor >> layout.sidebar: ', layout.sidebar);
     if (!layout.sidebar) {
       setSelectedElement((prev) => ({
         ...prev,
@@ -71,6 +76,8 @@ export default function Table(props: TableProps) {
         open: true,
       }));
       if (selectedElement.currentTab !== Tab.TABLES) return;
+      const te = document.getElementById(`scroll_table_${tableData.id}`);
+      console.log('setSelectedElement table  ', tableData.id);
       document
         .getElementById(`scroll_table_${tableData.id}`)
         ?.scrollIntoView({ behavior: 'smooth' });
@@ -116,7 +123,7 @@ export default function Table(props: TableProps) {
               if (!e.isPrimary) return;
 
               handleGripField(index);
-              setLinkingLine((prev) => ({
+              setLinkingLine((prev: LinkingLineType) => ({
                 ...prev,
                 startFieldId: index,
                 startTableId: tableData.id,
@@ -143,16 +150,12 @@ export default function Table(props: TableProps) {
         </div>
         <div className="text-zinc-400">
           {hoveredField === index ? (
-            <Button
-              variant={'contained'}
-              // theme="solid"
-              // size="small"
-              style={{
-                backgroundColor: '#d42020b3',
-              }}
-              startIcon={<Iconify icon="ic:baseline-minus" />}
+            <button
+              className="rounded bg-red-500 text-white p-1 cursor-pointer"
               onClick={() => deleteField(fieldData, tableData.id)}
-            />
+            >
+              <Iconify icon="ic:baseline-minus" />
+            </button>
           ) : (
             <div className="flex gap-1 items-center">
               {fieldData.primary && <Iconify icon="material-symbols:key" />}
@@ -162,8 +165,8 @@ export default function Table(props: TableProps) {
                   ((dbToTypes[database][fieldData.type]?.isSized ||
                     dbToTypes[database][fieldData.type]?.hasPrecision) &&
                   fieldData.size &&
-                  fieldData.size !== ''
-                    ? '(' + fieldData.size + ')'
+                  fieldData.size !== 0
+                    ? `(${fieldData.size})`
                     : '')}
               </span>
             </div>
@@ -211,11 +214,11 @@ export default function Table(props: TableProps) {
             <div className=" px-3 overflow-hidden text-ellipsis whitespace-nowrap">
               {tableData.name}
             </div>
-            <div className="group-hover:block">
+            <div className="hidden group-hover:block">
               <div className="flex justify-end items-center mx-2">
                 <Button
                   size="small"
-                  className="!min-w-0 !w-[36px] flex !justify-center"
+                  className="!min-w-0 !w-[36px] flex !justify-center z-100"
                   style={{
                     backgroundColor: '#2f68adb3',
                     marginRight: '6px',
@@ -264,7 +267,7 @@ export default function Table(props: TableProps) {
                         t('not_set')
                       ) : (
                         <div>
-                          {tableData.indices.map((index, k) => (
+                          {tableData.indices.map((index: DIndex, k) => (
                             <div
                               key={k}
                               className={`flex items-center my-1 px-2 py-1 rounded ${
@@ -275,14 +278,13 @@ export default function Table(props: TableProps) {
                             >
                               <i className="fa-solid fa-thumbtack me-2 mt-1 text-slate-500"></i>
                               <div>
-                                {index.fields.map((f) => (
+                                {index.fields.map((f: string) => (
                                   <Chip
                                     color="secondary"
                                     key={f}
                                     className="me-1"
-                                  >
-                                    {f}
-                                  </Chip>
+                                    label={f}
+                                  />
                                 ))}
                               </div>
                             </div>
@@ -330,8 +332,8 @@ export default function Table(props: TableProps) {
                         ((dbToTypes[database][e?.type]?.isSized ||
                           dbToTypes[database][e?.type]?.hasPrecision) &&
                         e.size &&
-                        e.size !== ''
-                          ? '(' + e.size + ')'
+                        e.size !== 0
+                          ? `(${e.size})`
                           : '')}
                     </p>
                   </div>

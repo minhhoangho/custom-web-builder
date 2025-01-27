@@ -15,7 +15,7 @@ import {
   useUndoRedo,
 } from 'src/containers/Editor/hooks';
 import { areFieldsCompatible } from 'src/utils/drawdb';
-import Table from './Table';
+import Table, { LinkingLineType } from './Table';
 import Area from './Area';
 import Relationship from './Relationship';
 import Note from './Note';
@@ -46,7 +46,7 @@ export default function Canvas() {
     prevY: 0,
   });
   const [linking, setLinking] = useState(false);
-  const [linkingLine, setLinkingLine] = useState({
+  const [linkingLine, setLinkingLine] = useState<LinkingLineType>({
     startTableId: -1,
     startFieldId: -1,
     endTableId: -1,

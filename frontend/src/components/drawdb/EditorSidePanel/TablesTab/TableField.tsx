@@ -28,7 +28,7 @@ export default function TableField({ data, tid, index }) {
     <Grid container spacing={0.5} className="hover-1 my-2">
       <Grid item xs={3}>
         <Input
-          // id={`scroll_table_${tid}_input_${index}`}
+          id={`scroll_table_${tid}_input_${index}`}
           value={data.name}
           // validateStatus={data.name.trim() === '' ? 'error' : 'default'}
           placeholder="Name"

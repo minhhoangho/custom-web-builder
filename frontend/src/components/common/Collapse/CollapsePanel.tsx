@@ -45,11 +45,16 @@ export function CollapsePanel({
     return _header;
   };
 
+  console.log('Expalend >> ', collapseContext?.activeKey === itemKey);
+  console.log('collapseContext?.activeKey >> ', collapseContext?.activeKey);
+  console.log('itemKey >> ', itemKey);
+
   return (
     <Accordion
       key={itemKey}
       onClick={(e) => handleClick(itemKey, e)}
       className={clsx('!rounded-none text-sm', className)}
+      expanded={collapseContext?.activeKey === itemKey}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />} className="font-bold">
         {renderHeader(header)}

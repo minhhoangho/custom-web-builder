@@ -66,6 +66,12 @@ export interface DField {
   isArray?: boolean; // optional, as not all fields are arrays
 }
 
+export interface DIndex {
+  name: string;
+  unique: boolean;
+  fields: string[];
+}
+
 export interface DTable {
   id: number;
   name: string;
