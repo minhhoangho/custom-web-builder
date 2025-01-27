@@ -55,15 +55,19 @@ export interface EditorUndoStackInterface {
     [key: string]: any; // To include properties from `areas[areaResize.id]`
   };
   message: string;
-  data:
-    | Partial<{
-        relationship: DRelationship[];
-        table: DTable;
-        field: DField;
-      }>
-    | DRelationship
-    | DArea
-    | DNote;
+  data?: any;
+  // data?:
+  //   | Partial<{
+  //       relationship: DRelationship[];
+  //       table: DTable;
+  //       field: DField;
+  //     }>
+  //   | DRelationship
+  //   | DField
+  //   | DArea
+  //   | DNote
+  //   | DType
+  //   | DEnum;
   toX: number;
   toY: number;
   x: number;

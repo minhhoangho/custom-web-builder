@@ -50,7 +50,10 @@ import { databases } from 'src/data/database';
 import { jsonToMermaid } from 'src/utils/exports/export-as/mermaid'; // import { isRtl } from '../../i18n/utils/rtl';
 import { jsonToDocumentation } from 'src/utils/exports/export-as/documentation';
 import useConfirm from '@shared/hooks/use-confirm';
-import { EditorUndoStackInterface } from 'src/containers/Editor/interfaces';
+import {
+  EditorLayoutInterface,
+  EditorUndoStackInterface,
+} from 'src/containers/Editor/interfaces';
 import Modal from './Modal/Modal';
 import Sidesheet from './SideSheet/Sidesheet';
 import LayoutDropdown from './LayoutDropdown';
@@ -187,7 +190,7 @@ export default function ControlPanel({
   // const navigate = useNavigate();
   const router = useRouter();
 
-  const invertLayout = (component: string) =>
+  const invertLayout = (component: keyof EditorLayoutInterface) =>
     setLayout((prev) => ({ ...prev, [component]: !prev[component] }));
 
   const undo = () => {
@@ -309,14 +312,14 @@ export default function ControlPanel({
           );
         } else if (a.component === 'field_add') {
           updateTable(a.tid, {
-            fields: tables[a.tid].fields
-              .filter((e) => e.id !== tables[a.tid].fields.length - 1)
+            fields: tables[a.tid]?.fields
+              .filter((e) => e.id !== tables[a.tid]?.fields.length - 1)
               .map((t, i) => ({ ...t, id: i })),
           });
         } else if (a.component === 'index_add') {
           updateTable(a.tid, {
-            indices: tables[a.tid].indices
-              .filter((e) => e.id !== tables[a.tid].indices.length - 1)
+            indices: tables[a.tid]?.indices
+              .filter((e) => e.id !== tables[a.tid]?.indices.length - 1)
               .map((t, i) => ({ ...t, id: i })),
           });
         } else if (a.component === 'index') {

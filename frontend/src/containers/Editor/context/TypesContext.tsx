@@ -27,7 +27,7 @@ export default function TypesContextProvider({
     if (data) {
       setTypes((prev) => {
         const temp = prev.slice();
-        temp.splice(data.id ?? 0, 0, data); // TODO: need check
+        temp.splice(data.id ?? 0, 0, data as DType); // TODO: need check
         return temp;
       });
     } else {

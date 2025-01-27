@@ -7,9 +7,7 @@ import { useUndoRedo } from '../hooks';
 
 export const EnumsContext = createContext<{
   enums: DEnum[];
-  setEnums: React.Dispatch<
-    React.SetStateAction<{ name: string; values: string[] }[]>
-  >;
+  setEnums: React.Dispatch<React.SetStateAction<DEnum[]>>;
   addEnum: (data: Partial<DEnum> | null, addToHistory?: boolean) => void;
   deleteEnum: (id: number, addToHistory?: boolean) => void;
   updateEnum: (id: number, values: DEnum) => void;
@@ -21,19 +19,15 @@ export default function EnumsContextProvider({
   children: React.ReactNode;
 }) {
   const { t } = useTranslation();
-  const [enums, setEnums] = useState<
-    {
-      name: string;
-      values: string[];
-    }[]
-  >([]);
+  const [enums, setEnums] = useState<DEnum[]>([]);
   const { setUndoStack, setRedoStack } = useUndoRedo();
 
   const addEnum = (data: Partial<DEnum> | null, addToHistory = true) => {
     if (data) {
       setEnums((prev) => {
         const temp = prev.slice();
-        temp.splice(data.id, 0, data);
+        if (!data.id) return temp;
+        temp.splice(data.id, 0, data as DEnum);
         return temp;
       });
     } else {
