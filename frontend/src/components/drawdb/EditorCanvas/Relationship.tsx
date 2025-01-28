@@ -10,8 +10,9 @@ import {
 } from 'src/containers/Editor/hooks';
 import { calcPath } from 'src/utils/drawdb';
 import RelationshipInfo from '../EditorSidePanel/RelationshipsTab/RelationshipInfo';
+import { DRelationship } from '../../../data/interface';
 
-export default function Relationship({ data }) {
+export default function Relationship({ data }: { data: DRelationship }) {
   const { settings } = useSettings();
   const { tables } = useDiagram();
   const { layout } = useLayout();

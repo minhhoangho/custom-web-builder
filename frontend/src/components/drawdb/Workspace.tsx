@@ -116,7 +116,7 @@ export default function WorkSpace() {
   // console.log('showSelectDbModal:', showSelectDbModal);
   // console.log('selectedDb:', selectedDb);
   // console.log('layout:', layout);
-  console.log('settings:', settings);
+  // console.log('settings:', settings);
   // console.log('types:', types);
   // console.log('areas:', areas);
   // console.log('tasks:', tasks);

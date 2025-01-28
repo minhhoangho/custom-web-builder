@@ -8,4 +8,5 @@ export interface EditorSelectInterface {
   currentTab: (typeof Tab)[keyof typeof Tab];
   open: boolean;
   openFromToolbar: boolean;
+  editFromToolbar: boolean;
 }

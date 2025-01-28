@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -24,9 +24,17 @@ export function CollapsePanel({
   itemKey,
   className,
 }: CollapsePanelProps) {
+  const [expanded, setExpanded] = React.useState(false);
   const collapseContext = React.useContext(CollapseContext);
 
-  const handleClick = (itemKey: string, e: React.MouseEvent) => {
+  useEffect(() => {
+    if (collapseContext?.activeKey === itemKey) {
+      setExpanded(true);
+    }
+  }, [collapseContext?.activeKey, itemKey]);
+
+  const handleOnChange = (e: React.BaseSyntheticEvent, expanded: boolean) => {
+    setExpanded(expanded);
     if (collapseContext?.onChange) {
       collapseContext.onChange(itemKey, e);
     }
@@ -45,16 +53,13 @@ export function CollapsePanel({
     return _header;
   };
 
-  console.log('Expalend >> ', collapseContext?.activeKey === itemKey);
-  console.log('collapseContext?.activeKey >> ', collapseContext?.activeKey);
-  console.log('itemKey >> ', itemKey);
-
   return (
     <Accordion
       key={itemKey}
-      onClick={(e) => handleClick(itemKey, e)}
+      // onClick={(e) => handleClick(itemKey, e)}
+      onChange={handleOnChange}
       className={clsx('!rounded-none text-sm', className)}
-      expanded={collapseContext?.activeKey === itemKey}
+      expanded={expanded}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />} className="font-bold">
         {renderHeader(header)}

@@ -76,7 +76,6 @@ export default function Table(props: TableProps) {
         open: true,
       }));
       if (selectedElement.currentTab !== Tab.TABLES) return;
-      const te = document.getElementById(`scroll_table_${tableData.id}`);
       console.log('setSelectedElement table  ', tableData.id);
       document
         .getElementById(`scroll_table_${tableData.id}`)

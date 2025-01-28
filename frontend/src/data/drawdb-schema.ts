@@ -181,7 +181,6 @@ export const ddbSchema = {
   properties: {
     author: { type: 'string' },
     project: { type: 'string' },
-    title: { type: 'string' },
     date: { type: 'string' },
     ...jsonSchema.properties,
   },
