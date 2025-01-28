@@ -13,24 +13,25 @@ export default function NotesTab() {
 
   return (
     <>
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-col">
+        <div>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="mdi:plus" />}
+            onClick={() => addNote()}
+          >
+            {t('add_note')}
+          </Button>
+        </div>
+
         <SearchBar
-          setActiveKey={(activeKey) =>
+          setActiveKey={(activeKey: string) =>
             setSelectedElement((prev) => ({
               ...prev,
               id: parseInt(activeKey),
             }))
           }
         />
-        <div>
-          <Button
-            startIcon={<Iconify icon="mdi:plus" />}
-            // block
-            onClick={() => addNote()}
-          >
-            {t('add_note')}
-          </Button>
-        </div>
       </div>
       {notes.length <= 0 ? (
         <Empty title={t('no_notes')} text={t('no_notes_text')} />
@@ -46,7 +47,6 @@ export default function NotesTab() {
               open: true,
             }));
           }}
-          accordion
         >
           {notes.map((n, i) => (
             <NoteInfo data={n} key={i} nid={i} />

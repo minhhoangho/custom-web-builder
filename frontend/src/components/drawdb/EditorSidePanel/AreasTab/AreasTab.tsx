@@ -11,17 +11,17 @@ export default function AreasTab() {
 
   return (
     <div>
-      <div className="flex gap-2">
-        <SearchBar />
+      <div className="flex gap-2 flex-col">
         <div>
           <Button
+            variant="contained"
             startIcon={<Iconify icon="mdi:plus" />}
-            block
             onClick={() => addArea()}
           >
             {t('add_area')}
           </Button>
         </div>
+        <SearchBar />
       </div>
       {areas.length <= 0 ? (
         // <Empty

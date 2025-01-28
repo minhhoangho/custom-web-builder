@@ -1,22 +1,17 @@
-import { useState } from "react";
-// import { AutoComplete } from "@douyinfe/semi-ui";
-// import { IconSearch } from "@douyinfe/semi-icons";
-import { useSelect, useType } from "src/containers/Editor/hooks";
-import { ObjectType } from "@constants/editor";
-import { useTranslation } from "react-i18next";
-import { Autocomplete } from "@mui/material";
+import { useState } from 'react';
+import { useSelect, useType } from 'src/containers/Editor/hooks';
+import { Autocomplete } from '@components/common';
+import { ObjectType } from '@constants/editor';
 
 export default function Searchbar() {
   const { types } = useType();
-  const [value, setValue] = useState("");
-  // const { setSelectedElement } = useSelect();
-  const { t } = useTranslation();
+  const { setSelectedElement } = useSelect();
 
   const [filteredResult, setFilteredResult] = useState(
     types.map((t) => t.name),
   );
 
-  const handleStringSearch = (value) => {
+  const handleStringSearch = (value: string) => {
     setFilteredResult(
       types.map((t) => t.name).filter((i) => i.includes(value)),
     );
@@ -24,20 +19,20 @@ export default function Searchbar() {
 
   return (
     <Autocomplete
-      options={filteredResult}
-      value={value}
-      showClear
-      // prefix={<Iconify icon="mdi:search"}/>}
-      // placeholder={t("search")}
-      // emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
-      onInputChange={(v) => setValue(v)}
-      // onSelect={(v) => {
-      //   const { id } = notes.find((t) => t.title === v);
-      //   setActiveKey(`${id}`);
-      //   document
-      //     .getElementById(`scroll_note_${id}`)
-      //     .scrollIntoView({ behavior: "smooth" });
-      // }}
+      searchResult={filteredResult}
+      onSearch={handleStringSearch}
+      onSelect={(v) => {
+        const i = types.findIndex((t) => t.name === v);
+        setSelectedElement((prev) => ({
+          ...prev,
+          id: i,
+          open: true,
+          element: ObjectType.TYPE,
+        }));
+        document
+          .getElementById(`scroll_type_${i}`)
+          ?.scrollIntoView({ behavior: 'smooth' });
+      }}
       className="w-full"
     />
   );
