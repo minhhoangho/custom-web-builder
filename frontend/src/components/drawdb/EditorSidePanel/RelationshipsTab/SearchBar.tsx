@@ -1,56 +1,42 @@
-import { useEffect, useState } from 'react';
-// import { IconSearch } from "@douyinfe/semi-icons";
-import { Autocomplete, TextField } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { useDiagram } from 'src/containers/Editor/hooks';
-import { Iconify } from '@components/common';
+import { useState } from 'react';
+import { useDiagram, useSelect } from 'src/containers/Editor/hooks';
+import { Autocomplete } from '@components/common';
+import { ObjectType } from '@constants/editor';
+import { EditorSelectInterface } from 'src/containers/Editor/interfaces';
+import { DRelationship } from 'src/data/interface';
 
 export default function SearchBar() {
   const { relationships } = useDiagram();
-  const [searchText, setSearchText] = useState('');
-  const { t } = useTranslation();
+  const { setSelectedElement } = useSelect();
 
-  const [filteredResult, setFilteredResult] = useState(
-    relationships.map((t) => t.name),
-  );
+  const [filteredResult, setFilteredResult] = useState<string[]>([]);
 
   const handleStringSearch = (value: string) => {
     setFilteredResult(
-      relationships.map((t) => t.name).filter((i) => i.includes(value)),
+      relationships
+        .map((t: DRelationship) => t.name)
+        .filter((i) => i.includes(value)),
     );
   };
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleStringSearch(searchText);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [searchText]);
-
-  const renderInput = (props) => (
-    <TextField
-      prefix={<Iconify icon="mdi:search" />}
-      {...props}
-      label={t('search')}
-    />
-  );
 
   return (
     <Autocomplete
-      options={filteredResult}
-      value={searchText}
-      renderInput={renderInput}
-      // showClear
-      // prefix={<Iconify icon="mdi:search"}/>}
-      // placeholder={t("search")}
-      // emptyContent={<div className="p-3 popover-theme">{t("not_found")}</div>}
-      onInputChange={(v) => setSearchText(v)}
-      // onSelect={(v) => {
-      //   const { id } = notes.find((t) => t.title === v);
-      //   setActiveKey(`${id}`);
-      //   document
-      //     .getElementById(`scroll_note_${id}`)
-      //     .scrollIntoView({ behavior: "smooth" });
-      // }}
+      searchResult={filteredResult}
+      onSearch={handleStringSearch}
+      onSelect={(v) => {
+        const res = relationships.find((t: DRelationship) => t.name === v);
+        if (!res) return;
+        const id = res.id;
+        setSelectedElement((prev: EditorSelectInterface) => ({
+          ...prev,
+          id: id,
+          open: true,
+          element: ObjectType.RELATIONSHIP,
+        }));
+        document
+          .getElementById(`scroll_ref_${id}`)
+          ?.scrollIntoView({ behavior: 'smooth' });
+      }}
       className="w-full"
     />
   );

@@ -85,6 +85,7 @@ export interface DTable {
 }
 
 export interface DRelationship {
+  id: number;
   startTableId: number;
   startFieldId: number;
   endTableId: number;
@@ -93,7 +94,6 @@ export interface DRelationship {
   cardinality: string;
   updateConstraint: string;
   deleteConstraint: string;
-  id: number;
 }
 
 export interface DTemplate {

@@ -82,7 +82,7 @@ export default function Relationship({ data }: { data: DRelationship }) {
       if (selectedElement.currentTab !== Tab.RELATIONSHIPS) return;
       document
         .getElementById(`scroll_ref_${data.id}`)
-        .scrollIntoView({ behavior: 'smooth' });
+        ?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 

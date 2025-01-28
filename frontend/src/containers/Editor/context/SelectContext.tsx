@@ -23,6 +23,7 @@ export default function SelectContextProvider({
       currentTab: Tab.TABLES,
       open: false,
       openFromToolbar: false,
+      editFromToolbar: false,
     },
   );
 

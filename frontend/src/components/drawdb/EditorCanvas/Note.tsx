@@ -71,7 +71,7 @@ export default function Note({ data, onPointerDown }) {
     if (layout.sidebar && selectedElement.currentTab === Tab.NOTES) {
       document
         .getElementById(`scroll_note_${data.id}`)
-        .scrollIntoView({ behavior: 'smooth' });
+        ?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
