@@ -7,7 +7,6 @@ import { HTMLAttributes, SyntheticEvent, useEffect, useState } from 'react';
 import { AutocompleteChangeReason } from '@mui/base';
 import clsx from 'clsx';
 import { TextFieldProps } from '@mui/material/TextField/TextField';
-
 type AutocompleteProps = {
   onSearch: (value: string) => void;
   onSelect?: (value: any) => void;

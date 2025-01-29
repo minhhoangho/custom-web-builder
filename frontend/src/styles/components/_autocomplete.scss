@@ -1,0 +1,22 @@
+.MuiAutocomplete-option {
+  height: 28px;
+  font-size: 14px;
+}
+
+.MuiAutocomplete-root {
+  font-size: 14px;
+
+  label {
+    font-size: 14px;
+  }
+
+  .MuiInputBase-root {
+    border-radius: 4px;
+  }
+}
+
+.MuiAutocomplete-popper {
+ .MuiPaper-root {
+    border-radius: 4px;
+  }
+}
