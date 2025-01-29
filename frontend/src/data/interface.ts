@@ -14,7 +14,8 @@ export type DDataType =
   | keyof typeof sqliteTypes
   | keyof typeof mssqlTypes;
 
-export type DBType = keyof typeof DB;
+export type DBType = (typeof DB)[keyof typeof DB];
+export type DBConstType = keyof typeof DB;
 
 export interface DType {
   id?: number;

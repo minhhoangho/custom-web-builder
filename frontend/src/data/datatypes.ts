@@ -1,6 +1,6 @@
 import { DB } from '@constants/editor';
 import { strHasQuotes } from 'src/utils/common';
-import { DField, DDataType, DBType } from './interface';
+import { DBConstType, DDataType, DField } from './interface';
 
 const intRegex = /^-?\d*$/;
 const doubleRegex = /^-?\d*.?\d+$/;
@@ -141,7 +141,8 @@ const defaultTypesBase = {
         return false;
       }
       const content = field.default.split(' ');
-      const date = content[0].split('-');
+      const date = content[0]?.split('-');
+      if (date?.length === 0 || date?.[0] === undefined) return false;
       return (
         Number.parseInt(date[0]) >= 1970 && Number.parseInt(date[0]) <= 2038
       );
@@ -281,8 +282,28 @@ const defaultTypesBase = {
   },
 };
 
+type DBtoType = {
+  [key in DBConstType]: TypeMapping;
+};
+
+type TypeMapping = {
+  [_key in DDataType]: {
+    type: string;
+    checkDefault: (field: DField) => boolean;
+    hasCheck: boolean;
+    isSized: boolean;
+    hasPrecision: boolean;
+    canIncrement?: boolean;
+    compatibleWith?: DDataType[];
+    defaultSize?: number;
+    hasQuotes?: boolean;
+    noDefault?: boolean;
+  };
+};
+
 export const defaultTypes = new Proxy(defaultTypesBase, {
-  get: (target, prop) => (prop in target ? target[prop] : false),
+  get: (target: Record<string, any>, prop: string) =>
+    prop in target ? target[prop] : false,
 });
 
 const mysqlTypesBase = {
@@ -420,7 +441,8 @@ const mysqlTypesBase = {
         return false;
       }
       const content = field.default.split(' ');
-      const date = content[0].split('-');
+      const date = content?.[0]?.split('-');
+      if (date?.length === 0 || date?.[0] === undefined) return false;
       return (
         Number.parseInt(date[0]) >= 1970 && Number.parseInt(date[0]) <= 2038
       );
@@ -450,8 +472,11 @@ const mysqlTypesBase = {
         return false;
       }
       const c = field.default.split(' ');
-      const d = c[0].split('-');
-      return Number.parseInt(d[0]) >= 1000 && Number.parseInt(d[0]) <= 9999;
+      const d = c[0]?.split('-');
+      return (
+        Number.parseInt(d?.[0] ?? '0') >= 1000 &&
+        Number.parseInt(d?.[0] ?? '0') <= 9999
+      );
     },
     hasCheck: false,
     isSized: false,
@@ -631,8 +656,8 @@ const mysqlTypesBase = {
     type: 'SET',
     checkDefault: (field: DField) => {
       const defaultValues = field.default.split(',');
-      for (let i = 0; i < defaultValues.length; i++) {
-        if (!field.values.includes(defaultValues[i].trim())) return false;
+      for (const value of defaultValues) {
+        if (!field.values?.includes(value.trim())) return false;
       }
       return true;
     },
@@ -716,7 +741,8 @@ const mysqlTypesBase = {
 };
 
 export const mysqlTypes = new Proxy(mysqlTypesBase, {
-  get: (target, prop) => (prop in target ? target[prop] : false),
+  get: (target: Record<string, any>, prop: string) =>
+    prop in target ? target[prop] : false,
 });
 
 const postgresTypesBase = {
@@ -879,8 +905,8 @@ const postgresTypesBase = {
   TEXT: {
     type: 'TEXT',
     checkDefault: (field: DField) => {
+      if (field.size === undefined) return false;
       if (strHasQuotes(field.default)) {
-        if (!field.size) return false;
         return field.default.length - 2 <= field.size;
       }
       return field.default.length <= field.size;
@@ -956,7 +982,7 @@ const postgresTypesBase = {
     type: 'TIMESTAMP',
     checkDefault: (field: DField) => {
       const content = field.default.split(' ');
-      const date = content[0].split('-');
+      const date = content[0]?.split('-');
       const specialValues = [
         'epoch',
         'infinity',
@@ -969,8 +995,8 @@ const postgresTypesBase = {
       ];
       return (
         /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(field.default) ||
-        (Number.parseInt(date[0]) >= 1970 &&
-          Number.parseInt(date[0]) <= 2038) ||
+        (Number.parseInt(date?.[0] ?? '0') >= 1970 &&
+          Number.parseInt(date?.[0] ?? '0') <= 2038) ||
         specialValues.includes(field.default.toLowerCase())
       );
     },
@@ -1266,7 +1292,8 @@ const postgresTypesBase = {
 };
 
 export const postgresTypes = new Proxy(postgresTypesBase, {
-  get: (target, prop) => (prop in target ? target[prop] : false),
+  get: (target: Record<string, any>, prop: string) =>
+    prop in target ? target[prop] : false,
 });
 
 const sqliteTypesBase = {
@@ -1315,6 +1342,7 @@ const sqliteTypesBase = {
   VARCHAR: {
     type: 'VARCHAR',
     checkDefault: (field: DField) => {
+      if (!field.size) return false;
       if (strHasQuotes(field.default)) {
         return field.default.length - 2 <= field.size;
       }
@@ -1363,9 +1391,10 @@ const sqliteTypesBase = {
         return false;
       }
       const content = field.default.split(' ');
-      const date = content[0].split('-');
+      const date = content[0]?.split('-');
       return (
-        Number.parseInt(date[0]) >= 1970 && Number.parseInt(date[0]) <= 2038
+        Number.parseInt(date?.[0] ?? '0') >= 1970 &&
+        Number.parseInt(date?.[0] ?? '0') <= 2038
       );
     },
     hasCheck: false,
@@ -1393,8 +1422,11 @@ const sqliteTypesBase = {
         return false;
       }
       const c = field.default.split(' ');
-      const d = c[0].split('-');
-      return Number.parseInt(d[0]) >= 1000 && Number.parseInt(d[0]) <= 9999;
+      const d = c[0]?.split('-');
+      return (
+        Number.parseInt(d?.[0] ?? '0') >= 1000 &&
+        Number.parseInt(d?.[0] ?? '0') <= 9999
+      );
     },
     hasCheck: false,
     isSized: false,
@@ -1404,7 +1436,8 @@ const sqliteTypesBase = {
 };
 
 export const sqliteTypes = new Proxy(sqliteTypesBase, {
-  get: (target, prop) => (prop in target ? target[prop] : false),
+  get: (target: Record<string, any>, prop: string) =>
+    prop in target ? target[prop] : false,
 });
 
 const mssqlTypesBase = {
@@ -1540,8 +1573,11 @@ const mssqlTypesBase = {
         return false;
       }
       const c = field.default.split(' ');
-      const d = c[0].split('-');
-      return Number.parseInt(d[0]) >= 1000 && Number.parseInt(d[0]) <= 9999;
+      const d = c[0]?.split('-');
+      return (
+        Number.parseInt(d?.[0] ?? '0') >= 1000 &&
+        Number.parseInt(d?.[0] ?? '0') <= 9999
+      );
     },
     hasCheck: false,
     isSized: false,
@@ -1558,8 +1594,11 @@ const mssqlTypesBase = {
         return false;
       }
       const c = field.default.split(' ');
-      const d = c[0].split('-');
-      return Number.parseInt(d[0]) >= 1000 && Number.parseInt(d[0]) <= 9999;
+      const d = c[0]?.split('-');
+      return (
+        Number.parseInt(d?.[0] ?? '0') >= 1000 &&
+        Number.parseInt(d?.[0] ?? '0') <= 9999
+      );
     },
     hasCheck: false,
     isSized: false,
@@ -1580,8 +1619,11 @@ const mssqlTypesBase = {
         return false;
       }
       const c = field.default.split(' ');
-      const d = c[0].split('-');
-      return Number.parseInt(d[0]) >= 1000 && Number.parseInt(d[0]) <= 9999;
+      const d = c[0]?.split('-');
+      return (
+        Number.parseInt(d?.[0] ?? '0') >= 1000 &&
+        Number.parseInt(d?.[0] ?? '0') <= 9999
+      );
     },
     hasCheck: false,
     isSized: false,
@@ -1598,8 +1640,11 @@ const mssqlTypesBase = {
         return false;
       }
       const c = field.default.split(' ');
-      const d = c[0].split('-');
-      return Number.parseInt(d[0]) >= 1900 && Number.parseInt(d[0]) <= 2079;
+      const d = c[0]?.split('-');
+      return (
+        Number.parseInt(d?.[0] ?? '0') >= 1900 &&
+        Number.parseInt(d?.[0] ?? '0') <= 2079
+      );
     },
     hasCheck: false,
     isSized: false,
@@ -1626,9 +1671,10 @@ const mssqlTypesBase = {
         return false;
       }
       const content = field.default.split(' ');
-      const date = content[0].split('-');
+      const date = content[0]?.split('-');
       return (
-        Number.parseInt(date[0]) >= 1970 && Number.parseInt(date[0]) <= 2038
+        Number.parseInt(date?.[0] ?? '0') >= 1970 &&
+        Number.parseInt(date?.[0] ?? '0') <= 2038
       );
     },
     hasCheck: false,
@@ -1798,11 +1844,12 @@ const mssqlTypesBase = {
 };
 
 export const mssqlTypes = new Proxy(mssqlTypesBase, {
-  get: (target, prop) => (prop in target ? target[prop] : false),
+  get: (target: Record<string, any>, prop: string) =>
+    prop in target ? target[prop] : false,
 });
 
 const dbToTypesBase: {
-  [key in DBType]: {
+  [key in DBConstType]: {
     [_key in DDataType]: {
       type: string;
       checkDefault: (field: DField) => boolean;
@@ -1825,21 +1872,7 @@ const dbToTypesBase: {
   [DB.MARIADB]: mysqlTypes,
 } as any;
 
-export const dbToTypes: {
-  [key in DBType]: {
-    [_key in DDataType]: {
-      type: DDataType;
-      checkDefault: (field: DField) => boolean;
-      hasCheck: boolean;
-      isSized: boolean;
-      hasPrecision: boolean;
-      canIncrement?: boolean;
-      compatibleWith?: DDataType[];
-      defaultSize?: number;
-      hasQuotes?: boolean;
-      noDefault?: boolean;
-    };
-  };
-} = new Proxy(dbToTypesBase, {
-  get: (target, prop) => (prop in target ? target[prop] : false),
+export const dbToTypes = new Proxy(dbToTypesBase, {
+  get: (target: DBtoType, prop: DBConstType) =>
+    prop in target ? target[prop] : false,
 });

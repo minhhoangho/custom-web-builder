@@ -5,6 +5,7 @@ import { Action, Cardinality, Constraint, ObjectType } from '@constants/editor';
 import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 import i18n from 'src/i18n/i18n';
 import { Iconify, Popover, SelectField as Select } from '@components/common';
+import { DRelationship } from 'src/data/interface';
 
 const columns = [
   {
@@ -17,7 +18,7 @@ const columns = [
   },
 ];
 
-export default function RelationshipInfo({ data }) {
+export default function RelationshipInfo({ data }: { data: DRelationship }) {
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { tables, setRelationships, deleteRelationship } = useDiagram();
   const { t } = useTranslation();
@@ -48,13 +49,13 @@ export default function RelationshipInfo({ data }) {
       },
     ]);
     setRedoStack([]);
-    setRelationships((prev) =>
-      prev.map((e, idx) =>
+    setRelationships((prev: DRelationship[]) =>
+      prev.map((e: DRelationship, idx) =>
         idx === data.id
           ? {
               ...e,
-              name: `${tables[e.startTableId].name}_${
-                tables[e.startTableId].fields[e.startFieldId].name
+              name: `${tables[e.startTableId]?.name}_${
+                tables[e.startTableId]?.fields[e.startFieldId]?.name
               }_fk`,
               startTableId: e.endTableId,
               startFieldId: e.endFieldId,
@@ -66,7 +67,7 @@ export default function RelationshipInfo({ data }) {
     );
   };
 
-  const changeCardinality = (value) => {
+  const changeCardinality = (value: string) => {
     setUndoStack((prev) => [
       ...prev,
       {
@@ -89,7 +90,7 @@ export default function RelationshipInfo({ data }) {
     );
   };
 
-  const changeConstraint = (key, value) => {
+  const changeConstraint = (key: string, value: string) => {
     const undoKey = `${key}Constraint`;
     setUndoStack((prev) => [
       ...prev,
@@ -97,7 +98,7 @@ export default function RelationshipInfo({ data }) {
         action: Action.EDIT,
         element: ObjectType.RELATIONSHIP,
         rid: data.id,
-        undo: { [undoKey]: data[undoKey] },
+        undo: { [undoKey]: data[undoKey as keyof DRelationship] },
         redo: { [undoKey]: value },
         message: t('edit_relationship', {
           refName: data.name,
@@ -116,11 +117,11 @@ export default function RelationshipInfo({ data }) {
       <div className="flex justify-between items-center mb-3">
         <div className="me-3">
           <span className="font-semibold">{t('primary')}: </span>
-          {tables[data.endTableId].name}
+          {tables[data.endTableId]?.name}
         </div>
         <div className="mx-1">
           <span className="font-semibold">{t('foreign')}: </span>
-          {tables[data.startTableId].name}
+          {tables[data.startTableId]?.name}
         </div>
         <div className="ml-1">
           <Popover
@@ -143,10 +144,10 @@ export default function RelationshipInfo({ data }) {
                   {
                     key: '1',
                     foreign: `${tables[data.startTableId]?.name}(${
-                      tables[data.startTableId].fields[data.startFieldId]?.name
+                      tables[data.startTableId]?.fields[data.startFieldId]?.name
                     })`,
                     primary: `${tables[data.endTableId]?.name}(${
-                      tables[data.endTableId].fields[data.endFieldId]?.name
+                      tables[data.endTableId]?.fields[data.endFieldId]?.name
                     })`,
                   },
                 ]}

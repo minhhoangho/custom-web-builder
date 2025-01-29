@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { toast } from '@components/common';
 import { Action, DB, defaultBlue, ObjectType } from '@constants/editor';
 import { DBType, DField, DRelationship, DTable } from 'src/data/interface';
@@ -13,11 +13,11 @@ export const DiagramContext = createContext<{
   deleteField: (field: DField, tid: number, addToHistory?: boolean) => void;
   deleteTable: (id: number, addToHistory?: boolean) => void;
   relationships: DRelationship[];
-  setRelationships: (_relationships: DRelationship[]) => void;
+  setRelationships: React.Dispatch<React.SetStateAction<DRelationship[]>>;
   addRelationship: (_data: DRelationship, addToHistory?: boolean) => void;
   deleteRelationship: (id: number, addToHistory?: boolean) => void;
   database: DBType;
-  setDatabase: (dbName: DBType) => void;
+  setDatabase: React.Dispatch<React.SetStateAction<DBType>>;
 } | null>(null);
 
 export default function DiagramContextProvider({
