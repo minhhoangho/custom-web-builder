@@ -171,7 +171,7 @@ export default function TableInfo({ data }: { data: DTable }) {
             // accordion
           >
             <Collapse.Panel header="indices" itemKey="1">
-              {data.indices.map((idx: number, k: string) => (
+              {data.indices.map((idx: any, k: number) => (
                 <IndexDetails
                   key={'index_' + k}
                   data={idx}

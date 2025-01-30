@@ -1,11 +1,13 @@
 import { Button, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { DataGrid } from '@mui/x-data-grid';
+import clsx from 'clsx';
 import { Action, Cardinality, Constraint, ObjectType } from '@constants/editor';
 import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 import i18n from 'src/i18n/i18n';
 import { Iconify, Popover, SelectField as Select } from '@components/common';
 import { DRelationship } from 'src/data/interface';
+import styles from './Custom.module.scss';
 
 const columns = [
   {
@@ -126,22 +128,26 @@ export default function RelationshipInfo({ data }: { data: DRelationship }) {
         <div className="ml-1">
           <Popover
             buttonElement={
-              <Button
-                startIcon={<Iconify icon="ic:round-more-vert" />}
-                variant="outlined"
-                // type="tertiary"
-              />
+              <button className="p-1 !rounded cursor-pointer hover:shadow w-9 h-9 bg-gray-200">
+                <Iconify icon="ic:round-more-vert" />
+              </button>
             }
-            // content={}
-            // trigger="click"
             position="topRight"
-            // showArrow
+            className="w-fit"
           >
-            <div className="p-2 popover-theme">
+            <div className={clsx('p-2 popover-theme')}>
               <DataGrid
+                showColumnVerticalBorder
+                showCellVerticalBorder
+                disableColumnFilter
+                disableRowSelectionOnClick
+                disableColumnMenu
+                disableColumnSelector
+                sortingOrder={[null]}
                 columns={columns}
                 rows={[
                   {
+                    id: 1,
                     key: '1',
                     foreign: `${tables[data.startTableId]?.name}(${
                       tables[data.startTableId]?.fields[data.startFieldId]?.name
@@ -151,12 +157,14 @@ export default function RelationshipInfo({ data }: { data: DRelationship }) {
                     })`,
                   },
                 ]}
+                className={styles['relationship-info']}
                 // pagination={false}
                 // size="small"
                 // bordered
               />
               <div className="mt-2">
                 <Button
+                  variant="contained"
                   // icon={<IconLoopTextStroked />}
                   startIcon={<Iconify icon="mdi:swap-horizontal" />}
                   // block

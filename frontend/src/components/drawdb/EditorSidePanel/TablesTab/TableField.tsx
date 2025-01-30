@@ -14,8 +14,17 @@ import {
 import { Action, ObjectType } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import FieldDetails from './FieldDetails';
+import { DField } from '../../../../data/interface';
 
-export default function TableField({ data, tid, index }) {
+export default function TableField({
+  data,
+  tid,
+  index,
+}: {
+  data: DField;
+  tid: number;
+  index: number;
+}) {
   const { updateField } = useDiagram();
   const { types } = useType();
   const { enums } = useEnum();
@@ -23,7 +32,7 @@ export default function TableField({ data, tid, index }) {
   const { t } = useTranslation();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState({});
-  console.log('Table field data ', data);
+  // console.log('Table field data ', data);
   return (
     <Grid container spacing={0.5} className="hover-1 my-2">
       <Grid item xs={3}>
@@ -47,7 +56,7 @@ export default function TableField({ data, tid, index }) {
                 undo: editField,
                 redo: { name: e.target.value },
                 message: t('edit_table', {
-                  tableName: tables[tid].name,
+                  tableName: tables[tid]?.name,
                   extra: '[field]',
                 }),
               },
@@ -79,7 +88,6 @@ export default function TableField({ data, tid, index }) {
           // placeholder="Type"
           onSelectChange={(event) => {
             const value: string = event.target.value;
-            console.log('Value change select', value);
             if (value === data.type) return;
             setUndoStack((prev) => [
               ...prev,
@@ -92,7 +100,7 @@ export default function TableField({ data, tid, index }) {
                 undo: { type: data.type },
                 redo: { type: value },
                 message: t('edit_table', {
-                  tableName: tables[tid].name,
+                  tableName: tables[tid]?.name,
                   extra: '[field]',
                 }),
               },
