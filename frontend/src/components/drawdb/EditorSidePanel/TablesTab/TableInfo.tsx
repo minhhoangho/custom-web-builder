@@ -17,21 +17,18 @@ import TableField from '@components/drawdb/EditorSidePanel/TablesTab/TableField'
 
 export default function TableInfo({ data }: { data: DTable }) {
   const { t } = useTranslation();
-  console.log('TableInfo data', data);
   const [indexActiveKey, setIndexActiveKey] = useState('');
   const { deleteTable, updateTable, updateField, setRelationships, database } =
     useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const [editField, setEditField] = useState<any>({});
-  const [drag, setDrag] = useState({
+  const [drag, setDrag] = useState<{
+    draggingElementIndex: number | null;
+    draggingOverIndexList: number[];
+  }>({
     draggingElementIndex: null,
     draggingOverIndexList: [],
   });
-
-  // console.log('DEBUG: TableInfo -> data', data);
-  // console.log('DEBUG: TableInfo -> editField', editField);
-  // console.log('DEBUG: TableInfo -> drag', drag);
-  // console.log('DEBUG: TableInfo -> indexActiveKey', indexActiveKey);
 
   return (
     <div>
@@ -112,16 +109,16 @@ export default function TableInfo({ data }: { data: DTable }) {
 
             updateField(data.id, index, {
               ...b,
-              ...(!dbToTypes?.[database]?.[b.type]?.isSized && { size: '' }),
-              ...(!dbToTypes?.[database]?.[b.type]?.hasCheck && { check: '' }),
-              ...(dbToTypes?.[database]?.[b.type]?.noDefault && {
+              ...(!dbToTypes[database][b.type].isSized && { size: b.size }),
+              ...(!dbToTypes[database][b.type].hasCheck && { check: '' }),
+              ...(dbToTypes[database][b.type].noDefault && {
                 default: '',
               }),
               id: index,
             });
             updateField(data.id, j, {
               ...a,
-              ...(!dbToTypes[database][a.type].isSized && { size: '' }),
+              ...(!dbToTypes[database][a.type].isSized && { size: a.size }),
               ...(!dbToTypes[database][a.type].hasCheck && { check: '' }),
               ...(!dbToTypes[database][a.type].noDefault && { default: '' }),
               id: j,
@@ -203,7 +200,8 @@ export default function TableInfo({ data }: { data: DTable }) {
                 placeholder={t('comment')}
                 // rows={1}
                 onInputChange={(value) =>
-                  updateTable(data.id, { comment: value }, false)
+                  // updateTable(data.id, { comment: value }, false)
+                  updateTable(data.id, { comment: value })
                 }
                 onFocus={(e) => setEditField({ comment: e.target.value })}
                 onBlur={(e) => {
@@ -333,7 +331,7 @@ export default function TableInfo({ data }: { data: DTable }) {
                   ...data.fields,
                   {
                     name: '',
-                    type: '',
+                    type: 'INTEGER',
                     default: '',
                     check: '',
                     primary: false,

@@ -75,11 +75,9 @@ export default function IndexDetails({
       />
       <Popover
         buttonElement={
-          <Button
-            startIcon={<Iconify icon="ic:round-more-vert" />}
-            variant="outlined"
-            sx={{ marginLeft: '12px' }}
-          />
+          <button className="p-1 !rounded cursor-pointer hover:shadow w-9 h-9 bg-gray-200 ml-2">
+            <Iconify icon="ic:round-more-vert" />
+          </button>
         }
         // trigger="click"
         position="topRight"

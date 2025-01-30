@@ -14,8 +14,8 @@ export type DDataType =
   | keyof typeof sqliteTypes
   | keyof typeof mssqlTypes;
 
-export type DBType = (typeof DB)[keyof typeof DB];
-export type DBConstType = keyof typeof DB;
+export type DBKeyType = keyof typeof DB;
+export type DBValueType = (typeof DB)[DBKeyType];
 
 export interface DType {
   id?: number;
@@ -99,7 +99,7 @@ export interface DRelationship {
 
 export interface DTemplate {
   id?: number;
-  database: DBType;
+  database: DBValueType;
   tables: DTable[];
   relationships: DRelationship[];
   notes: DNote[]; // assuming notes can be of any type

@@ -1,6 +1,6 @@
 import { DB } from '@constants/editor';
 import { strHasQuotes } from 'src/utils/common';
-import { DBConstType, DDataType, DField } from './interface';
+import { DBKeyType, DBValueType, DDataType, DField } from './interface';
 
 const intRegex = /^-?\d*$/;
 const doubleRegex = /^-?\d*.?\d+$/;
@@ -283,7 +283,7 @@ const defaultTypesBase = {
 };
 
 type DBtoType = {
-  [key in DBConstType]: TypeMapping;
+  [key in DBKeyType]: TypeMapping;
 };
 
 type TypeMapping = {
@@ -302,8 +302,7 @@ type TypeMapping = {
 };
 
 export const defaultTypes = new Proxy(defaultTypesBase, {
-  get: (target: Record<string, any>, prop: string) =>
-    prop in target ? target[prop] : false,
+  get: (target, prop: string) => (prop in target ? target[prop] : false),
 });
 
 const mysqlTypesBase = {
@@ -741,8 +740,7 @@ const mysqlTypesBase = {
 };
 
 export const mysqlTypes = new Proxy(mysqlTypesBase, {
-  get: (target: Record<string, any>, prop: string) =>
-    prop in target ? target[prop] : false,
+  get: (target, prop: string) => (prop in target ? target[prop] : false),
 });
 
 const postgresTypesBase = {
@@ -1292,8 +1290,7 @@ const postgresTypesBase = {
 };
 
 export const postgresTypes = new Proxy(postgresTypesBase, {
-  get: (target: Record<string, any>, prop: string) =>
-    prop in target ? target[prop] : false,
+  get: (target, prop: string) => (prop in target ? target[prop] : false),
 });
 
 const sqliteTypesBase = {
@@ -1436,8 +1433,7 @@ const sqliteTypesBase = {
 };
 
 export const sqliteTypes = new Proxy(sqliteTypesBase, {
-  get: (target: Record<string, any>, prop: string) =>
-    prop in target ? target[prop] : false,
+  get: (target, prop: string) => (prop in target ? target[prop] : false),
 });
 
 const mssqlTypesBase = {
@@ -1844,12 +1840,11 @@ const mssqlTypesBase = {
 };
 
 export const mssqlTypes = new Proxy(mssqlTypesBase, {
-  get: (target: Record<string, any>, prop: string) =>
-    prop in target ? target[prop] : false,
+  get: (target, prop: string) => (prop in target ? target[prop] : false),
 });
 
 const dbToTypesBase: {
-  [key in DBConstType]: {
+  [key in DBValueType]: {
     [_key in DDataType]: {
       type: string;
       checkDefault: (field: DField) => boolean;
@@ -1873,6 +1868,5 @@ const dbToTypesBase: {
 } as any;
 
 export const dbToTypes = new Proxy(dbToTypesBase, {
-  get: (target: DBtoType, prop: DBConstType) =>
-    prop in target ? target[prop] : false,
+  get: (target, prop: DBValueType) => (prop in target ? target[prop] : false),
 });

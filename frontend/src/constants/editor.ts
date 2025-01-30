@@ -76,7 +76,7 @@ export const State = {
   LOADING: 3,
   ERROR: 4,
   FAILED_TO_LOAD: 5,
-};
+} as const;
 
 export const MODAL = {
   NONE: 0,
@@ -113,4 +113,4 @@ export const DB = {
   SQLITE: 'sqlite',
   MARIADB: 'mariadb',
   GENERIC: 'generic',
-};
+} as const;

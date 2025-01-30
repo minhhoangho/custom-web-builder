@@ -42,7 +42,10 @@ export const SelectField = ({
       return (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
           {(selected as string[]).map((value) => (
-            <div className="!h-7 w-7 rounded-full bg-gray-200 px-2 py-1">
+            <div
+              key={value}
+              className="!h-7 rounded-full bg-gray-200 px-2 py-1"
+            >
               {value}
             </div>
           ))}
@@ -52,7 +55,7 @@ export const SelectField = ({
     return selected;
   };
   return (
-    <div className={classNames('relative w-full mb-1', className)}>
+    <div className={classNames('relative w-full', className)}>
       <InputLabel
         id={labelNameId}
         className={classNames('text-sm', labelClassName)}
