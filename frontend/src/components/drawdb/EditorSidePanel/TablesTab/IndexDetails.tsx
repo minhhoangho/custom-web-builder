@@ -6,21 +6,23 @@ import { useDiagram, useUndoRedo } from 'src/containers/Editor/hooks';
 import { Iconify, Popover, SelectField as Select } from '@components/common';
 import { Input } from '@components/form/Input';
 
+type IndexDetailsProps = {
+  data: {
+    name: string;
+    fields: string[];
+    unique: boolean;
+  };
+  fields: { label: string; value: string }[];
+  iid: number;
+  tid: number;
+};
+
 export default function IndexDetails({
   data,
   fields,
   iid,
   tid,
-}: {
-  data: {
-    name: string;
-    fields: number[];
-    unique: boolean;
-  };
-  fields: { label: string; value: number }[];
-  iid: number;
-  tid: number;
-}) {
+}: IndexDetailsProps) {
   const { t } = useTranslation();
   const { tables, updateTable } = useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
@@ -31,13 +33,13 @@ export default function IndexDetails({
   return (
     <div className="flex justify-between items-center mb-2">
       <Select
-        label={t('select_fields')}
         multiple
         // validateStatus={data.fields.length === 0 ? 'error' : 'default'}
         options={fields}
         className="w-full"
         value={data.fields}
-        onSelectChange={(value) => {
+        onSelectChange={(event) => {
+          const value = event.target.value as string[];
           setUndoStack((prev) => [
             ...prev,
             {

@@ -1,5 +1,5 @@
 import MenuItem from '@mui/material/MenuItem';
-import { InputLabel, Select } from '@mui/material';
+import { Box, InputLabel, Select } from '@mui/material';
 import React from 'react';
 import classNames from 'classnames';
 import styles from './Select.module.scss';
@@ -17,7 +17,7 @@ export type SelectProps = {
   isRequired?: boolean;
   className?: string;
   selectElementClassName?: string;
-  value?: string;
+  value?: string | string[] | number | number[];
   labelClassName?: string;
   onSelectChange?: (e?: any) => void;
   errorMessage?: string;
@@ -37,6 +37,20 @@ export const SelectField = ({
   selectElementClassName,
 }: SelectProps) => {
   const labelNameId = `select_${name}_label`;
+  const renderValue = (selected: string | number | string[] | number[]) => {
+    if (multiple) {
+      return (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+          {(selected as string[]).map((value) => (
+            <div className="!h-7 w-7 rounded-full bg-gray-200 px-2 py-1">
+              {value}
+            </div>
+          ))}
+        </Box>
+      );
+    }
+    return selected;
+  };
   return (
     <div className={classNames('relative w-full mb-1', className)}>
       <InputLabel
@@ -54,6 +68,7 @@ export const SelectField = ({
         value={value}
         label={label}
         onChange={onSelectChange}
+        renderValue={renderValue}
         className={classNames(
           'relative w-full !rounded',
           styles['select-input'],

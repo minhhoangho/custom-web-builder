@@ -177,7 +177,7 @@ export default function TableInfo({ data }: { data: DTable }) {
                   data={idx}
                   iid={k}
                   tid={data.id}
-                  fields={data.fields.map((e) => ({
+                  fields={data.fields?.map((e) => ({
                     value: e.name,
                     label: e.name,
                   }))}

@@ -1,8 +1,8 @@
 
 .select-input {
-    @apply text-sm #{!important};
-
-  .MuiInputBase-input{
+  @apply text-sm #{!important};
+  height: 36px;
+  .MuiInputBase-input {
     @apply py-1 #{!important};
   }
 }
