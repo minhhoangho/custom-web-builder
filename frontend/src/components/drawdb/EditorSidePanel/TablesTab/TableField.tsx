@@ -14,7 +14,7 @@ import {
 import { Action, ObjectType } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import FieldDetails from './FieldDetails';
-import { DField } from '../../../../data/interface';
+import { DDataType, DField } from '../../../../data/interface';
 
 export default function TableField({
   data,
@@ -69,7 +69,7 @@ export default function TableField({
         <Select
           className="w-full h-9"
           options={[
-            ...Object.keys(dbToTypes?.[database] ?? {})?.map((value) => ({
+            ...Object.keys(dbToTypes[database] ?? {})?.map((value) => ({
               label: value,
               value: value,
             })),
@@ -87,7 +87,7 @@ export default function TableField({
           // validateStatus={data.type === '' ? 'error' : 'default'}
           // placeholder="Type"
           onSelectChange={(event) => {
-            const value: string = event.target.value;
+            const value: DDataType = event.target.value;
             if (value === data.type) return;
             setUndoStack((prev) => [
               ...prev,
@@ -107,7 +107,7 @@ export default function TableField({
             ]);
             setRedoStack([]);
             const incr =
-              data.increment && !!dbToTypes[database][value].canIncrement;
+              data.increment && !!dbToTypes[database][value]?.canIncrement;
 
             if (value === 'ENUM' || value === 'SET') {
               updateField(tid, index, {
