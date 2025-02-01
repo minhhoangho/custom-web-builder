@@ -43,7 +43,6 @@ export function getIssues(diagram: Partial<DTemplate>) {
         issues.push(i18n.t('empty_field_name', { tableName: table.name }));
       }
 
-      // @ts-ignore
       if (field['type'] === '') {
         issues.push(i18n.t('empty_field_type', { tableName: table.name }));
       } else if (field['type'] === 'ENUM' || field['type'] === 'SET') {
@@ -226,7 +225,7 @@ export function getIssues(diagram: Partial<DTemplate>) {
     visited.push(tableId);
     visitedTables.add(tableId);
 
-    diagram.relationships.forEach((r) => {
+    diagram.relationships?.forEach((r) => {
       if (r.startTableId === tableId && r.startTableId !== r.endTableId) {
         checkCircularRelationships(r.endTableId, [...visited]);
       }

@@ -1,6 +1,7 @@
 import { Cardinality, DB } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import { buildSQLFromAST } from './shared';
+import { DBValueType } from '../../../data/interface';
 
 const affinity = {
   [DB.POSTGRES]: new Proxy(
@@ -17,7 +18,7 @@ const affinity = {
   ),
 };
 
-export function fromPostgres(ast, diagramDb = DB.GENERIC) {
+export function fromPostgres(ast, diagramDb: DBValueType = DB.GENERIC) {
   const tables = [];
   const relationships = [];
   const types = [];

@@ -1,6 +1,13 @@
+import { AST } from 'node-sql-parser';
 import { Cardinality, DB } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import { buildSQLFromAST } from './shared';
+import {
+  DBValueType,
+  DField,
+  DRelationship,
+  DTable,
+} from '../../../data/interface';
 
 const affinity = {
   [DB.SQLITE]: new Proxy(
@@ -36,13 +43,16 @@ const affinity = {
   ),
 };
 
-export function fromSQLite(ast, diagramDb = DB.GENERIC) {
-  const tables = [];
-  const relationships = [];
+export function fromSQLite(
+  ast: AST | AST[],
+  diagramDb: DBValueType = DB.GENERIC,
+) {
+  const tables: DTable[] = [];
+  const relationships: DRelationship[] = [];
 
   const addRelationshipFromReferenceDef = (
-    startTable,
-    startFieldName,
+    startTable: DTable,
+    startFieldName: string,
     referenceDefinition,
   ) => {
     const relationship = {};
@@ -92,19 +102,19 @@ export function fromSQLite(ast, diagramDb = DB.GENERIC) {
     relationships.push(relationship);
   };
 
-  const parseSingleStatement = (e) => {
+  const parseSingleStatement = (e: AST) => {
     if (e.type === 'create') {
       if (e.keyword === 'table') {
-        const table = {};
+        const table = {} as DTable;
         table.name = e.table[0].table;
         table.comment = '';
         table.color = '#175e7a';
         table.fields = [];
         table.indices = [];
         table.id = tables.length;
-        e.create_definitions.forEach((d) => {
+        e.create_definitions?.forEach((d) => {
           if (d.resource === 'column') {
-            const field = {};
+            const field = {} as DField;
             field.name = d.column.column;
 
             let type = d.definition.dataType;

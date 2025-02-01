@@ -6,13 +6,20 @@ import { githubLight } from '@uiw/codemirror-theme-github';
 import { useTranslation } from 'react-i18next';
 import CodeMirror from '@uiw/react-codemirror';
 import { useSettings } from 'src/containers/Editor/hooks';
+import { toast } from '@components/common';
 
 const languageExtension = {
   sql: [sql()],
   json: [json()],
 };
 
-export default function Code({ value, language }) {
+export default function Code({
+  value,
+  language,
+}: {
+  value: string;
+  language: 'sql' | 'json';
+}) {
   const { t } = useTranslation();
   const { settings } = useSettings();
   const [copied, setCopied] = useState(false);
@@ -26,8 +33,9 @@ export default function Code({ value, language }) {
           setCopied(false);
         }, 2000);
       })
-      .catch((e) => {
-        console.log(e);
+      .catch((_e) => {
+        toast('error', t('copy_failed'));
+        // console.log(e);
       });
   };
 

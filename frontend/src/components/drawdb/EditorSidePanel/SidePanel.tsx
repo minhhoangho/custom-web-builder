@@ -1,8 +1,7 @@
+import React, { useMemo, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-
 import { useTranslation } from 'react-i18next';
-import { useMemo, useState } from 'react';
 import { databases } from 'src/data/database';
 import { useDiagram, useLayout, useSelect } from 'src/containers/Editor/hooks';
 import { Tab as TabConst } from '@constants/editor';
@@ -144,14 +143,14 @@ export default function SidePanel({
         )}
       </div>
 
-      {/*<div*/}
-      {/*  className={`flex justify-center items-center p-1 h-auto hover:bg-gray-300 cursor-col-resize ${*/}
-      {/*    resize && 'bg-semi-grey-2'*/}
-      {/*  }`}*/}
-      {/*  onPointerDown={(e) => e.isPrimary && setResize(true)}*/}
-      {/*>*/}
-      {/*  <div className="w-1 border-x border-gray-200 h-1/6" />*/}
-      {/*</div>*/}
+      <div
+        className={`flex justify-center items-center p-1 h-auto hover:bg-gray-300 cursor-col-resize ${
+          resize && 'bg-semi-grey-2'
+        }`}
+        onPointerDown={(e) => e.isPrimary && setResize(true)}
+      >
+        <div className="w-1 border-x border-gray-200 h-1/6" />
+      </div>
     </div>
   );
 }

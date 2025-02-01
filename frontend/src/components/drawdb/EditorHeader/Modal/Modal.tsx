@@ -23,7 +23,7 @@ import { db } from 'src/data/db';
 import { importSQL } from 'src/utils/imports/import-sql';
 import { databases } from 'src/data/database';
 import { Spinner, toast } from '@components/common';
-import { DTemplate } from 'src/data/interface';
+import { DBValueType, DTable, DTemplate } from 'src/data/interface';
 import Rename from './Rename';
 import Open from './Open';
 import New from './New';
@@ -40,17 +40,17 @@ type ModalProps = {
   setDiagramId: React.Dispatch<React.SetStateAction<number>>;
   exportData: {
     data: string | null;
-    extension: string;
+    extension: 'json' | 'sql';
     filename: string;
   };
   setExportData: React.Dispatch<
     React.SetStateAction<{
       data: null | string;
-      extension: string;
+      extension: 'json' | 'sql';
       filename: string;
     }>
   >;
-  importDb: string;
+  importDb: DBValueType;
 };
 
 export default function Modal({
@@ -63,7 +63,7 @@ export default function Modal({
   setExportData,
   importDb,
 }: ModalProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { setTables, setRelationships, database, setDatabase } = useDiagram();
   const { setNotes } = useNote();
   const { setAreas } = useArea();
@@ -114,15 +114,15 @@ export default function Modal({
             setDatabase(DB.GENERIC);
           }
           setDiagramId(diagram.id ?? 0);
-          setTitle(diagram.name);
-          setTables(diagram.tables);
-          setRelationships(diagram.references);
-          setAreas(diagram.areas);
-          setNotes(diagram.notes);
+          setTitle(diagram.name ?? '');
+          setTables(diagram.tables ?? []);
+          setRelationships(diagram.references ?? []);
+          setAreas(diagram.areas ?? []);
+          setNotes(diagram.notes ?? []);
           setTasks(diagram.todos ?? []);
           setTransform({
-            pan: diagram.pan,
-            zoom: diagram.zoom,
+            pan: diagram.pan as any,
+            zoom: diagram.zoom as any,
           });
           setUndoStack([]);
           setRedoStack([]);
@@ -138,8 +138,8 @@ export default function Modal({
           toast('error', 'Cannot find the diagram');
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((_error) => {
+        // console.log(error);
         toast('error', 'Cannot find the diagram');
       });
   };
@@ -151,7 +151,7 @@ export default function Modal({
       ast = parser.astify(importSource.src, {
         database: database === DB.GENERIC ? importDb : database,
       });
-    } catch (error) {
+    } catch (error: any) {
       const message = error.location
         ? `${error.name} [Ln ${error.location.start.line}, Col ${error.location.start.column}]: ${error.message}`
         : error.message;
@@ -178,7 +178,7 @@ export default function Modal({
         setUndoStack([]);
         setRedoStack([]);
       } else {
-        setTables((prev) =>
+        setTables((prev: DTable[]) =>
           [...prev, ...diagramData.tables].map((t, i) => ({ ...t, id: i })),
         );
         setRelationships((prev) =>
@@ -200,19 +200,20 @@ export default function Modal({
 
   const createNewDiagram = (id: number) => {
     const newWindow = window.open('/editor');
+    if (!newWindow) return;
     newWindow.name = 'lt ' + id;
   };
 
-  const getModalOnOk = async () => {
+  const getModalOnOk = () => {
     switch (modal) {
       case MODAL.IMG:
         saveAs(
-          exportData.data,
+          exportData.data ?? '',
           `${exportData.filename}.${exportData.extension}`,
         );
         return;
       case MODAL.CODE: {
-        const blob = new Blob([exportData.data], {
+        const blob = new Blob([exportData.data ?? ''], {
           type: 'application/json',
         });
         saveAs(blob, `${exportData.filename}.${exportData.extension}`);
@@ -307,7 +308,10 @@ export default function Modal({
               {modal === MODAL.IMG ? (
                 <Image src={exportData.data ?? ''} alt="Diagram" height={280} />
               ) : (
-                <Code value={exportData.data} language={exportData.extension} />
+                <Code
+                  value={exportData.data ?? ''}
+                  language={exportData.extension}
+                />
               )}
               <div className="text-sm font-semibold mt-2">{t('filename')}:</div>
               <Input
@@ -391,7 +395,7 @@ export default function Modal({
       onClose={() => {
         setExportData(() => ({
           data: '',
-          extension: '',
+          extension: 'json',
           filename: `${title}_${new Date().toISOString()}`,
         }));
         setError({

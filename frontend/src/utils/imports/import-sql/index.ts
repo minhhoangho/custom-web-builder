@@ -1,3 +1,4 @@
+import { AST } from 'node-sql-parser';
 import {
   DB,
   tableColorStripHeight,
@@ -9,8 +10,16 @@ import { fromMSSQL } from './mssql';
 import { fromMySQL } from './mysql';
 import { fromPostgres } from './postgres';
 import { fromSQLite } from './sqlite';
+import { DBValueType, DRelationship, DTable } from '../../../data/interface';
 
-export function importSQL(ast, toDb = DB.MYSQL, diagramDb = DB.GENERIC) {
+export function importSQL(
+  ast: AST | AST[],
+  toDb: DBValueType = DB.MYSQL,
+  diagramDb: DBValueType = DB.GENERIC,
+): {
+  tables: DTable[];
+  relationships: DRelationship[];
+} {
   let diagram;
   switch (toDb) {
     case DB.SQLITE:

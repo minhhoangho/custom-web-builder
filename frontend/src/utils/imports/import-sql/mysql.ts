@@ -1,6 +1,7 @@
 import { Cardinality, DB } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import { buildSQLFromAST } from './shared';
+import { DBValueType } from '../../../data/interface';
 
 const affinity = {
   [DB.MYSQL]: new Proxy(
@@ -19,7 +20,7 @@ const affinity = {
   ),
 };
 
-export function fromMySQL(ast, diagramDb = DB.GENERIC) {
+export function fromMySQL(ast, diagramDb: DBValueType = DB.GENERIC) {
   const tables = [];
   const relationships = [];
 

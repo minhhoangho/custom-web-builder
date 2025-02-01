@@ -7,7 +7,7 @@ import Thumbnail from '../../Thumbnail';
 
 type NewProps = {
   selectedTemplateId: number;
-  setSelectedTemplateId: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedTemplateId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default function New({

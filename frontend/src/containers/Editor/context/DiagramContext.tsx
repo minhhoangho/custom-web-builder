@@ -6,7 +6,7 @@ import { useSelect, useTransform, useUndoRedo } from '../hooks';
 
 export const DiagramContext = createContext<{
   tables: DTable[];
-  setTables: (_tables: DTable[]) => void;
+  setTables: React.Dispatch<React.SetStateAction<DTable[]>>;
   addTable: (_data?: Partial<DTable> | null, addToHistory?: boolean) => void;
   updateTable: (_id: number, payload: Partial<DTable>) => void;
   updateField: (tid: number, fid: number, payload: Partial<DField>) => void;

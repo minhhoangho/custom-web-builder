@@ -1,4 +1,5 @@
 import { DB } from '@constants/editor';
+import { DBValueType } from '../../../data/interface';
 
 function quoteColumn(str, db) {
   switch (db) {
@@ -15,10 +16,10 @@ function quoteColumn(str, db) {
   }
 }
 
-export function buildSQLFromAST(ast, db = DB.MYSQL) {
+export function buildSQLFromAST(ast: any, db: DBValueType = DB.MYSQL) {
   if (ast.type === 'binary_expr') {
-    const leftSQL = buildSQLFromAST(ast.left, db);
-    const rightSQL = buildSQLFromAST(ast.right, db);
+    const leftSQL: string = buildSQLFromAST(ast.left, db);
+    const rightSQL: string = buildSQLFromAST(ast.right, db);
     return `${leftSQL} ${ast.operator} ${rightSQL}`;
   }
 

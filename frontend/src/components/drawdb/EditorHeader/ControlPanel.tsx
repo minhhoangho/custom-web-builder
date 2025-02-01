@@ -54,12 +54,12 @@ import {
   EditorLayoutInterface,
   EditorUndoStackInterface,
 } from 'src/containers/Editor/interfaces';
+import { DArea, DNote, DRelationship, DTable } from 'src/data/interface';
 import Modal from './Modal/Modal';
 import Sidesheet from './SideSheet/Sidesheet';
 import LayoutDropdown from './LayoutDropdown';
 import { IconAddArea, IconAddNote, IconAddTable } from '../icons';
 import { IdContext } from '../Workspace';
-import { DArea, DNote, DRelationship, DTable } from '../../../data/interface';
 
 type BasicMenuProps = {
   prefix?: React.ReactNode | string;
@@ -154,12 +154,12 @@ export default function ControlPanel({
   const [importDb, setImportDb] = useState('');
   const [exportData, setExportData] = useState<{
     data: null | string;
-    extension: string;
+    extension: 'sql' | 'json';
     filename: string;
   }>({
     data: null,
     filename: `${title}_${new Date().toISOString()}`,
-    extension: '',
+    extension: 'json',
   });
   const { saveState, setSaveState } = useSaveState();
   const { layout, setLayout } = useLayout();

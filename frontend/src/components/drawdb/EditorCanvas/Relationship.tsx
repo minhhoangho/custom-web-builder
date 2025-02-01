@@ -9,8 +9,8 @@ import {
   useSettings,
 } from 'src/containers/Editor/hooks';
 import { calcPath } from 'src/utils/drawdb';
+import { DRelationship } from 'src/data/interface';
 import RelationshipInfo from '../EditorSidePanel/RelationshipsTab/RelationshipInfo';
-import { DRelationship } from '../../../data/interface';
 
 export default function Relationship({ data }: { data: DRelationship }) {
   const { settings } = useSettings();
