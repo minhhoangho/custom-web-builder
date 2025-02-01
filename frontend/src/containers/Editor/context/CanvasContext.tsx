@@ -188,6 +188,7 @@ export function CanvasContextProvider({
   }
 
   // Important for touch screen devices!
+
   useEventListener('pointerdown', detectPointerMovement, canvasWrapRef);
   useEventListener('pointermove', detectPointerMovement, canvasWrapRef);
 

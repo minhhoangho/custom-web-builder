@@ -16,6 +16,34 @@ export type DDataType =
 
 export type DBKeyType = keyof typeof DB;
 export type DBValueType = (typeof DB)[DBKeyType];
+export type DBAttributeType = {
+  name: string;
+  label: DBValueType;
+  image: string | null;
+  description?: string;
+  hasTypes: boolean;
+  hasEnums?: boolean;
+  hasArrays?: boolean;
+  hasUnsignedTypes?: boolean;
+};
+
+export type DBDataTypeAttributeType = {
+  name: string;
+  type: DDataType;
+  size?: number | string;
+  values?: any[];
+  isArray?: boolean;
+  signed?: boolean;
+  canIncrement?: boolean;
+  isSized?: boolean;
+  hasPrecision?: boolean;
+  noDefault?: boolean;
+  defaultSize?: string;
+  hasCheck?: boolean;
+  checkDefault: (value: DField) => boolean;
+  hasQuotes?: boolean;
+  compatibleWith?: DDataType[];
+};
 
 export interface DType {
   id?: number;
@@ -62,9 +90,10 @@ export interface DField {
   increment: boolean;
   comment: string;
   id: number;
-  size?: number; // optional, as not all fields have a size
+  size?: number | string; // optional, as not all fields have a size
   values?: any[]; // optional, as not all fields have values
   isArray?: boolean; // optional, as not all fields are arrays
+  unsigned?: boolean; // optional, as not all fields are unsigned
 }
 
 export interface DIndex {
@@ -118,7 +147,7 @@ export interface DDiagram {
   loadedFromGistId: string;
   name: string;
   description?: string;
-  database: string;
+  database: DBValueType;
   tables: DTable[];
   references: DRelationship[];
   template?: DTemplate;

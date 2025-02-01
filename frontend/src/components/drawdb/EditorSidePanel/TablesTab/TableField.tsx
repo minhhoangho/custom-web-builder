@@ -31,7 +31,9 @@ export default function TableField({
   const { tables, database } = useDiagram();
   const { t } = useTranslation();
   const { setUndoStack, setRedoStack } = useUndoRedo();
-  const [editField, setEditField] = useState({});
+  const [editField, setEditField] = useState<{
+    name: string;
+  }>();
   // console.log('Table field data ', data);
   return (
     <Grid container spacing={0.5} className="hover-1 my-2">
@@ -44,7 +46,7 @@ export default function TableField({
           onInputChange={(value) => updateField(tid, index, { name: value })}
           onFocus={(e) => setEditField({ name: e.target.value })}
           onBlur={(e) => {
-            if (e.target.value === editField['name']) return;
+            if (e.target.value === editField?.name) return;
             setUndoStack((prev) => [
               ...prev,
               {
@@ -69,7 +71,7 @@ export default function TableField({
         <Select
           className="w-full h-9"
           options={[
-            ...Object.keys(dbToTypes[database] ?? {})?.map((value) => ({
+            ...Object.keys(dbToTypes[database] ?? {}).map((value) => ({
               label: value,
               value: value,
             })),
@@ -125,7 +127,8 @@ export default function TableField({
                 size: dbToTypes[database][value].defaultSize,
                 increment: incr,
               });
-            } else if (!dbToTypes[database][value].hasDefault || incr) {
+              // } else if (!dbToTypes[database][value].hasDefault || incr) {
+            } else if (dbToTypes[database][value].noDefault || incr) {
               updateField(tid, index, {
                 type: value,
                 increment: incr,
@@ -170,7 +173,7 @@ export default function TableField({
                 undo: { notNull: data.notNull },
                 redo: { notNull: !data.notNull },
                 message: t('edit_table', {
-                  tableName: tables[tid].name,
+                  tableName: tables[tid]?.name,
                   extra: '[field]',
                 }),
               },
@@ -202,7 +205,7 @@ export default function TableField({
                 undo: { primary: data.primary },
                 redo: { primary: !data.primary },
                 message: t('edit_table', {
-                  tableName: tables[tid].name,
+                  tableName: tables[tid]?.name,
                   extra: '[field]',
                 }),
               },

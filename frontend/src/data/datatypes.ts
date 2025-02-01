@@ -1,6 +1,11 @@
 import { DB } from '@constants/editor';
 import { strHasQuotes } from 'src/utils/common';
-import { DBKeyType, DBValueType, DDataType, DField } from './interface';
+import {
+  DBDataTypeAttributeType,
+  DBValueType,
+  DDataType,
+  DField,
+} from './interface';
 
 const intRegex = /^-?\d*$/;
 const doubleRegex = /^-?\d*.?\d+$/;
@@ -87,9 +92,9 @@ const defaultTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -102,9 +107,9 @@ const defaultTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -204,7 +209,8 @@ const defaultTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       return (
-        field.default.length <= field.size && binaryRegex.test(field.default)
+        field.default.length <= Number(field.size) &&
+        binaryRegex.test(field.default)
       );
     },
     hasCheck: false,
@@ -218,7 +224,8 @@ const defaultTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       return (
-        field.default.length <= field.size && binaryRegex.test(field.default)
+        field.default.length <= Number(field.size) &&
+        binaryRegex.test(field.default)
       );
     },
     hasCheck: false,
@@ -280,10 +287,6 @@ const defaultTypesBase = {
     hasPrecision: false,
     noDefault: true,
   },
-};
-
-type DBtoType = {
-  [key in DBKeyType]: TypeMapping;
 };
 
 type TypeMapping = {
@@ -496,9 +499,9 @@ const mysqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -511,9 +514,9 @@ const mysqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -526,7 +529,8 @@ const mysqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       return (
-        field.default.length <= field.size && binaryRegex.test(field.default)
+        field.default.length <= Number(field.size) &&
+        binaryRegex.test(field.default)
       );
     },
     hasCheck: false,
@@ -540,7 +544,8 @@ const mysqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       return (
-        field.default.length <= field.size && binaryRegex.test(field.default)
+        field.default.length <= Number(field.size) &&
+        binaryRegex.test(field.default)
       );
     },
     hasCheck: false,
@@ -586,9 +591,9 @@ const mysqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -601,9 +606,9 @@ const mysqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -616,9 +621,9 @@ const mysqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -631,9 +636,9 @@ const mysqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -875,9 +880,9 @@ const postgresTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -890,9 +895,9 @@ const postgresTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -905,9 +910,9 @@ const postgresTypesBase = {
     checkDefault: (field: DField) => {
       if (field.size === undefined) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: false,
@@ -1341,9 +1346,9 @@ const sqliteTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -1683,9 +1688,9 @@ const mssqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -1698,9 +1703,9 @@ const mssqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -1722,9 +1727,9 @@ const mssqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -1737,9 +1742,9 @@ const mssqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       if (strHasQuotes(field.default)) {
-        return field.default.length - 2 <= field.size;
+        return field.default.length - 2 <= Number(field.size);
       }
-      return field.default.length <= field.size;
+      return field.default.length <= Number(field.size);
     },
     hasCheck: true,
     isSized: true,
@@ -1761,7 +1766,8 @@ const mssqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       return (
-        field.default.length <= field.size && binaryRegex.test(field.default)
+        field.default.length <= Number(field.size) &&
+        binaryRegex.test(field.default)
       );
     },
     hasCheck: false,
@@ -1775,7 +1781,8 @@ const mssqlTypesBase = {
     checkDefault: (field: DField) => {
       if (!field.size) return false;
       return (
-        field.default.length <= field.size && binaryRegex.test(field.default)
+        field.default.length <= Number(field.size) &&
+        binaryRegex.test(field.default)
       );
     },
     hasCheck: false,
@@ -1845,18 +1852,7 @@ export const mssqlTypes = new Proxy(mssqlTypesBase, {
 
 const dbToTypesBase: {
   [key in DBValueType]: {
-    [_key in DDataType]: {
-      type: string;
-      checkDefault: (field: DField) => boolean;
-      hasCheck: boolean;
-      isSized: boolean;
-      hasPrecision: boolean;
-      canIncrement?: boolean;
-      compatibleWith?: DDataType[];
-      defaultSize?: number;
-      hasQuotes?: boolean;
-      noDefault?: boolean;
-    };
+    [_key in DDataType]: DBDataTypeAttributeType;
   };
 } = {
   [DB.GENERIC]: defaultTypes,

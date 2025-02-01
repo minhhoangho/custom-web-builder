@@ -22,7 +22,7 @@ export default function FieldDetails({
   const { tables, database } = useDiagram();
   const { setUndoStack, setRedoStack } = useUndoRedo();
   const { updateField, deleteField } = useDiagram();
-  const [editField, setEditField] = useState<DField | any>({});
+  const [editField, setEditField] = useState<Partial<DField>>({});
 
   return (
     <div>
@@ -31,7 +31,7 @@ export default function FieldDetails({
         className="my-2"
         placeholder={t('default_value')}
         value={data.default}
-        disabled={dbToTypes[database][data.type].noDefault || data.increment}
+        disabled={dbToTypes[database][data.type].noDefault ?? data.increment}
         onInputChange={(value) => updateField(tid, index, { default: value })}
         onFocus={(e) => setEditField({ default: e.target.value })}
         onBlur={(e) => {
@@ -46,11 +46,11 @@ export default function FieldDetails({
               fid: index,
               undo: editField,
               redo: { default: e.target.value },
-              // message: t('edit_table', {
-              //   tableName: tables[tid].name,
-              //   extra: '[field]',
-              // }),
-              message: t('edit_table'),
+              message: t('edit_table', {
+                tableName: tables[tid]?.name,
+                extra: '[field]',
+              }),
+              // message: t('edit_table'),
             },
           ]);
           setRedoStack([]);
@@ -121,11 +121,11 @@ export default function FieldDetails({
                   fid: index,
                   undo: editField,
                   redo: { size: e.target.value },
-                  message: t('edit_table'),
-                  // message: t('edit_table', {
-                  //   tableName: tables[tid].name,
-                  //   extra: '[field]',
-                  // }),
+                  // message: t('edit_table'),
+                  message: t('edit_table', {
+                    tableName: tables[tid]?.name,
+                    extra: '[field]',
+                  }),
                 },
               ]);
               setRedoStack([]);

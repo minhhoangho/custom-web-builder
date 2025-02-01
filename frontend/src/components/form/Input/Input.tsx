@@ -20,6 +20,7 @@ export type InputProps = {
   errorMessage?: string;
   isTextarea?: boolean;
   autoComplete?: string;
+  id?: string;
 };
 
 export const Input = React.forwardRef<
@@ -41,13 +42,14 @@ export const Input = React.forwardRef<
       isTextarea,
       autoComplete,
       defaultValue,
+      id,
       ...rest
     }: InputProps &
       React.TextareaHTMLAttributes<HTMLTextAreaElement> &
       React.InputHTMLAttributes<HTMLInputElement>,
     ref,
   ): React.ReactElement => (
-    <div className={classNames('relative w-full' as any, className)}>
+    <div className={classNames('relative w-full' as any, className)} id={id}>
       {label && (
         <label
           className={classNames('block text-sm mb-1' as any, labelClassName)}

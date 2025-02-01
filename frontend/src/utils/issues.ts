@@ -3,8 +3,9 @@ import { isFunction } from 'src/utils';
 import { dbToTypes } from 'src/data/datatypes';
 
 import i18n from 'src/i18n/i18n';
+import { DBValueType, DField, DTemplate } from '../data/interface';
 
-function checkDefault(field: string, database: string) {
+function checkDefault(field: DField, database: DBValueType): boolean {
   if (field.default === '') return true;
 
   if (isFunction(field.default)) return true;
@@ -16,11 +17,11 @@ function checkDefault(field: string, database: string) {
   return dbToTypes[database][field['type']].checkDefault(field);
 }
 
-export function getIssues(diagram) {
-  const issues = [];
-  const duplicateTableNames = {};
+export function getIssues(diagram: Partial<DTemplate>) {
+  const issues: string[] = [];
+  const duplicateTableNames: Record<string, boolean> = {};
 
-  diagram.tables.forEach((table) => {
+  diagram.tables?.forEach((table) => {
     if (table.name === '') {
       issues.push(i18n.t('table_w_no_name'));
     }
@@ -31,7 +32,7 @@ export function getIssues(diagram) {
       duplicateTableNames[table.name] = true;
     }
 
-    const duplicateFieldNames = {};
+    const duplicateFieldNames: Record<string, boolean> = {};
     let hasPrimaryKey = false;
 
     table.fields.forEach((field) => {
@@ -42,6 +43,7 @@ export function getIssues(diagram) {
         issues.push(i18n.t('empty_field_name', { tableName: table.name }));
       }
 
+      // @ts-ignore
       if (field['type'] === '') {
         issues.push(i18n.t('empty_field_type', { tableName: table.name }));
       } else if (field['type'] === 'ENUM' || field['type'] === 'SET') {
@@ -56,7 +58,7 @@ export function getIssues(diagram) {
         }
       }
 
-      if (!checkDefault(field, diagram.database)) {
+      if (!checkDefault(field, diagram.database as DBValueType)) {
         issues.push(
           i18n.t('default_doesnt_match_type', {
             tableName: table.name,
@@ -86,7 +88,7 @@ export function getIssues(diagram) {
       }
     });
 
-    const duplicateIndices = {};
+    const duplicateIndices: Record<string, boolean> = {};
     table.indices.forEach((index) => {
       if (duplicateIndices[index.name]) {
         issues.push(
@@ -122,8 +124,8 @@ export function getIssues(diagram) {
     }
   });
 
-  const duplicateTypeNames = {};
-  diagram.types.forEach((type) => {
+  const duplicateTypeNames: Record<string, boolean> = {};
+  diagram.types?.forEach((type) => {
     if (type.name === '') {
       issues.push(i18n.t('type_with_no_name'));
     }
@@ -139,7 +141,7 @@ export function getIssues(diagram) {
       return;
     }
 
-    const duplicateFieldNames = {};
+    const duplicateFieldNames: Record<string, boolean> = {};
     type.fields.forEach((field) => {
       if (field['name'] === '') {
         issues.push(
@@ -178,8 +180,8 @@ export function getIssues(diagram) {
     });
   });
 
-  const duplicateEnumNames = {};
-  diagram.enums.forEach((e) => {
+  const duplicateEnumNames: Record<string, boolean> = {};
+  diagram.enums?.forEach((e) => {
     if (e.name === '') {
       issues.push(i18n.t('enum_w_no_name'));
     }
@@ -196,8 +198,8 @@ export function getIssues(diagram) {
     }
   });
 
-  const duplicateFKName = {};
-  diagram.relationships.forEach((r) => {
+  const duplicateFKName: Record<string, boolean> = {};
+  diagram.relationships?.forEach((r) => {
     if (duplicateFKName[r.name]) {
       issues.push(
         i18n.t('duplicate_reference', {
@@ -211,11 +213,11 @@ export function getIssues(diagram) {
 
   const visitedTables = new Set();
 
-  function checkCircularRelationships(tableId, visited = []) {
+  function checkCircularRelationships(tableId: number, visited: number[] = []) {
     if (visited.includes(tableId)) {
       issues.push(
         i18n.t('circular_dependency', {
-          refName: diagram.tables[tableId].name,
+          refName: diagram.tables?.[tableId]?.name,
         }),
       );
       return;
@@ -231,7 +233,7 @@ export function getIssues(diagram) {
     });
   }
 
-  diagram.tables.forEach((table) => {
+  diagram.tables?.forEach((table) => {
     if (!visitedTables.has(table.id)) {
       checkCircularRelationships(table.id);
     }

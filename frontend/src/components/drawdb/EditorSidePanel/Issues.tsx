@@ -18,10 +18,10 @@ export default function Issues() {
   const { settings } = useSettings();
   const { enums } = useEnum();
   const { tables, relationships, database } = useDiagram();
-  const [issues, setIssues] = useState([]);
+  const [issues, setIssues] = useState<string[]>([]);
 
   useEffect(() => {
-    const findIssues = async () => {
+    const findIssues = () => {
       const newIssues = getIssues({
         tables: tables,
         relationships: relationships,
@@ -40,9 +40,7 @@ export default function Issues() {
 
   return (
     <Collapse
-      // keepDOM lazyRender
-
-      style={{ width: '100%' }}
+    // keepDOM lazyRender
     >
       <Collapse.Panel
         header={
