@@ -1,7 +1,8 @@
+import { AST } from 'node-sql-parser';
 import { Cardinality, DB } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import { buildSQLFromAST } from './shared';
-import { DBValueType } from '../../../data/interface';
+import { DBValueType, DRelationship, DTable } from '../../../data/interface';
 
 const affinity = {
   [DB.MSSQL]: new Proxy(
@@ -32,14 +33,17 @@ const affinity = {
   ),
 };
 
-export function fromMSSQL(ast, diagramDb: DBValueType = DB.GENERIC) {
-  const tables = [];
-  const relationships = [];
+export function fromMSSQL(
+  ast: AST | AST[],
+  diagramDb: DBValueType = DB.GENERIC,
+) {
+  const tables: DTable[] = [];
+  const relationships: DRelationship[] = [];
 
   const parseSingleStatement = (e) => {
     if (e.type === 'create') {
       if (e.keyword === 'table') {
-        const table = {};
+        const table = {} as DTable;
         table.name = e.table[0].table;
         table.comment = '';
         table.color = '#175e7a';
@@ -119,8 +123,8 @@ export function fromMSSQL(ast, diagramDb: DBValueType = DB.GENERIC) {
                 });
               });
             } else if (d.constraint_type.toLowerCase() === 'foreign key') {
-              const relationship = {};
-              const startTableId = table.id;
+              const relationship = {} as DRelationship;
+              const startTableId: number = table.id;
               const startTable = e.table[0].table;
               const startField = d.definition[0].column;
               const endTable = d.reference_definition.table[0].table;
@@ -129,10 +133,10 @@ export function fromMSSQL(ast, diagramDb: DBValueType = DB.GENERIC) {
               const endTableId = tables.findIndex((t) => t.name === endTable);
               if (endTableId === -1) return;
 
-              const endFieldId = tables[endTableId].fields.findIndex(
+              const endFieldId = tables[endTableId]?.fields.findIndex(
                 (f) => f.name === endField,
               );
-              if (endFieldId === -1) return;
+              if (endFieldId === -1 || !endFieldId) return;
 
               const startFieldId = table.fields.findIndex(
                 (f) => f.name === startField,

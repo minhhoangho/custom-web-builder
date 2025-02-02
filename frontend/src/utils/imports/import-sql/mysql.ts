@@ -1,7 +1,8 @@
+import { AST } from 'node-sql-parser';
 import { Cardinality, DB } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import { buildSQLFromAST } from './shared';
-import { DBValueType } from '../../../data/interface';
+import { DBValueType, DRelationship, DTable } from '../../../data/interface';
 
 const affinity = {
   [DB.MYSQL]: new Proxy(
@@ -20,9 +21,12 @@ const affinity = {
   ),
 };
 
-export function fromMySQL(ast, diagramDb: DBValueType = DB.GENERIC) {
-  const tables = [];
-  const relationships = [];
+export function fromMySQL(
+  ast: AST | AST[],
+  diagramDb: DBValueType = DB.GENERIC,
+) {
+  const tables: DTable[] = [];
+  const relationships: DRelationship[] = [];
 
   const parseSingleStatement = (e) => {
     if (e.type === 'create') {

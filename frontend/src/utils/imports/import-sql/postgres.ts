@@ -1,7 +1,14 @@
+import { AST } from 'node-sql-parser';
 import { Cardinality, DB } from '@constants/editor';
 import { dbToTypes } from 'src/data/datatypes';
 import { buildSQLFromAST } from './shared';
-import { DBValueType } from '../../../data/interface';
+import {
+  DBValueType,
+  DEnum,
+  DRelationship,
+  DTable,
+  DType,
+} from '../../../data/interface';
 
 const affinity = {
   [DB.POSTGRES]: new Proxy(
@@ -18,11 +25,14 @@ const affinity = {
   ),
 };
 
-export function fromPostgres(ast, diagramDb: DBValueType = DB.GENERIC) {
-  const tables = [];
-  const relationships = [];
-  const types = [];
-  const enums = [];
+export function fromPostgres(
+  ast: AST | AST[],
+  diagramDb: DBValueType = DB.GENERIC,
+) {
+  const tables: DTable[] = [];
+  const relationships: DRelationship[] = [];
+  const types: DType[] = [];
+  const enums: DEnum[] = [];
 
   const parseSingleStatement = (e) => {
     if (e.type === 'create') {

@@ -53,7 +53,7 @@ export function fromSQLite(
   const addRelationshipFromReferenceDef = (
     startTable: DTable,
     startFieldName: string,
-    referenceDefinition,
+    referenceDefinition: any,
   ) => {
     const relationship = {};
     const endTableName = referenceDefinition.table[0].table;
@@ -62,10 +62,10 @@ export function fromSQLite(
     const endTableId = tables.findIndex((t) => t.name === endTableName);
     if (endTableId === -1) return;
 
-    const endFieldId = tables[endTableId].fields.findIndex(
+    const endFieldId = tables[endTableId]?.fields.findIndex(
       (f) => f.name === endField,
     );
-    if (endFieldId === -1) return;
+    if (endFieldId === -1 || !endFieldId) return;
 
     const startFieldId = startTable.fields.findIndex(
       (f) => f.name === startFieldName,
