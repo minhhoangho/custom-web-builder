@@ -8,7 +8,7 @@ import { useSelect, useTransform, useUndoRedo } from '../hooks';
 export const NotesContext = createContext<{
   notes: DNote[];
   setNotes: React.Dispatch<React.SetStateAction<DNote[]>>;
-  updateNote: (id: number, values: DNote) => void;
+  updateNote: (id: number, values: Partial<DNote>) => void;
   addNote: (data?: Partial<DNote> | null, addToHistory?: boolean) => void;
   deleteNote: (id: number, addToHistory?: boolean) => void;
 } | null>(null);

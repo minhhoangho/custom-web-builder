@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { db } from 'src/data/db';
 import { databases } from 'src/data/database';
 import { Banner } from '@components/common';
+import { DDiagram } from 'src/data/interface';
 
 export default function Open({
   selectedDiagramId,
@@ -15,7 +16,7 @@ export default function Open({
   const diagrams = useLiveQuery(() => db.diagrams.toArray());
   const { t } = useTranslation();
 
-  const getDiagramSize = (d) => {
+  const getDiagramSize = (d: DDiagram) => {
     const size = JSON.stringify(d).length;
     let sizeStr;
     if (size >= 1024 && size < 1024 * 1024)
@@ -55,7 +56,7 @@ export default function Open({
                         : 'hover-1'
                     }`}
                     onClick={() => {
-                      setSelectedDiagramId(d.id);
+                      setSelectedDiagramId(d.id ?? 0);
                     }}
                   >
                     <td className="py-1">
@@ -67,7 +68,7 @@ export default function Open({
                         ' ' +
                         d.lastModified?.toLocaleTimeString()}
                     </td>
-                    <td className="py-1">{getDiagramSize(d)}</td>
+                    <td className="py-1">{getDiagramSize(d as DDiagram)}</td>
                     <td className="py-1">
                       {(d.database && databases[d.database].name) ?? 'Generic'}
                     </td>

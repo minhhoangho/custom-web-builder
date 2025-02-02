@@ -50,11 +50,14 @@ import { databases } from 'src/data/database';
 import { jsonToMermaid } from 'src/utils/exports/export-as/mermaid'; // import { isRtl } from '../../i18n/utils/rtl';
 import { jsonToDocumentation } from 'src/utils/exports/export-as/documentation';
 import useConfirm from '@shared/hooks/use-confirm';
+import { EditorLayoutInterface } from 'src/containers/Editor/interfaces';
 import {
-  EditorLayoutInterface,
-  EditorUndoStackInterface,
-} from 'src/containers/Editor/interfaces';
-import { DArea, DNote, DRelationship, DTable } from 'src/data/interface';
+  DArea,
+  DField,
+  DNote,
+  DRelationship,
+  DTable,
+} from 'src/data/interface';
 import Modal from './Modal/Modal';
 import Sidesheet from './SideSheet/Sidesheet';
 import LayoutDropdown from './LayoutDropdown';
@@ -154,7 +157,7 @@ export default function ControlPanel({
   const [importDb, setImportDb] = useState('');
   const [exportData, setExportData] = useState<{
     data: null | string;
-    extension: 'sql' | 'json';
+    extension: 'sql' | 'json' | 'png' | 'jpeg' | 'svg' | 'md';
     filename: string;
   }>({
     data: null,
@@ -195,9 +198,7 @@ export default function ControlPanel({
 
   const undo = () => {
     if (undoStack.length === 0) return;
-    const a: EditorUndoStackInterface = undoStack[
-      undoStack.length - 1
-    ] as EditorUndoStackInterface;
+    const a: any = undoStack[undoStack.length - 1] as any;
     setUndoStack((prev) => prev.filter((_, i) => i !== prev.length - 1));
     if (a.action === Action.ADD) {
       if (a.element === ObjectType.TABLE) {
@@ -218,19 +219,19 @@ export default function ControlPanel({
       if (a.element === ObjectType.TABLE) {
         setRedoStack((prev) => [
           ...prev,
-          { ...a, x: tables[a.id ?? 0].x, y: tables[a.id].y },
+          { ...a, x: tables[a.id ?? 0]?.x, y: tables[a.id ?? 0]?.y },
         ]);
         updateTable(a.id ?? 0, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.AREA) {
         setRedoStack((prev) => [
           ...prev,
-          { ...a, x: areas[a.id].x, y: areas[a.id].y },
+          { ...a, x: areas[a.id ?? 0]?.x, y: areas[a.id ?? 0]?.y },
         ]);
         updateArea(a.id ?? 0, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.NOTE) {
         setRedoStack((prev) => [
           ...prev,
-          { ...a, x: notes[a.id].x, y: notes[a.id].y },
+          { ...a, x: notes[a.id]?.x, y: notes[a.id]?.y },
         ]);
         updateNote(a.id ?? 0, { x: a.x, y: a.y });
       }
@@ -313,18 +314,18 @@ export default function ControlPanel({
         } else if (a.component === 'field_add') {
           updateTable(a.tid, {
             fields: tables[a.tid]?.fields
-              .filter((e) => e.id !== tables[a.tid]?.fields.length - 1)
+              .filter((e) => e.id !== (tables[a.tid]?.fields?.length ?? 0) - 1)
               .map((t, i) => ({ ...t, id: i })),
           });
         } else if (a.component === 'index_add') {
           updateTable(a.tid, {
             indices: tables[a.tid]?.indices
-              .filter((e) => e.id !== tables[a.tid]?.indices.length - 1)
+              .filter((e) => e.id !== (tables[a.tid]?.indices?.length ?? 0) - 1)
               .map((t, i) => ({ ...t, id: i })),
           });
         } else if (a.component === 'index') {
           updateTable(a.tid, {
-            indices: tables[a.tid].indices.map((index) =>
+            indices: tables[a.tid]?.indices.map((index) =>
               index.id === a.iid
                 ? {
                     ...index,
@@ -357,14 +358,14 @@ export default function ControlPanel({
       } else if (a.element === ObjectType.TYPE) {
         if (a.component === 'field_add') {
           updateType(a.tid, {
-            fields: types[a.tid].fields.filter(
-              (_, i) => i !== types[a.tid].fields.length - 1,
+            fields: types[a.tid]?.fields.filter(
+              (_, i) => i !== (types[a.tid]?.fields.length ?? 0) - 1,
             ),
           });
         }
         if (a.component === 'field') {
           updateType(a.tid, {
-            fields: types[a.tid].fields.map((e, i) =>
+            fields: types[a.tid]?.fields.map((e, i) =>
               i === a.fid ? { ...e, ...a.undo } : e,
             ),
           });
@@ -383,7 +384,7 @@ export default function ControlPanel({
           updateType(a.tid, a.undo);
           if (a.updatedFields) {
             if (a.undo.name) {
-              a.updatedFields.forEach((x) =>
+              a.updatedFields.forEach((x: any) =>
                 updateField(x.tid, x.fid, { type: a.undo.name.toUpperCase() }),
               );
             }
@@ -411,8 +412,8 @@ export default function ControlPanel({
 
   const redo = () => {
     if (redoStack.length === 0) return;
-    const a = redoStack[redoStack.length - 1];
-    setRedoStack((prev) => prev.filter((e, i) => i !== prev.length - 1));
+    const a: any = redoStack[redoStack.length - 1];
+    setRedoStack((prev) => prev.filter((_e, i) => i !== prev.length - 1));
     if (a.action === Action.ADD) {
       if (a.element === ObjectType.TABLE) {
         addTable(null, false);
@@ -432,21 +433,21 @@ export default function ControlPanel({
       if (a.element === ObjectType.TABLE) {
         setUndoStack((prev) => [
           ...prev,
-          { ...a, x: tables[a.id].x, y: tables[a.id].y },
+          { ...a, x: tables[a.id]?.x, y: tables[a.id]?.y },
         ]);
         updateTable(a.id, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.AREA) {
         setUndoStack((prev) => [
           ...prev,
-          { ...a, x: areas[a.id].x, y: areas[a.id].y },
+          { ...a, x: areas[a.id]?.x, y: areas[a.id]?.y },
         ]);
         updateArea(a.id, { x: a.x, y: a.y });
       } else if (a.element === ObjectType.NOTE) {
         setUndoStack((prev) => [
           ...prev,
-          { ...a, x: notes[a.id].x, y: notes[a.id].y },
+          { ...a, x: notes[a.id]?.x, y: notes[a.id]?.y },
         ]);
-        updateNote(a.id, { x: a.x, y: a.y });
+        updateNote(a.id, { x: Number(a.x), y: Number(a.y) });
       }
     } else if (a.action === Action.DELETE) {
       if (a.element === ObjectType.TABLE) {
@@ -476,10 +477,10 @@ export default function ControlPanel({
         } else if (a.component === 'field_add') {
           updateTable(a.tid, {
             fields: [
-              ...tables[a.tid].fields,
+              ...(tables[a.tid]?.fields ?? []),
               {
                 name: '',
-                type: '',
+                type: 'INTEGER',
                 default: '',
                 check: '',
                 primary: false,
@@ -487,8 +488,8 @@ export default function ControlPanel({
                 notNull: false,
                 increment: false,
                 comment: '',
-                id: tables[a.tid].fields.length,
-              },
+                id: tables[a.tid]?.fields.length ?? 0,
+              } as DField,
             ],
           });
         } else if (a.component === 'index_add') {
@@ -512,7 +513,7 @@ export default function ControlPanel({
           );
         } else if (a.component === 'index') {
           updateTable(a.tid, {
-            indices: tables[a.tid].indices.map((index) =>
+            indices: tables[a.tid]?.indices.map((index) =>
               index.id === a.iid
                 ? {
                     ...index,
@@ -523,12 +524,12 @@ export default function ControlPanel({
           });
         } else if (a.component === 'index_delete') {
           updateTable(a.tid, {
-            indices: tables[a.tid].indices
+            indices: tables[a.tid]?.indices
               .filter((e) => e.id !== a.data.id)
               .map((t, i) => ({ ...t, id: i })),
           });
         } else if (a.component === 'self') {
-          updateTable(a.tid, a.redo, false);
+          updateTable(a.tid, a.redo);
         }
       } else if (a.element === ObjectType.RELATIONSHIP) {
         setRelationships((prev) =>
@@ -538,7 +539,7 @@ export default function ControlPanel({
         if (a.component === 'field_add') {
           updateType(a.tid, {
             fields: [
-              ...types[a.tid].fields,
+              ...(types[a.tid]?.fields ?? []),
               {
                 name: '',
                 type: '',
@@ -547,19 +548,19 @@ export default function ControlPanel({
           });
         } else if (a.component === 'field') {
           updateType(a.tid, {
-            fields: types[a.tid].fields.map((e, i) =>
+            fields: types[a.tid]?.fields.map((e, i) =>
               i === a.fid ? { ...e, ...a.redo } : e,
             ),
           });
         } else if (a.component === 'field_delete') {
           updateType(a.tid, {
-            fields: types[a.tid].fields.filter((field, i) => i !== a.fid),
+            fields: types[a.tid]?.fields.filter((_field, i) => i !== a.fid),
           });
         } else if (a.component === 'self') {
           updateType(a.tid, a.redo);
           if (a.updatedFields) {
             if (a.redo.name) {
-              a.updatedFields.forEach((x) =>
+              a.updatedFields.forEach((x: any) =>
                 updateField(x.tid, x.fid, { type: a.redo.name.toUpperCase() }),
               );
             }
@@ -1717,8 +1718,8 @@ export default function ControlPanel({
       return (
         <div key={_index}>
           <BasicMenu title={t(category)}>
-            {Object.keys(menu[category]).map((item, index) => {
-              if (menu[category][item].children) {
+            {Object.keys(menu[category] ?? {})?.map((item, index) => {
+              if (menu[category]?.[item]?.children) {
                 return (
                   <div key={_index}>
                     <BasicMenu
@@ -1726,8 +1727,8 @@ export default function ControlPanel({
                       title={t(item)}
                       className="!px-4 !py-1.5 round-0 !justify-between !items-center w-full !text-sm !text-neutral-900"
                     >
-                      {menu[category][item].children.map((e, i) => (
-                        <MenuItem key={i} onClick={Object.values(e)?.[0]}>
+                      {menu[category]?.[item]?.children.map((e, i) => (
+                        <MenuItem key={i} onClick={Object.values(e)[0]}>
                           {t(Object.keys(e)[0])}
                         </MenuItem>
                       ))}

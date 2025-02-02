@@ -3,4 +3,5 @@ export interface EditorTaskInterface {
   priority: number;
   complete: boolean;
   details: string;
+  order: number;
 }

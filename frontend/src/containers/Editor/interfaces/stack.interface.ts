@@ -43,8 +43,10 @@ export interface EditorRedoStackInterface {
 export interface EditorUndoStackInterface {
   action: (typeof Action)[keyof typeof Action];
   element: (typeof ObjectType)[keyof typeof ObjectType];
+  updatedFields: any[];
   component: string;
   tid: number;
+  iid: number;
   aid: number;
   fid: number;
   nid: number;

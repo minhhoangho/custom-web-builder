@@ -47,7 +47,7 @@ export default function Todo() {
   const { setSaveState } = useSaveState();
   const { t } = useTranslation();
 
-  const priorityLabel = (p) => {
+  const priorityLabel = (p: number): string => {
     switch (p) {
       case Priority.NONE:
         return t('none');
@@ -62,7 +62,8 @@ export default function Todo() {
     }
   };
 
-  const priorityColor = (p) => {
+  const priorityColor = (p: number) => {
+    // "error" | "primary" | "secondary" | "success" | "info" | "warning" | "default"
     switch (p) {
       case Priority.NONE:
         return 'primary';
@@ -73,11 +74,11 @@ export default function Todo() {
       case Priority.HIGH:
         return 'error';
       default:
-        return 'primary';
+        return 'default';
     }
   };
 
-  const sort = (s) => {
+  const sort = (s: string) => {
     setActiveTask(-1);
     switch (s) {
       case SortOrder.ORIGINAL:
@@ -156,7 +157,7 @@ export default function Todo() {
                       <div className="mb-2 font-semibold">{t('priority')}:</div>
                       <RadioGroup
                         onChange={(e) => {
-                          updateTask(i, { priority: e.target.value });
+                          updateTask(i, { priority: Number(e.target.value) });
                           setSaveState(State.SAVING);
                         }}
                         value={task.priority}

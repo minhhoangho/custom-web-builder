@@ -40,13 +40,13 @@ type ModalProps = {
   setDiagramId: React.Dispatch<React.SetStateAction<number>>;
   exportData: {
     data: string | null;
-    extension: 'json' | 'sql';
+    extension: 'sql' | 'json' | 'png' | 'jpeg' | 'svg' | 'md';
     filename: string;
   };
   setExportData: React.Dispatch<
     React.SetStateAction<{
       data: null | string;
-      extension: 'json' | 'sql';
+      extension: 'sql' | 'json' | 'png' | 'jpeg' | 'svg' | 'md';
       filename: string;
     }>
   >;
