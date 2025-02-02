@@ -104,7 +104,7 @@ export const SIDESHEET = {
   NONE: 0,
   TODO: 1,
   TIMELINE: 2,
-};
+} as const;
 
 export const DB = {
   MYSQL: 'mysql',

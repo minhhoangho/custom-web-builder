@@ -10,7 +10,13 @@ import { fromMSSQL } from './mssql';
 import { fromMySQL } from './mysql';
 import { fromPostgres } from './postgres';
 import { fromSQLite } from './sqlite';
-import { DBValueType, DRelationship, DTable } from '../../../data/interface';
+import {
+  DBValueType,
+  DEnum,
+  DRelationship,
+  DTable,
+  DType,
+} from '../../../data/interface';
 
 export function importSQL(
   ast: AST | AST[],
@@ -19,6 +25,8 @@ export function importSQL(
 ): {
   tables: DTable[];
   relationships: DRelationship[];
+  types?: DType[];
+  enums?: DEnum[];
 } {
   let diagram;
   switch (toDb) {

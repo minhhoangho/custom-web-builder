@@ -1,10 +1,17 @@
 import { useLiveQuery } from 'dexie-react-hooks';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { db } from 'src/data/db';
 import { databases } from 'src/data/database';
 import { Banner } from '@components/common';
 
-export default function Open({ selectedDiagramId, setSelectedDiagramId }) {
+export default function Open({
+  selectedDiagramId,
+  setSelectedDiagramId,
+}: {
+  selectedDiagramId: number;
+  setSelectedDiagramId: React.Dispatch<React.SetStateAction<number>>;
+}) {
   const diagrams = useLiveQuery(() => db.diagrams.toArray());
   const { t } = useTranslation();
 
@@ -56,13 +63,13 @@ export default function Open({ selectedDiagramId, setSelectedDiagramId }) {
                       {d.name}
                     </td>
                     <td className="py-1">
-                      {d.lastModified.toLocaleDateString() +
+                      {d.lastModified?.toLocaleDateString() +
                         ' ' +
-                        d.lastModified.toLocaleTimeString()}
+                        d.lastModified?.toLocaleTimeString()}
                     </td>
                     <td className="py-1">{getDiagramSize(d)}</td>
                     <td className="py-1">
-                      {databases[d.database].name ?? 'Generic'}
+                      {(d.database && databases[d.database].name) ?? 'Generic'}
                     </td>
                   </tr>
                 );

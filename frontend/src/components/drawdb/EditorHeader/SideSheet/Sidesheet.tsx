@@ -1,16 +1,23 @@
 // import { SideSheet as SemiUISideSheet } from "@douyinfe/semi-ui";
 import { Drawer } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Box } from '@mui/system';
 import { SIDESHEET } from '@constants/editor';
 import { useSettings } from 'src/containers/Editor/hooks';
 import Timeline from './Timeline';
 import Todo from './Todo';
 
-export default function Sidesheet({ type, onClose }) {
+export default function Sidesheet({
+  type,
+  onClose,
+}: {
+  type: 0 | 1 | 2;
+  onClose: () => void;
+}) {
   const { t } = useTranslation();
   const { settings } = useSettings();
 
-  function getTitle(type) {
+  function getTitle(type: 0 | 1 | 2) {
     switch (type) {
       case SIDESHEET.TIMELINE:
         return (
@@ -41,9 +48,11 @@ export default function Sidesheet({ type, onClose }) {
       default:
         break;
     }
+
+    return null;
   }
 
-  function getContent(type) {
+  function getContent(type: 0 | 1 | 2) {
     switch (type) {
       case SIDESHEET.TIMELINE:
         return <Timeline />;
@@ -52,18 +61,21 @@ export default function Sidesheet({ type, onClose }) {
       default:
         break;
     }
+    return null;
   }
 
   return (
     <Drawer
       open={type !== SIDESHEET.NONE}
-      onCancel={onClose}
-      width={340}
+      onClose={onClose}
+      // width={340}
       // title={getTitle(type)}
-      xs={{ paddingBottom: '16px' }}
-      bodyStyle={{ padding: '0px' }}
+      sx={{ paddingBottom: '16px' }}
     >
-      {getContent(type)}
+      <Box>
+        {getTitle(type)}
+        {getContent(type)}
+      </Box>
     </Drawer>
   );
 }
