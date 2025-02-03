@@ -23,6 +23,7 @@ import { UOWModule } from '@common/uow/uow.module';
 import { RedisCacheModule } from '@providers/cache/cache.module';
 import { CategoryModule } from './category/category.module';
 import { PostModule } from './post/post.module';
+import { DrawDBModule } from "@app/drawdb/drawdb.module";
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PostModule } from './post/post.module';
     RoleModule,
     UserModule,
     AuthModule,
+    DrawDBModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.gmail.com',
