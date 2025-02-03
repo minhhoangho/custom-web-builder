@@ -1,4 +1,5 @@
 import React, { MouseEvent, useContext, useState } from 'react';
+import Image from 'next/image';
 import { Button, Divider, Menu, MenuItem, Tooltip } from '@mui/material';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import { saveAs } from 'file-saver';
@@ -8,13 +9,11 @@ import { Validator } from 'jsonschema';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import clsx from 'clsx';
 import { Iconify, Spinner, toast } from '@components/common';
 import { Input } from '@components/form/Input';
 import { areaSchema, noteSchema, tableSchema } from 'src/data/drawdb-schema';
 import { db } from 'src/data/db';
-
 import {
   jsonToMariaDB,
   jsonToMySQL,
@@ -47,12 +46,16 @@ import {
 import { dataURItoBlob } from 'src/utils/common';
 import { exportSQL } from 'src/utils/exports/export-sql';
 import { databases } from 'src/data/database';
-import { jsonToMermaid } from 'src/utils/exports/export-as/mermaid'; // import { isRtl } from '../../i18n/utils/rtl';
+import { jsonToMermaid } from 'src/utils/exports/export-as/mermaid';
 import { jsonToDocumentation } from 'src/utils/exports/export-as/documentation';
 import useConfirm from '@shared/hooks/use-confirm';
-import { EditorLayoutInterface } from 'src/containers/Editor/interfaces';
 import {
-  DArea, DBValueType,
+  EditorLayoutInterface,
+  EditorUndoStackInterface,
+} from 'src/containers/Editor/interfaces';
+import {
+  DArea,
+  DBValueType,
   DField,
   DNote,
   DRelationship,
@@ -67,7 +70,7 @@ import { IdContext } from '../Workspace';
 type BasicMenuProps = {
   prefix?: React.ReactNode | string;
   postfix?: React.ReactNode | string;
-  title: string;
+  title: string | React.ReactNode | HTMLElement;
   onMenuClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
   className?: string;
@@ -104,7 +107,7 @@ function BasicMenu({
         )}
       >
         {prefix}
-        <div>{title}</div>
+        <>{title}</>
         {postfix}
       </button>
       <Menu
@@ -140,7 +143,7 @@ type MenuItemConstType = {
   };
   shortcut?: string;
   state?: React.ReactElement;
-  children?: any[];
+  children?: { [key: string]: () => void }[];
 };
 
 export default function ControlPanel({
@@ -152,7 +155,7 @@ export default function ControlPanel({
 }: ControlPanelProps) {
   const confirmBox = useConfirm();
   const [modal, setModal] = useState(MODAL.NONE);
-  const [sidesheet, setSidesheet] = useState(SIDESHEET.NONE);
+  const [sidesheet, setSidesheet] = useState<0 | 1 | 2>(SIDESHEET.NONE);
   const [showEditName, setShowEditName] = useState(false);
   const [importDb, setImportDb] = useState<DBValueType>();
   const [exportData, setExportData] = useState<{
@@ -269,7 +272,7 @@ export default function ControlPanel({
             });
             temp = temp.map((e, i) => {
               const recoveredRel = a.data.relationship.find(
-                (x) =>
+                (x: DRelationship) =>
                   (x.startTableId === e.startTableId &&
                     x.startFieldId === e.startFieldId) ||
                   (x.endTableId === e.endTableId &&
@@ -394,7 +397,7 @@ export default function ControlPanel({
         updateEnum(a.id, a.undo);
         if (a.updatedFields) {
           if (a.undo.name) {
-            a.updatedFields.forEach((x) =>
+            a.updatedFields.forEach((x: any) =>
               updateField(x.tid, x.fid, { type: a.undo.name.toUpperCase() }),
             );
           }
@@ -570,7 +573,7 @@ export default function ControlPanel({
         updateEnum(a.id, a.redo);
         if (a.updatedFields) {
           if (a.redo.name) {
-            a.updatedFields.forEach((x) =>
+            a.updatedFields.forEach((x: EditorUndoStackInterface) =>
               updateField(x.tid, x.fid, { type: a.redo.name.toUpperCase() }),
             );
           }
@@ -1659,9 +1662,9 @@ export default function ControlPanel({
                 const body = document.body;
                 if (body.hasAttribute('theme-mode')) {
                   if (body.getAttribute('theme-mode') === 'light') {
-                    menu['view']['theme']?.children[1]?.['dark']?.();
+                    menu['view']?.['theme']?.children?.[1]?.['dark']?.();
                   } else {
-                    menu['view']['theme']?.children[0]?.['light']?.();
+                    menu['view']?.['theme']?.children?.[0]?.['light']?.();
                   }
                 }
               }}
@@ -1706,8 +1709,8 @@ export default function ControlPanel({
       const handleOnClickMenuItem = (menuItem: MenuItemConstType) => {
         if (menuItem.warning) {
           return confirmBox.confirm({
-            title: menu[category][item].warning.title,
-            message: menu[category][item].warning.message,
+            title: menuItem.warning.title,
+            message: menuItem.warning.message,
             confirmButtonLabel: t('confirm'),
           });
         }
@@ -1729,7 +1732,7 @@ export default function ControlPanel({
                     >
                       {menu[category]?.[item]?.children.map((e, i) => (
                         <MenuItem key={i} onClick={Object.values(e)[0]}>
-                          {t(Object.keys(e)[0])}
+                          <div>{Object.keys(e)?.[0] ?? ''}</div>
                         </MenuItem>
                       ))}
                     </BasicMenu>

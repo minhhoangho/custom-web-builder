@@ -28,7 +28,7 @@ export default function NotesContextProvider({
     if (data) {
       setNotes((prev) => {
         const temp = prev.slice();
-        temp.splice(data.id, 0, data);
+        temp.splice(data.id as number, 0, data as DNote);
         return temp.map((t, i) => ({ ...t, id: i }));
       });
     } else {

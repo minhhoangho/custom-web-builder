@@ -14,7 +14,7 @@ export default function TasksContextProvider({
 }) {
   const [tasks, setTasks] = useState<EditorTaskInterface[]>([]);
 
-  const updateTask = (id, values) =>
+  const updateTask = (id: number, values: Partial<EditorTaskInterface>) =>
     setTasks((prev) =>
       prev.map((task, i) => (id === i ? { ...task, ...values } : task)),
     );

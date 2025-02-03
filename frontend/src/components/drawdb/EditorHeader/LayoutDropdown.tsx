@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { MouseEvent, useState } from 'react';
+import { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import { useLayout } from 'src/containers/Editor/hooks';
 import { Iconify } from '@components/common';
@@ -9,7 +9,7 @@ export default function LayoutDropdown() {
   const { layout, setLayout } = useLayout();
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {

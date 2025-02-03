@@ -189,7 +189,11 @@ export function CanvasContextProvider({
 
   // Important for touch screen devices!
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   useEventListener('pointerdown', detectPointerMovement, canvasWrapRef);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   useEventListener('pointermove', detectPointerMovement, canvasWrapRef);
 
   const contextValue = {
