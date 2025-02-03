@@ -52,7 +52,7 @@ import { jsonToDocumentation } from 'src/utils/exports/export-as/documentation';
 import useConfirm from '@shared/hooks/use-confirm';
 import { EditorLayoutInterface } from 'src/containers/Editor/interfaces';
 import {
-  DArea,
+  DArea, DBValueType,
   DField,
   DNote,
   DRelationship,
@@ -154,7 +154,7 @@ export default function ControlPanel({
   const [modal, setModal] = useState(MODAL.NONE);
   const [sidesheet, setSidesheet] = useState(SIDESHEET.NONE);
   const [showEditName, setShowEditName] = useState(false);
-  const [importDb, setImportDb] = useState('');
+  const [importDb, setImportDb] = useState<DBValueType>();
   const [exportData, setExportData] = useState<{
     data: null | string;
     extension: 'sql' | 'json' | 'png' | 'jpeg' | 'svg' | 'md';
@@ -1501,7 +1501,7 @@ export default function ControlPanel({
         setTitle={setTitle}
         setDiagramId={setDiagramId}
         setModal={setModal}
-        importDb={importDb}
+        importDb={importDb as DBValueType}
       />
       <Sidesheet
         type={sidesheet}
@@ -1791,7 +1791,7 @@ export default function ControlPanel({
             <div className="flex items-center ml-3 gap-2">
               {databases[database]?.image && (
                 <Image
-                  src={databases[database]?.image}
+                  src={databases[database]?.image ?? ''}
                   width={20}
                   height={20}
                   // className="h-5"

@@ -1,6 +1,6 @@
 export interface CollapseProps {
   activeKey?: string;
-  onChange?: (activeKey: string, e: any) => void;
+  onChange?: (activeKey: string, e: any) => void 
   // children: React.ReactNode;
   // expandIcon?: any;
   // collapseIcon?: any;

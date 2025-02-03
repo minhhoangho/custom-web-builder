@@ -11,8 +11,8 @@
 .editor-container {
   margin: 16px auto 16px auto;
   border-radius: 6px;
-  color: var(--semi-color-text-1);
-  background-color: rgba(var(--semi-grey-1), 1);
+  color: #fafafa;
+  background-color: #999999;
   position: relative;
   line-height: 20px;
   font-weight: 400;
@@ -20,7 +20,7 @@
 }
 
 .editor-inner {
-  background-color: rgba(var(--semi-grey-1), 1);
+  background-color:  #999999;
   position: relative;
   border-radius: 6px;
 }

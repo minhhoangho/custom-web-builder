@@ -14,8 +14,8 @@ function Collapse({ children, onChange, activeKey }: CollapseReactProps) {
     <div>
       <CollapseContext.Provider
         value={{
-          activeKey,
-          onChange,
+          activeKey: activeKey as string,
+          onChange: onChange as (activeKey: string, e: React.MouseEvent) => void,
         }}
       >
         {children}

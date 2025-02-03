@@ -76,7 +76,7 @@ export const languages = [
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 i18n
-  .use(LanguageDetector)
+  // .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',

@@ -31,6 +31,7 @@ import ImportDiagram from './ImportDiagram';
 import ImportSource from './ImportSource';
 import SetTableWidth from './SetTableWidth';
 import Code from './Code';
+import Language from "./Language";
 
 type ModalProps = {
   modal: (typeof MODAL)[keyof typeof MODAL];
@@ -335,8 +336,8 @@ export default function Modal({
         }
       case MODAL.TABLE_WIDTH:
         return <SetTableWidth />;
-      // case MODAL.LANGUAGE:
-      //   return <Language />;
+      case MODAL.LANGUAGE:
+        return <Language />;
       // case MODAL.SHARE:
       //   return <Share title={title} setModal={setModal} />;
       default:
