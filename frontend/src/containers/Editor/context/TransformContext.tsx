@@ -20,10 +20,10 @@ export default function TransformContextProvider({
    * @type {typeof DrawDB.TransformContext["setTransform"]}
    */
   const setTransform = useCallback(
-    (actionOrValue) => {
+    (actionOrValue: any) => {
       const clamp = (value: number, min: number, max: number) =>
         Math.max(min, Math.min(max, value));
-      const findFirstNumber = (...values) =>
+      const findFirstNumber = (...values: any) =>
         values.find((value) => typeof value === 'number' && !isNaN(value));
 
       setTransformInternal((prev) => {

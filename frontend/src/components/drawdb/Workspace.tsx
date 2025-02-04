@@ -30,7 +30,15 @@ import SidePanel from '@components/drawdb/EditorSidePanel/SidePanel';
 import Canvas from '@components/drawdb/EditorCanvas/Canvas';
 import FloatingControls from './FloatingControls';
 import ControlPanel from './EditorHeader/ControlPanel';
-import { DDiagram, DTemplate } from '../../data/interface';
+import {
+  DArea,
+  DBValueType,
+  DDiagram,
+  DNote,
+  DRelationship,
+  DTable,
+  DTemplate,
+} from '../../data/interface';
 import { CanvasContextProvider } from '../../containers/Editor/context/CanvasContext';
 
 export const IdContext = createContext<{
@@ -77,7 +85,7 @@ export const IdContext = createContext<{
 // };
 
 export default function WorkSpace() {
-  const [id, setId] = useState(0);
+  const [id, setId] = useState<number>(0);
   const [gistId, setGistId] = useState('');
   const [loadedFromGistId, setLoadedFromGistId] = useState('');
   const [title, setTitle] = useState<string>('Untitled Diagram');
@@ -175,13 +183,13 @@ export default function WorkSpace() {
           })
           .then((id) => {
             setId(id);
-            window.name = `d ${id}`;
+            window.name = `d ${Number(id)}`;
             setSaveState(State.SAVED);
             setLastSaved(new Date().toLocaleString());
           });
       } else {
         await db.diagrams
-          .update(id, {
+          .update(id as Partial<DDiagram>, {
             database: database,
             name: title,
             lastModified: new Date(),
@@ -204,7 +212,7 @@ export default function WorkSpace() {
       }
     } else {
       await db.templates
-        .update(id, {
+        .update(id as Partial<DDiagram>, {
           database: database,
           title: title,
           tables: tables,
@@ -280,13 +288,14 @@ export default function WorkSpace() {
           }
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.log(error);
         });
     };
 
     const loadDiagram = async (id: number) => {
       await db.diagrams
-        .get(id)
+        .get(id as any)
         .then((diagram) => {
           if (diagram) {
             if (diagram.database) {
@@ -294,18 +303,18 @@ export default function WorkSpace() {
             } else {
               setDatabase(DB.GENERIC);
             }
-            setId(diagram.id);
-            setGistId(diagram.gistId);
-            setLoadedFromGistId(diagram.loadedFromGistId);
-            setTitle(diagram.name);
-            setTables(diagram.tables);
-            setRelationships(diagram.references);
-            setAreas(diagram.areas);
-            setNotes(diagram.notes);
+            setId(diagram.id as number);
+            setGistId(diagram.gistId as string);
+            setLoadedFromGistId(diagram.loadedFromGistId as string);
+            setTitle(diagram.name as string);
+            setTables(diagram.tables as DTable[]);
+            setRelationships(diagram.references as DRelationship[]);
+            setAreas(diagram.areas as DArea[]);
+            setNotes(diagram.notes as DNote[]);
             setTasks(diagram.todos ?? []);
             setTransform({
-              pan: diagram.pan,
-              zoom: diagram.zoom,
+              pan: diagram.pan as { x: number; y: number },
+              zoom: diagram.zoom as number,
             });
             setUndoStack([]);
             setRedoStack([]);
@@ -321,27 +330,28 @@ export default function WorkSpace() {
           }
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.log(error);
         });
     };
 
     const loadTemplate = async (id: number) => {
       await db.templates
-        .get(id)
-        .then((diagram: DTemplate) => {
+        .get(id as any)
+        .then((diagram: Partial<DTemplate> | undefined) => {
           if (diagram) {
             if (diagram.database) {
               setDatabase(diagram.database);
             } else {
               setDatabase(DB.GENERIC);
             }
-            setId(diagram.id);
-            setTitle(diagram.title);
-            setTables(diagram.tables);
-            setRelationships(diagram.relationships);
-            setAreas(diagram.subjectAreas);
+            setId(diagram.id as number);
+            setTitle(diagram.title as string);
+            setTables(diagram.tables as DTable[]);
+            setRelationships(diagram.relationships as DRelationship[]);
+            setAreas(diagram.subjectAreas as DArea[]);
             setTasks(diagram.todos ?? []);
-            setNotes(diagram.notes);
+            setNotes(diagram.notes as DNote[]);
             setTransform({
               zoom: 1,
               pan: { x: 0, y: 0 },
@@ -359,12 +369,14 @@ export default function WorkSpace() {
           }
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.log(error);
           if (selectedDb === '') setShowSelectDbModal(true);
         });
     };
 
-    const loadFromGist = async (shareId: string) => {
+    const loadFromGist = async (_shareId: string) => {
+      // eslint-disable-next-line no-console
       console.log('This function is not supported');
     };
 
@@ -375,7 +387,7 @@ export default function WorkSpace() {
 
       if (existingDiagram) {
         window.name = 'd ' + existingDiagram.id;
-        setId(existingDiagram.id);
+        setId(existingDiagram.id as number);
       } else {
         window.name = '';
         setId(0);
@@ -567,7 +579,7 @@ export default function WorkSpace() {
             // type="submit"
             onClick={() => {
               if (selectedDb === '') return;
-              setDatabase(selectedDb);
+              setDatabase(selectedDb as DBValueType);
               setShowSelectDbModal(false);
             }}
             disabled={selectedDb === ''}
