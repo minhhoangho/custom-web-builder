@@ -212,7 +212,7 @@ export default function WorkSpace() {
       }
     } else {
       await db.templates
-        .update(id as Partial<DDiagram>, {
+        .update(id, {
           database: database,
           title: title,
           tables: tables,
@@ -258,23 +258,26 @@ export default function WorkSpace() {
       await db.diagrams
         .orderBy('lastModified')
         .last()
-        .then((d: DDiagram) => {
+        .then((d: Partial<DDiagram> | undefined) => {
           if (d) {
             if (d.database) {
               setDatabase(d.database);
             } else {
               setDatabase(DB.GENERIC);
             }
-            setId(d.id);
-            setGistId(d.gistId);
-            setLoadedFromGistId(d.loadedFromGistId);
-            setTitle(d.name);
-            setTables(d.tables);
-            setRelationships(d.references);
-            setNotes(d.notes);
-            setAreas(d.areas);
+            setId(d.id as number);
+            setGistId(d.gistId as string);
+            setLoadedFromGistId(d.loadedFromGistId as string);
+            setTitle(d.name as string);
+            setTables(d.tables as DTable[]);
+            setRelationships(d.references as DRelationship[]);
+            setNotes(d.notes as DNote[]);
+            setAreas(d.areas as DArea[]);
             setTasks(d.todos ?? []);
-            setTransform({ pan: d.pan, zoom: d.zoom });
+            setTransform({
+              pan: d.pan as { x: number; y: number },
+              zoom: d.zoom as number,
+            });
             if (databases[database]?.hasTypes) {
               setTypes(d.types ?? []);
             }
