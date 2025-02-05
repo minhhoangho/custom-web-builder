@@ -1,10 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { DrawDBDefinition } from "@app/drawdb/entities/drawdb.entity";
-import { DrawDBDefinitionRepository } from "@app/drawdb/drawdb.repository";
+import { Injectable } from '@nestjs/common';
+import { DrawDBDefinition } from '@app/drawdb/entities/drawdb.entity';
+import { DrawDBDefinitionRepository } from '@app/drawdb/drawdb.repository';
+import { NotFoundError } from 'src/errors';
 
 @Injectable()
 export class DrawDBService {
-  constructor(private readonly drawDBDefinitionRepository: DrawDBDefinitionRepository) {}
+  constructor(
+    private readonly drawDBDefinitionRepository: DrawDBDefinitionRepository,
+  ) {}
 
   async createDrawDBDefinition(
     drawDBDefinition: DrawDBDefinition,
@@ -12,10 +15,16 @@ export class DrawDBService {
     return this.drawDBDefinitionRepository.save(drawDBDefinition);
   }
 
-  async getDrawDBDefinition(
-    drawDBDefinitionId: number,
-  ): Promise<DrawDBDefinition | undefined> {
-    return this.drawDBDefinitionRepository.findOne(drawDBDefinitionId);
+  async getDrawDBDefinition(id: number): Promise<DrawDBDefinition> {
+    return this.drawDBDefinitionRepository.findOneByIdOrFail(id);
+  }
+
+  async getLatest(): Promise<DrawDBDefinition | null> {
+    return this.drawDBDefinitionRepository.findOne({
+      order: {
+        updatedAt: 'desc',
+      },
+    });
   }
 
   async getDrawDBDefinitions(): Promise<DrawDBDefinition[]> {
@@ -26,8 +35,13 @@ export class DrawDBService {
     drawDBDefinitionId: number,
     drawDBDefinition: DrawDBDefinition,
   ): Promise<DrawDBDefinition> {
-    await this.drawDBDefinitionRepository.update(drawDBDefinitionId, drawDBDefinition);
-    return this.drawDBDefinitionRepository.findOneByIdOrFail(drawDBDefinitionId);
+    await this.drawDBDefinitionRepository.update(
+      drawDBDefinitionId,
+      drawDBDefinition,
+    );
+    return this.drawDBDefinitionRepository.findOneByIdOrFail(
+      drawDBDefinitionId,
+    );
   }
 
   async deleteDrawDBDefinition(drawDBDefinitionId: number): Promise<void> {

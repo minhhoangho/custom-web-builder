@@ -10,6 +10,7 @@ import {
 import { useRouter } from 'next/router';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import { useMutation } from 'react-query';
 import { db } from 'src/data/db';
 import { DB, State } from '@constants/editor';
 import {
@@ -28,37 +29,33 @@ import {
 import { databases } from 'src/data/database';
 import SidePanel from '@components/drawdb/EditorSidePanel/SidePanel';
 import Canvas from '@components/drawdb/EditorCanvas/Canvas';
+import {
+  createDatabase,
+  getDatabaseDetail,
+  getLastestDatabase,
+  updateDatabase,
+} from '@api/drawdb';
+import { toast } from '@components/common';
 import FloatingControls from './FloatingControls';
 import ControlPanel from './EditorHeader/ControlPanel';
 import {
   DArea,
   DBValueType,
-  DDiagram,
   DNote,
   DRelationship,
   DTable,
   DTemplate,
 } from '../../data/interface';
 import { CanvasContextProvider } from '../../containers/Editor/context/CanvasContext';
-import { useMutation } from "react-query";
-import { LoginPayloadRequest, LoginResponse } from "../../containers/Login/models";
-import { login } from "@api/auth";
-import { CookieStorage } from "../../utils";
-import { CookieKey } from "@constants/storage";
-import { toast } from "@components/common";
-import { UserData } from "../../containers/UserManagement/models";
-import { PathName } from "@constants/routes";
-import { createDatabase, getDatabaseDetail, updateDatabase } from "@api/drawdb";
-import { DatabasePostRequestPayload } from "../../containers/Editor/models/database-request.dto";
-import { DatabaseDetailResponse } from "../../containers/Editor/models/database-response.dto";
+import { DatabasePostRequestPayload } from '../../containers/Editor/models/database-request.dto';
+import { DatabaseDetailResponse } from '../../containers/Editor/models/database-response.dto';
 
 export const IdContext = createContext<{
   gistId: string;
   setGistId: React.Dispatch<React.SetStateAction<string>>;
 }>({
   gistId: '',
-  setGistId: () => {
-  },
+  setGistId: () => {},
 });
 
 // const useSearchParams = () => {
@@ -154,7 +151,7 @@ export default function WorkSpace() {
 
   // const [searchParams, setSearchParams] = useSearchParams();
   const searchParams = useSearchParams();
-  const shareId = searchParams.get('shareId');
+  // const shareId = searchParams.get('shareId');
 
   const router = useRouter();
   const handleResize = (e: any) => {
@@ -165,44 +162,115 @@ export default function WorkSpace() {
   };
 
   const { mutate: createDatabaseMutate } = useMutation({
-    mutationFn: (data: DatabasePostRequestPayload) =>
-      createDatabase(data),
+    mutationFn: (data: DatabasePostRequestPayload) => createDatabase(data),
     onSuccess: (res: DatabaseDetailResponse) => {
       setId(res.id);
       window.name = `d ${Number(res.id)}`;
       setSaveState(State.SAVED);
       // setLastSaved(new Date().toLocaleString());
-      setLastSaved(res.updatedAt)
+      setLastSaved(res.updatedAt);
     },
     onError: () => {
       setSaveState(State.ERROR);
     },
   });
 
-
   const { mutate: updateDatabaseMutate } = useMutation({
-    mutationFn: ({ id, data }: { id: number, data: Partial<DatabasePostRequestPayload> }) => updateDatabase(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: Partial<DatabasePostRequestPayload>;
+    }) => updateDatabase(id, data),
     onSuccess: (res: DatabaseDetailResponse) => {
       setSaveState(State.SAVED);
       // setLastSaved(new Date().toLocaleString());
-      setLastSaved(res.updatedAt)
+      setLastSaved(res.updatedAt);
     },
     onError: () => {
       setSaveState(State.ERROR);
     },
   });
 
-  const { mutate: getDatabaseMutate } = useMutation({
-    mutationFn: (id: number): Promise<any> =>
-      getDatabaseDetail(id),
-    onSuccess: () => {
-
+  const { mutate: getDatabaseDetailMutate } = useMutation({
+    mutationFn: (id: number): Promise<any> => getDatabaseDetail(id),
+    onSuccess: (diagram: DatabaseDetailResponse) => {
+      if (diagram) {
+        if (diagram.database) {
+          setDatabase(diagram.database);
+        } else {
+          setDatabase(DB.GENERIC);
+        }
+        setId(diagram.id);
+        setGistId(diagram.gistId);
+        setLoadedFromGistId(diagram.loadedFromGistId);
+        setTitle(diagram.name);
+        setTables(diagram.tables);
+        setRelationships(diagram.references);
+        setAreas(diagram.areas);
+        setNotes(diagram.notes);
+        setTasks(diagram.todos ?? []);
+        setTransform({
+          pan: diagram.pan as { x: number; y: number },
+          zoom: diagram.zoom,
+        });
+        setUndoStack([]);
+        setRedoStack([]);
+        if (databases[database].hasTypes) {
+          setTypes(diagram.types ?? []);
+        }
+        if (databases[database].hasEnums) {
+          setEnums(diagram.enums ?? []);
+        }
+        window.name = `d ${diagram.id}`;
+      } else {
+        window.name = '';
+      }
     },
     onError: () => {
-
+      toast('error', 'Load diagram error');
     },
   });
 
+  const { mutate: getLastestDatabaseMutate } = useMutation({
+    mutationFn: (): Promise<DatabaseDetailResponse> => getLastestDatabase(),
+    onSuccess: (d: DatabaseDetailResponse | null) => {
+      if (d) {
+        if (d.database) {
+          setDatabase(d.database);
+        } else {
+          setDatabase(DB.GENERIC);
+        }
+        setId(d.id);
+        setGistId(d.gistId);
+        setLoadedFromGistId(d.loadedFromGistId);
+        setTitle(d.name);
+        setTables(d.tables);
+        setRelationships(d.references);
+        setNotes(d.notes);
+        setAreas(d.areas);
+        setTasks(d.todos ?? []);
+        setTransform({
+          pan: d.pan as { x: number; y: number },
+          zoom: d.zoom,
+        });
+        if (databases[database]?.hasTypes) {
+          setTypes(d.types ?? []);
+        }
+        if (databases[database]?.hasEnums) {
+          setEnums(d.enums ?? []);
+        }
+        window.name = `d ${d.id}`;
+      } else {
+        window.name = '';
+        if (selectedDb === '') setShowSelectDbModal(true);
+      }
+    },
+    onError: () => {
+      toast('error', 'Load latest diagram error');
+    },
+  });
 
   const save = useCallback(async () => {
     if (saveState !== State.SAVING) return;
@@ -213,7 +281,7 @@ export default function WorkSpace() {
     if (saveAsDiagram) {
       router.replace({ search: null });
       if ((id === 0 && window.name === '') || op === 'lt') {
-        await createDatabaseMutate({
+        createDatabaseMutate({
           database: database,
           name: title,
           gistId: gistId ?? '',
@@ -228,9 +296,9 @@ export default function WorkSpace() {
           loadedFromGistId: loadedFromGistId,
           ...(databases[database]?.hasEnums && { enums: enums }),
           ...(databases[database]?.hasTypes && { types: types }),
-        } as DatabasePostRequestPayload)
+        } as DatabasePostRequestPayload);
       } else {
-        await updateDatabaseMutate({
+        updateDatabaseMutate({
           id: id,
           data: {
             database: database,
@@ -247,11 +315,11 @@ export default function WorkSpace() {
             loadedFromGistId: loadedFromGistId,
             ...(databases[database]?.hasEnums && { enums: enums }),
             ...(databases[database]?.hasTypes && { types: types }),
-          } as Partial<DatabasePostRequestPayload>
-        })
+          } as Partial<DatabasePostRequestPayload>,
+        });
       }
     } else {
-      await updateDatabaseMutate({
+      updateDatabaseMutate({
         id: id,
         data: {
           database: database,
@@ -265,8 +333,8 @@ export default function WorkSpace() {
           zoom: transform.zoom,
           ...(databases[database]?.hasEnums && { enums: enums }),
           ...(databases[database]?.hasTypes && { types: types }),
-        } as Partial<DatabasePostRequestPayload>
-      })
+        } as Partial<DatabasePostRequestPayload>,
+      });
     }
   }, [
     searchParams,
@@ -289,90 +357,6 @@ export default function WorkSpace() {
   ]);
 
   const load = useCallback(async () => {
-    const loadLatestDiagram = async () => {
-      await db.diagrams
-        .orderBy('lastModified')
-        .last()
-        .then((d: Partial<DDiagram> | undefined) => {
-          if (d) {
-            if (d.database) {
-              setDatabase(d.database);
-            } else {
-              setDatabase(DB.GENERIC);
-            }
-            setId(d.id as number);
-            setGistId(d.gistId as string);
-            setLoadedFromGistId(d.loadedFromGistId as string);
-            setTitle(d.name as string);
-            setTables(d.tables as DTable[]);
-            setRelationships(d.references as DRelationship[]);
-            setNotes(d.notes as DNote[]);
-            setAreas(d.areas as DArea[]);
-            setTasks(d.todos ?? []);
-            setTransform({
-              pan: d.pan as { x: number; y: number },
-              zoom: d.zoom as number,
-            });
-            if (databases[database]?.hasTypes) {
-              setTypes(d.types ?? []);
-            }
-            if (databases[database]?.hasEnums) {
-              setEnums(d.enums ?? []);
-            }
-            window.name = `d ${d.id}`;
-          } else {
-            window.name = '';
-            if (selectedDb === '') setShowSelectDbModal(true);
-          }
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.log(error);
-        });
-    };
-
-    const loadDiagram = async (id: number) => {
-      await db.diagrams
-        .get(id as any)
-        .then((diagram) => {
-          if (diagram) {
-            if (diagram.database) {
-              setDatabase(diagram.database);
-            } else {
-              setDatabase(DB.GENERIC);
-            }
-            setId(diagram.id as number);
-            setGistId(diagram.gistId as string);
-            setLoadedFromGistId(diagram.loadedFromGistId as string);
-            setTitle(diagram.name as string);
-            setTables(diagram.tables as DTable[]);
-            setRelationships(diagram.references as DRelationship[]);
-            setAreas(diagram.areas as DArea[]);
-            setNotes(diagram.notes as DNote[]);
-            setTasks(diagram.todos ?? []);
-            setTransform({
-              pan: diagram.pan as { x: number; y: number },
-              zoom: diagram.zoom as number,
-            });
-            setUndoStack([]);
-            setRedoStack([]);
-            if (databases[database].hasTypes) {
-              setTypes(diagram.types ?? []);
-            }
-            if (databases[database].hasEnums) {
-              setEnums(diagram.enums ?? []);
-            }
-            window.name = `d ${diagram.id}`;
-          } else {
-            window.name = '';
-          }
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.log(error);
-        });
-    };
-
     const loadTemplate = async (id: number) => {
       await db.templates
         .get(id as any)
@@ -413,37 +397,36 @@ export default function WorkSpace() {
         });
     };
 
-    const loadFromGist = async (_shareId: string) => {
-      // eslint-disable-next-line no-console
-      console.log('This function is not supported');
-    };
+    // const loadFromGist = async (_shareId: string) => {
+    //   // eslint-disable-next-line no-console
+    //   console.log('This function is not supported');
+    // };
 
-    if (shareId) {
-      const existingDiagram = await db.diagrams.get({
-        loadedFromGistId: shareId,
-      });
-
-      if (existingDiagram) {
-        window.name = 'd ' + existingDiagram.id;
-        setId(existingDiagram.id as number);
-      } else {
-        window.name = '';
-        setId(0);
-      }
-      await loadFromGist(shareId);
-      return;
-    }
+    // if (shareId) {
+    //   const existingDiagram = await db.diagrams.get({
+    //     loadedFromGistId: shareId,
+    //   });
+    //
+    //   if (existingDiagram) {
+    //     window.name = 'd ' + existingDiagram.id;
+    //     setId(existingDiagram.id as number);
+    //   } else {
+    //     window.name = '';
+    //     setId(0);
+    //   }
+    //   await loadFromGist(shareId);
+    //   return;
+    // }
 
     if (window.name === '') {
-      await loadLatestDiagram();
+      return getLastestDatabaseMutate();
     } else {
       const name = window.name.split(' ');
       const op = name[0];
       const id = parseInt(name?.[1] ?? '0');
       switch (op) {
         case 'd': {
-          await loadDiagram(id);
-          break;
+          return getDatabaseDetailMutate(id);
         }
         case 't':
         case 'lt': {
@@ -551,15 +534,15 @@ export default function WorkSpace() {
         // style={isRtl(i18n.language) ? { direction: 'rtl' } : {}}
       >
         {layout.sidebar && (
-          <SidePanel resize={resize} setResize={setResize} width={width}/>
+          <SidePanel resize={resize} setResize={setResize} width={width} />
         )}
         <div className="relative w-full h-full overflow-hidden">
           <CanvasContextProvider className="h-full w-full">
-            <Canvas saveState={saveState} setSaveState={setSaveState}/>
+            <Canvas saveState={saveState} setSaveState={setSaveState} />
           </CanvasContextProvider>
           {!(layout.sidebar || layout.toolbar || layout.header) && (
             <div className="fixed right-5 bottom-4">
-              <FloatingControls/>
+              <FloatingControls />
             </div>
           )}
         </div>

@@ -1,18 +1,24 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { DrawDBDefinition } from "@app/drawdb/entities/drawdb.entity";
-import { ApiTags } from "@nestjs/swagger";
-import { DrawDBService } from "@app/drawdb/drawdb.service";
-
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { DrawDBDefinition } from '@app/drawdb/entities/drawdb.entity';
+import { ApiTags } from '@nestjs/swagger';
+import { DrawDBService } from '@app/drawdb/drawdb.service';
 
 @ApiTags('DrawDB')
 @Controller('drawdb/databases')
 export class DrawDBController {
-  constructor(private readonly drawDBService: DrawDBService) {
-  }
+  constructor(private readonly drawDBService: DrawDBService) {}
 
   @Get()
   async getAll(): Promise<DrawDBDefinition[]> {
-    return this.drawDBService.getDrawDBDefinitions()
+    return this.drawDBService.getDrawDBDefinitions();
   }
 
   @Get(':id')
@@ -20,13 +26,23 @@ export class DrawDBController {
     return this.drawDBService.getDrawDBDefinition(id);
   }
 
+  @Get('latest')
+  async getLatest(): Promise<DrawDBDefinition | null> {
+    return this.drawDBService.getLatest();
+  }
+
   @Post()
-  async create(@Body() drawDBDefinition: DrawDBDefinition): Promise<DrawDBDefinition> {
+  async create(
+    @Body() drawDBDefinition: DrawDBDefinition,
+  ): Promise<DrawDBDefinition> {
     return this.drawDBService.createDrawDBDefinition(drawDBDefinition);
   }
 
   @Put(':id')
-  async update(@Param('id') id: number, @Body() drawDBDefinition: DrawDBDefinition): Promise<DrawDBDefinition> {
+  async update(
+    @Param('id') id: number,
+    @Body() drawDBDefinition: DrawDBDefinition,
+  ): Promise<DrawDBDefinition> {
     return this.drawDBService.updateDrawDBDefinition(id, drawDBDefinition);
   }
 

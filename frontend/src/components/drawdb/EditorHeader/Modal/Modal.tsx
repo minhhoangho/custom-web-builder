@@ -26,12 +26,11 @@ import { Spinner, toast } from '@components/common';
 import { DBValueType, DTable, DTemplate } from 'src/data/interface';
 import Rename from './Rename';
 import Open from './Open';
-import New from './New';
 import ImportDiagram from './ImportDiagram';
 import ImportSource from './ImportSource';
 import SetTableWidth from './SetTableWidth';
 import Code from './Code';
-import Language from "./Language";
+import Language from './Language';
 
 type ModalProps = {
   modal: (typeof MODAL)[keyof typeof MODAL];
@@ -275,13 +274,13 @@ export default function Modal({
             setError={setError}
           />
         );
-      case MODAL.NEW:
-        return (
-          <New
-            selectedTemplateId={selectedTemplateId}
-            setSelectedTemplateId={setSelectedTemplateId}
-          />
-        );
+      // case MODAL.NEW:
+      //   return (
+      //     <New
+      //       selectedTemplateId={selectedTemplateId}
+      //       setSelectedTemplateId={setSelectedTemplateId}
+      //     />
+      //   );
       case MODAL.RENAME:
         return (
           <Rename key={title} title={title} setTitle={setUncontrolledTitle} />
