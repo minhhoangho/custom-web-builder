@@ -40,13 +40,25 @@ import {
   DTemplate,
 } from '../../data/interface';
 import { CanvasContextProvider } from '../../containers/Editor/context/CanvasContext';
+import { useMutation } from "react-query";
+import { LoginPayloadRequest, LoginResponse } from "../../containers/Login/models";
+import { login } from "@api/auth";
+import { CookieStorage } from "../../utils";
+import { CookieKey } from "@constants/storage";
+import { toast } from "@components/common";
+import { UserData } from "../../containers/UserManagement/models";
+import { PathName } from "@constants/routes";
+import { createDatabase, getDatabaseDetail, updateDatabase } from "@api/drawdb";
+import { DatabasePostRequestPayload } from "../../containers/Editor/models/database-request.dto";
+import { DatabaseDetailResponse } from "../../containers/Editor/models/database-response.dto";
 
 export const IdContext = createContext<{
   gistId: string;
   setGistId: React.Dispatch<React.SetStateAction<string>>;
 }>({
   gistId: '',
-  setGistId: () => {},
+  setGistId: () => {
+  },
 });
 
 // const useSearchParams = () => {
@@ -152,44 +164,75 @@ export default function WorkSpace() {
     if (w > 340) setWidth(w);
   };
 
+  const { mutate: createDatabaseMutate } = useMutation({
+    mutationFn: (data: DatabasePostRequestPayload) =>
+      createDatabase(data),
+    onSuccess: (res: DatabaseDetailResponse) => {
+      setId(res.id);
+      window.name = `d ${Number(res.id)}`;
+      setSaveState(State.SAVED);
+      // setLastSaved(new Date().toLocaleString());
+      setLastSaved(res.updatedAt)
+    },
+    onError: () => {
+      setSaveState(State.ERROR);
+    },
+  });
+
+
+  const { mutate: updateDatabaseMutate } = useMutation({
+    mutationFn: ({ id, data }: { id: number, data: Partial<DatabasePostRequestPayload> }) => updateDatabase(id, data),
+    onSuccess: (res: DatabaseDetailResponse) => {
+      setSaveState(State.SAVED);
+      // setLastSaved(new Date().toLocaleString());
+      setLastSaved(res.updatedAt)
+    },
+    onError: () => {
+      setSaveState(State.ERROR);
+    },
+  });
+
+  const { mutate: getDatabaseMutate } = useMutation({
+    mutationFn: (id: number): Promise<any> =>
+      getDatabaseDetail(id),
+    onSuccess: () => {
+
+    },
+    onError: () => {
+
+    },
+  });
+
+
   const save = useCallback(async () => {
     if (saveState !== State.SAVING) return;
 
     const name = window.name.split(' ');
     const op = name[0];
     const saveAsDiagram = window.name === '' || op === 'd' || op === 'lt';
-
     if (saveAsDiagram) {
-      // searchParams.delete('shareId');
-      // setSearchParams(searchParams);
       router.replace({ search: null });
       if ((id === 0 && window.name === '') || op === 'lt') {
-        await db.diagrams
-          .add({
-            database: database,
-            name: title,
-            gistId: gistId ?? '',
-            lastModified: new Date(),
-            tables: tables,
-            references: relationships,
-            notes: notes,
-            areas: areas,
-            todos: tasks,
-            pan: transform.pan,
-            zoom: transform.zoom,
-            loadedFromGistId: loadedFromGistId,
-            ...(databases[database]?.hasEnums && { enums: enums }),
-            ...(databases[database]?.hasTypes && { types: types }),
-          })
-          .then((id) => {
-            setId(id);
-            window.name = `d ${Number(id)}`;
-            setSaveState(State.SAVED);
-            setLastSaved(new Date().toLocaleString());
-          });
+        await createDatabaseMutate({
+          database: database,
+          name: title,
+          gistId: gistId ?? '',
+          lastModified: new Date(),
+          tables: tables,
+          references: relationships,
+          notes: notes,
+          areas: areas,
+          todos: tasks,
+          pan: transform.pan,
+          zoom: transform.zoom,
+          loadedFromGistId: loadedFromGistId,
+          ...(databases[database]?.hasEnums && { enums: enums }),
+          ...(databases[database]?.hasTypes && { types: types }),
+        } as DatabasePostRequestPayload)
       } else {
-        await db.diagrams
-          .update(id as Partial<DDiagram>, {
+        await updateDatabaseMutate({
+          id: id,
+          data: {
             database: database,
             name: title,
             lastModified: new Date(),
@@ -204,15 +247,13 @@ export default function WorkSpace() {
             loadedFromGistId: loadedFromGistId,
             ...(databases[database]?.hasEnums && { enums: enums }),
             ...(databases[database]?.hasTypes && { types: types }),
-          })
-          .then(() => {
-            setSaveState(State.SAVED);
-            setLastSaved(new Date().toLocaleString());
-          });
+          } as Partial<DatabasePostRequestPayload>
+        })
       }
     } else {
-      await db.templates
-        .update(id, {
+      await updateDatabaseMutate({
+        id: id,
+        data: {
           database: database,
           title: title,
           tables: tables,
@@ -224,14 +265,8 @@ export default function WorkSpace() {
           zoom: transform.zoom,
           ...(databases[database]?.hasEnums && { enums: enums }),
           ...(databases[database]?.hasTypes && { types: types }),
-        })
-        .then(() => {
-          setSaveState(State.SAVED);
-          setLastSaved(new Date().toLocaleString());
-        })
-        .catch(() => {
-          setSaveState(State.ERROR);
-        });
+        } as Partial<DatabasePostRequestPayload>
+      })
     }
   }, [
     searchParams,
@@ -516,15 +551,15 @@ export default function WorkSpace() {
         // style={isRtl(i18n.language) ? { direction: 'rtl' } : {}}
       >
         {layout.sidebar && (
-          <SidePanel resize={resize} setResize={setResize} width={width} />
+          <SidePanel resize={resize} setResize={setResize} width={width}/>
         )}
         <div className="relative w-full h-full overflow-hidden">
           <CanvasContextProvider className="h-full w-full">
-            <Canvas saveState={saveState} setSaveState={setSaveState} />
+            <Canvas saveState={saveState} setSaveState={setSaveState}/>
           </CanvasContextProvider>
           {!(layout.sidebar || layout.toolbar || layout.header) && (
             <div className="fixed right-5 bottom-4">
-              <FloatingControls />
+              <FloatingControls/>
             </div>
           )}
         </div>
