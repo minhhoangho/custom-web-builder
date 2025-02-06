@@ -2,7 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { TypeORMLogger } from '@database/db-logger';
-import loadConfig from '../configs';
+import loadConfig from 'src/configs';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: <never>loadConfig.db.type,
@@ -29,6 +29,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   //   rejectUnauthorized: false
   // }
 };
+
 export const MysqlDataSource = new DataSource(
   typeOrmConfig as DataSourceOptions,
 );

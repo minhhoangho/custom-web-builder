@@ -21,14 +21,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm-seeding": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js",
+    "typeorm-seeding": "ts-node --project ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js",
     "seed:config": "pnpm typeorm-seeding config",
     "db:seed": "pnpm typeorm-seeding seed -n seeding.config.ts -r src/database",
-    "typeorm": "pnpm ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js ",
+    "typeorm": "ts-node --project ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js" ,
     "migration:show": "pnpm typeorm migration:show",
     "db:migrate": "pnpm typeorm migration:run -d src/database/typeorm.config.ts",
-    "db:refresh": "yarn db:drop && yarn db:migrate && yarn db:seed",
-    "db:drop": "yarn typeorm schema:drop"
+    "db:refresh": "pnpm db:drop && yarn db:migrate && yarn db:seed",
+    "db:drop": "pnpm typeorm schema:drop"
   },
   "dependencies": {
     "@bull-board/api": "^6.5.3",
@@ -102,7 +102,7 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.0",
     "ts-loader": "9.4.3",
-    "ts-node": "10.9.2",
+    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },
