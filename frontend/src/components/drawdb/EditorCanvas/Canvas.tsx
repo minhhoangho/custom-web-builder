@@ -20,7 +20,7 @@ import Area from './Area';
 import Relationship from './Relationship';
 import Note from './Note';
 
-export default function Canvas() {
+export default function Canvas({ saveState, setSaveState }) {
   const { t } = useTranslation();
 
   const canvasRef = useRef(null);

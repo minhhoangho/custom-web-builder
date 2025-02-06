@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -50,14 +50,6 @@ import { CanvasContextProvider } from '../../containers/Editor/context/CanvasCon
 import { DatabasePostRequestPayload } from '../../containers/Editor/models/database-request.dto';
 import { DatabaseDetailResponse } from '../../containers/Editor/models/database-response.dto';
 
-export const IdContext = createContext<{
-  gistId: string;
-  setGistId: React.Dispatch<React.SetStateAction<string>>;
-}>({
-  gistId: '',
-  setGistId: () => {},
-});
-
 // const useSearchParams = () => {
 //   const router = useRouter();
 //   // const [searchParams, setSearchParams] = useState(() => {
@@ -95,8 +87,6 @@ export const IdContext = createContext<{
 
 export default function WorkSpace() {
   const [id, setId] = useState<number>(0);
-  const [gistId, setGistId] = useState('');
-  const [loadedFromGistId, setLoadedFromGistId] = useState('');
   const [title, setTitle] = useState<string>('Untitled Diagram');
   const [resize, setResize] = useState<boolean>(false);
   const [width, setWidth] = useState(360);
@@ -124,8 +114,6 @@ export default function WorkSpace() {
   const { undoStack, redoStack, setUndoStack, setRedoStack } = useUndoRedo();
   // console.log('----------------------');
   // console.log('id:', id);
-  // console.log('gistId:', gistId);
-  // console.log('loadedFromGistId:', loadedFromGistId);
   // console.log('title:', title);
   // console.log('resize:', resize);
   // console.log('width:', width);
@@ -203,8 +191,6 @@ export default function WorkSpace() {
           setDatabase(DB.GENERIC);
         }
         setId(diagram.id);
-        setGistId(diagram.gistId);
-        setLoadedFromGistId(diagram.loadedFromGistId);
         setTitle(diagram.name);
         setTables(diagram.tables);
         setRelationships(diagram.references);
@@ -243,8 +229,6 @@ export default function WorkSpace() {
           setDatabase(DB.GENERIC);
         }
         setId(d.id);
-        setGistId(d.gistId);
-        setLoadedFromGistId(d.loadedFromGistId);
         setTitle(d.name);
         setTables(d.tables);
         setRelationships(d.references);
@@ -272,7 +256,7 @@ export default function WorkSpace() {
     },
   });
 
-  const save = useCallback(async () => {
+  const save = useCallback(() => {
     if (saveState !== State.SAVING) return;
 
     const name = window.name.split(' ');
@@ -284,8 +268,6 @@ export default function WorkSpace() {
         createDatabaseMutate({
           database: database,
           name: title,
-          gistId: gistId ?? '',
-          lastModified: new Date(),
           tables: tables,
           references: relationships,
           notes: notes,
@@ -293,7 +275,6 @@ export default function WorkSpace() {
           todos: tasks,
           pan: transform.pan,
           zoom: transform.zoom,
-          loadedFromGistId: loadedFromGistId,
           ...(databases[database]?.hasEnums && { enums: enums }),
           ...(databases[database]?.hasTypes && { types: types }),
         } as DatabasePostRequestPayload);
@@ -303,16 +284,13 @@ export default function WorkSpace() {
           data: {
             database: database,
             name: title,
-            lastModified: new Date(),
             tables: tables,
             references: relationships,
             notes: notes,
             areas: areas,
             todos: tasks,
-            gistId: gistId ?? '',
             pan: transform.pan,
             zoom: transform.zoom,
-            loadedFromGistId: loadedFromGistId,
             ...(databases[database]?.hasEnums && { enums: enums }),
             ...(databases[database]?.hasTypes && { types: types }),
           } as Partial<DatabasePostRequestPayload>,
@@ -324,11 +302,11 @@ export default function WorkSpace() {
         data: {
           database: database,
           title: title,
-          tables: tables,
-          relationships: relationships,
-          notes: notes,
-          subjectAreas: areas,
-          todos: tasks,
+          tables: tables ?? [],
+          relationships: relationships ?? [],
+          notes: notes ?? [],
+          subjectAreas: areas ?? [],
+          todos: tasks ?? [],
           pan: transform.pan,
           zoom: transform.zoom,
           ...(databases[database]?.hasEnums && { enums: enums }),
@@ -337,23 +315,22 @@ export default function WorkSpace() {
       });
     }
   }, [
-    searchParams,
-    // setSearchParams,
+    saveState,
+    router,
+    id,
+    createDatabaseMutate,
+    database,
+    title,
     tables,
     relationships,
     notes,
     areas,
-    types,
-    title,
-    id,
     tasks,
-    transform,
-    setSaveState,
-    database,
+    transform.pan,
+    transform.zoom,
     enums,
-    gistId,
-    loadedFromGistId,
-    saveState,
+    types,
+    updateDatabaseMutate,
   ]);
 
   const load = useCallback(async () => {
@@ -396,27 +373,6 @@ export default function WorkSpace() {
           if (selectedDb === '') setShowSelectDbModal(true);
         });
     };
-
-    // const loadFromGist = async (_shareId: string) => {
-    //   // eslint-disable-next-line no-console
-    //   console.log('This function is not supported');
-    // };
-
-    // if (shareId) {
-    //   const existingDiagram = await db.diagrams.get({
-    //     loadedFromGistId: shareId,
-    //   });
-    //
-    //   if (existingDiagram) {
-    //     window.name = 'd ' + existingDiagram.id;
-    //     setId(existingDiagram.id as number);
-    //   } else {
-    //     window.name = '';
-    //     setId(0);
-    //   }
-    //   await loadFromGist(shareId);
-    //   return;
-    // }
 
     if (window.name === '') {
       return getLastestDatabaseMutate();
@@ -481,7 +437,6 @@ export default function WorkSpace() {
     tasks?.length,
     transform.zoom,
     title,
-    gistId,
     setSaveState,
   ]);
 
@@ -511,16 +466,14 @@ export default function WorkSpace() {
 
   return (
     <div className="h-screen w-full flex flex-col overflow-hidden theme bg-white">
-      <IdContext.Provider value={{ gistId, setGistId }}>
-        <ControlPanel
-          diagramId={id}
-          setDiagramId={setId}
-          title={title}
-          setTitle={setTitle}
-          lastSaved={lastSaved}
-          // setLastSaved={setLastSaved}
-        />
-      </IdContext.Provider>
+      <ControlPanel
+        diagramId={id}
+        setDiagramId={setId}
+        title={title}
+        setTitle={setTitle}
+        lastSaved={lastSaved}
+        // setLastSaved={setLastSaved}
+      />
       <div
         className="flex h-full overflow-y-auto"
         onPointerUp={(e) => e.isPrimary && setResize(false)}

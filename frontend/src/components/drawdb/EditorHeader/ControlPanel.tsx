@@ -1,4 +1,4 @@
-import React, { MouseEvent, useContext, useState } from 'react';
+import React, { MouseEvent, useState } from 'react';
 import Image from 'next/image';
 import { Button, Divider, Menu, MenuItem, Tooltip } from '@mui/material';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
@@ -65,7 +65,6 @@ import Modal from './Modal/Modal';
 import Sidesheet from './SideSheet/Sidesheet';
 import LayoutDropdown from './LayoutDropdown';
 import { IconAddArea, IconAddNote, IconAddTable } from '../icons';
-import { IdContext } from '../Workspace';
 
 type BasicMenuProps = {
   prefix?: React.ReactNode | string;
@@ -192,7 +191,6 @@ export default function ControlPanel({
   const { selectedElement, setSelectedElement } = useSelect();
   const { transform, setTransform } = useTransform();
   const { t } = useTranslation();
-  const { setGistId } = useContext(IdContext);
   // const navigate = useNavigate();
   const router = useRouter();
 
