@@ -21,7 +21,6 @@ export class DrawDBDefinition extends BaseEntityTimestampSoftDelete {
   })
   database: string;
 
-
   @Column({
     type: 'json',
     name: 'pan',
@@ -30,10 +29,10 @@ export class DrawDBDefinition extends BaseEntityTimestampSoftDelete {
   pan: AnyObject;
   @Column({
     type: 'json',
-    name: 'note',
+    name: 'notes',
     nullable: true,
   })
-  note: AnyObject[];
+  notes: AnyObject[];
 
   @Column({
     type: 'json',
@@ -58,10 +57,10 @@ export class DrawDBDefinition extends BaseEntityTimestampSoftDelete {
 
   @Column({
     type: 'json',
-    name: 'todo',
+    name: 'todos',
     nullable: true,
   })
-  todo: AnyObject[];
+  todos: AnyObject[];
 
   @Column({
     type: 'float',

@@ -1,11 +1,10 @@
-import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { CustomRepositoryModule } from "../../libs/typeorm-custom-repository";
-import { DrawDBDefinition } from "@app/drawdb/entities/drawdb.entity";
-import { DrawDBDefinitionRepository } from "@app/drawdb/drawdb.repository";
-import { DrawDBController } from "@app/drawdb/drawdb.controller";
-import { DrawDBService } from "@app/drawdb/drawdb.service";
-
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CustomRepositoryModule } from '../../libs/typeorm-custom-repository';
+import { DrawDBDefinition } from '@app/drawdb/entities/drawdb.entity';
+import { DrawDBDefinitionRepository } from '@app/drawdb/drawdb.repository';
+import { DrawDBController } from '@app/drawdb/drawdb.controller';
+import { DrawDBService } from '@app/drawdb/drawdb.service';
 
 @Module({
   imports: [

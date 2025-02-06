@@ -17,7 +17,6 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
-    "tsBuildInfoFile": "./.tsbuildinfo",
     "esModuleInterop": true,
     "paths": {
       "@app/*": ["src/app/*"],
@@ -32,6 +31,7 @@
   ],
   "extensions": [".ts", ".js", ".json"],
   "include": [
+    "src/common/global.d.ts",
     "src",
     "src/**/*",
     "./eslint.config.mjs"

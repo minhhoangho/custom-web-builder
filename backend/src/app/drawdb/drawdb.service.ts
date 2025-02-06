@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DrawDBDefinition } from '@app/drawdb/entities/drawdb.entity';
 import { DrawDBDefinitionRepository } from '@app/drawdb/drawdb.repository';
-import { NotFoundError } from 'src/errors';
+import { IsNull } from 'typeorm';
 
 @Injectable()
 export class DrawDBService {
@@ -21,6 +21,9 @@ export class DrawDBService {
 
   async getLatest(): Promise<DrawDBDefinition | null> {
     return this.drawDBDefinitionRepository.findOne({
+      where: {
+        deletedAt: IsNull(),
+      },
       order: {
         updatedAt: 'desc',
       },

@@ -9,13 +9,17 @@ export class CreateDrawDBSchema1732499961705 implements MigrationInterface {
         columns: [
           MigrationHelper.intIdPrimary(),
           MigrationHelper.varchar({ name: 'name', isNullable: false }),
-          MigrationHelper.varchar({ name: 'database', isNullable: false, defaultValue: 'mysql' }),
-          MigrationHelper.json({ name: 'note' }),
-          MigrationHelper.json({ name: 'pan' }), // position
+          MigrationHelper.varchar({
+            name: 'database',
+            isNullable: false,
+            defaultValue: 'mysql',
+          }),
+          MigrationHelper.json({ name: 'tables' }),
           MigrationHelper.json({ name: 'references' }),
           MigrationHelper.json({ name: 'areas' }),
-          MigrationHelper.json({ name: 'tables' }),
-          MigrationHelper.json({ name: 'todo' }),
+          MigrationHelper.json({ name: 'notes' }),
+          MigrationHelper.json({ name: 'todos' }),
+          MigrationHelper.json({ name: 'pan' }), // position
           MigrationHelper.float({ name: 'zoom', isNullable: false }),
           ...MigrationHelper.timestampsWithDelete(),
           ...MigrationHelper.userInteractionFieldsWithSoftDelete(),

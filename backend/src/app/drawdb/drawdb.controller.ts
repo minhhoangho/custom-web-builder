@@ -20,15 +20,14 @@ export class DrawDBController {
   async getAll(): Promise<DrawDBDefinition[]> {
     return this.drawDBService.getDrawDBDefinitions();
   }
+  @Get('/latest')
+  async getLatest(): Promise<DrawDBDefinition | null> {
+    return this.drawDBService.getLatest();
+  }
 
   @Get(':id')
   async getById(@Param('id') id: number): Promise<DrawDBDefinition> {
     return this.drawDBService.getDrawDBDefinition(id);
-  }
-
-  @Get('latest')
-  async getLatest(): Promise<DrawDBDefinition | null> {
-    return this.drawDBService.getLatest();
   }
 
   @Post()
