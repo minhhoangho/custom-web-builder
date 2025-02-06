@@ -1,22 +1,22 @@
-import {TypeOrmModuleOptions} from '@nestjs/typeorm';
-import envConfig from 'src/configs';
-import {join} from 'path';
-import {DataSource, DataSourceOptions} from 'typeorm';
-import {TypeORMLogger} from '@database/db-logger';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { join } from 'path';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { TypeORMLogger } from '@database/db-logger';
+import loadConfig from '../configs';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
-  type: <never>envConfig.db.type,
-  host: envConfig.db.host,
-  port: envConfig.db.port,
-  username: envConfig.db.username,
-  password: envConfig.db.password,
-  database: envConfig.db.database,
+  type: <never>loadConfig.db.type,
+  host: loadConfig.db.host,
+  port: loadConfig.db.port,
+  username: loadConfig.db.username,
+  password: loadConfig.db.password,
+  database: loadConfig.db.database,
   entities: [join(__dirname, '../', 'app/**/*.entity{.ts,.js}')],
   migrations: [join(__dirname, '../', 'database/migrations/*{.ts,.js}')],
   // synchronize: true,
   migrationsRun: false,
   logger: new TypeORMLogger(),
-  logging: envConfig.db.logging,
+  logging: loadConfig.db.logging,
   connectionTimeout: 20000,
   options: {
     useUTC: true,
