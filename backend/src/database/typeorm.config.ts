@@ -18,6 +18,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   logger: new TypeORMLogger(),
   logging: loadConfig.db.logging,
   connectionTimeout: 20000,
+  timezone: 'Z',
   options: {
     useUTC: true,
   },

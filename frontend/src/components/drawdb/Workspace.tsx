@@ -203,6 +203,7 @@ export default function WorkSpace() {
         });
         setUndoStack([]);
         setRedoStack([]);
+        setLastSaved(diagram.updatedAt);
         if (databases[database].hasTypes) {
           setTypes(diagram.types ?? []);
         }
@@ -239,6 +240,7 @@ export default function WorkSpace() {
           pan: d.pan as { x: number; y: number },
           zoom: d.zoom,
         });
+        setLastSaved(d.updatedAt);
         if (databases[database]?.hasTypes) {
           setTypes(d.types ?? []);
         }

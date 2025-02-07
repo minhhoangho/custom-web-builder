@@ -24,14 +24,14 @@ export const appConfig = {
     username: get(process.env, 'DB_USERNAME', 'postgres'),
     password: get(process.env, 'DB_PASSWORD', 'password'),
     database: get(process.env, 'DB_DATABASE_NAME', 'base-api'),
-    logging: false,
+    logging: true,
   },
   aws: {
     region: get(process.env, 'AWS_REGION', 'ap-southest-1'),
     accessKeyId: get(process.env, 'AWS_ACCESS_KEY_ID', ''),
     secretAccessKey: get(process.env, 'AWS_SECRET_ACCESS_KEY', ''),
     bucketName: get(process.env, 'AWS_BUCKET_NAME', 'base'),
-    signUrlTimeout: Number(get(process.env, 'AWS_SIGN_URL_TIMEOUT')|| 60),
+    signUrlTimeout: Number(get(process.env, 'AWS_SIGN_URL_TIMEOUT') || 60),
   },
   locale: {
     supportedLocales: get(process.env, 'LOCALE_SUPPORTED_LOCALES')?.split(
@@ -52,7 +52,7 @@ export const appConfig = {
   },
   auth: {
     accessTokenTTL: Number(
-      get(process.env, 'JWT_EXPIRES_ACCESS_TOKEN') ||  3600 * 24 * 7,
+      get(process.env, 'JWT_EXPIRES_ACCESS_TOKEN') || 3600 * 24 * 7,
     ),
     refreshTokenTTL: Number(
       get(process.env, 'JWT_EXPIRES_REFRESH_TOKEN') || 3600 * 24 * 7 * 2,

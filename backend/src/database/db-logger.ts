@@ -11,7 +11,6 @@ const typeormLogger = winston.createLogger({
   ],
 });
 
-
 export class TypeORMLogger implements Logger {
   // implement all methods from logger class
   logQuery(query: string, parameters?: never[], _queryRunner?: QueryRunner) {
