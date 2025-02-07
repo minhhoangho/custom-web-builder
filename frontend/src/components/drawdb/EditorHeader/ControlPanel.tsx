@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import moment from 'moment';
 import { Iconify, Spinner, toast } from '@components/common';
 import { Input } from '@components/form/Input';
 import { areaSchema, noteSchema, tableSchema } from 'src/data/drawdb-schema';
@@ -1690,7 +1691,7 @@ export default function ControlPanel({
       case State.LOADING:
         return t('loading');
       case State.SAVED:
-        return `${t('last_saved')} ${lastSaved}`;
+        return `${t('last_saved')} ${lastSaved && moment(lastSaved).fromNow()}`;
       case State.SAVING:
         return t('saving');
       case State.ERROR:

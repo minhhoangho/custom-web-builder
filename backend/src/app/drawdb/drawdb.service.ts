@@ -16,7 +16,9 @@ export class DrawDBService {
   }
 
   async getDrawDBDefinition(id: number): Promise<DrawDBDefinition> {
-    return this.drawDBDefinitionRepository.findOneByIdOrFail(id);
+    const data = await this.drawDBDefinitionRepository.findOneByIdOrFail(id);
+    console.log('DrawDBService -> getDrawDBDefinition -> data', data);
+    return data;
   }
 
   async getLatest(): Promise<DrawDBDefinition | null> {

@@ -11,6 +11,7 @@ import {
   AnyObject,
   FindOneBuilderOptions,
   FindWithPaginationBuilderOptions,
+  IPaginationEntity,
 } from '@common/interfaces';
 import {
   ErrorCode,
@@ -18,7 +19,6 @@ import {
   PAGINATION_MAX_LIMIT,
 } from '@common/constants';
 import { NotFoundError } from 'src/errors';
-import { IPaginationEntity } from '@common/interfaces';
 import { convertConditionToString } from '@utils';
 
 export class BaseRepository<E extends ObjectLiteral> extends Repository<E> {
