@@ -209,7 +209,13 @@ export default function WorkSpace() {
       };
 
       if (!id) {
-        if (selectedDb === '') setShowSelectDbModal(true);
+        const diagram = await getDatabaseDetail(0);
+        if (diagram) {
+          postSetDatabaseInfo(diagram);
+        } else {
+          window.name = '';
+          if (selectedDb === '') setShowSelectDbModal(true);
+        }
       } else {
         const diagram = await getDatabaseDetail(id);
         if (diagram) {
