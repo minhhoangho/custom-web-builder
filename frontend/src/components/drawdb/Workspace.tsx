@@ -29,13 +29,7 @@ import {
 import { databases } from 'src/data/database';
 import SidePanel from '@components/drawdb/EditorSidePanel/SidePanel';
 import Canvas from '@components/drawdb/EditorCanvas/Canvas';
-import {
-  createDatabase,
-  getDatabaseDetail,
-  getLastestDatabase,
-  updateDatabase,
-} from '@api/drawdb';
-import { toast } from '@components/common';
+import { createDatabase, getDatabaseDetail, updateDatabase } from '@api/drawdb';
 import FloatingControls from './FloatingControls';
 import ControlPanel from './EditorHeader/ControlPanel';
 import {
@@ -157,6 +151,7 @@ export default function WorkSpace() {
       setSaveState(State.SAVED);
       // setLastSaved(new Date().toLocaleString());
       setLastSaved(res.updatedAt);
+      handleFetchDatabase(res.id);
     },
     onError: () => {
       setSaveState(State.ERROR);
@@ -175,16 +170,16 @@ export default function WorkSpace() {
       setSaveState(State.SAVED);
       // setLastSaved(new Date().toLocaleString());
       setLastSaved(res.updatedAt);
+      handleFetchDatabase(res.id);
     },
     onError: () => {
       setSaveState(State.ERROR);
     },
   });
 
-  const { mutate: getDatabaseDetailMutate } = useMutation({
-    mutationFn: (id: number): Promise<any> => getDatabaseDetail(id),
-    onSuccess: (diagram: DatabaseDetailResponse) => {
-      if (diagram) {
+  const handleFetchDatabase = useCallback(
+    async (id?: number) => {
+      const postSetDatabaseInfo = (diagram: DatabaseDetailResponse) => {
         if (diagram.database) {
           setDatabase(diagram.database);
         } else {
@@ -211,55 +206,39 @@ export default function WorkSpace() {
           setEnums(diagram.enums ?? []);
         }
         window.name = `d ${diagram.id}`;
-      } else {
-        window.name = '';
-      }
-    },
-    onError: () => {
-      toast('error', 'Load diagram error');
-    },
-  });
+      };
 
-  const { mutate: getLastestDatabaseMutate } = useMutation({
-    mutationFn: (): Promise<DatabaseDetailResponse> => getLastestDatabase(),
-    onSuccess: (d: DatabaseDetailResponse | null) => {
-      if (d) {
-        if (d.database) {
-          setDatabase(d.database);
-        } else {
-          setDatabase(DB.GENERIC);
-        }
-        setId(d.id);
-        setTitle(d.name);
-        setTables(d.tables);
-        setRelationships(d.references);
-        setNotes(d.notes);
-        setAreas(d.areas);
-        setTasks(d.todos ?? []);
-        setTransform({
-          pan: d.pan as { x: number; y: number },
-          zoom: d.zoom,
-        });
-        setLastSaved(d.updatedAt);
-        if (databases[database]?.hasTypes) {
-          setTypes(d.types ?? []);
-        }
-        if (databases[database]?.hasEnums) {
-          setEnums(d.enums ?? []);
-        }
-        window.name = `d ${d.id}`;
-      } else {
-        window.name = '';
+      if (!id) {
         if (selectedDb === '') setShowSelectDbModal(true);
+      } else {
+        const diagram = await getDatabaseDetail(id);
+        if (diagram) {
+          postSetDatabaseInfo(diagram);
+        } else {
+          window.name = '';
+        }
       }
     },
-    onError: () => {
-      toast('error', 'Load latest diagram error');
-    },
-  });
+    [
+      database,
+      selectedDb,
+      setAreas,
+      setDatabase,
+      setEnums,
+      setNotes,
+      setRedoStack,
+      setRelationships,
+      setTables,
+      setTasks,
+      setTransform,
+      setTypes,
+      setUndoStack,
+    ],
+  );
 
   const save = useCallback(() => {
     if (saveState !== State.SAVING) return;
+    setSaveState(State.SAVED);
 
     const name = window.name.split(' ');
     const op = name[0];
@@ -375,16 +354,15 @@ export default function WorkSpace() {
           if (selectedDb === '') setShowSelectDbModal(true);
         });
     };
-
     if (window.name === '') {
-      return getLastestDatabaseMutate();
+      return handleFetchDatabase();
     } else {
       const name = window.name.split(' ');
       const op = name[0];
       const id = parseInt(name?.[1] ?? '0');
       switch (op) {
         case 'd': {
-          return getDatabaseDetailMutate(id);
+          return handleFetchDatabase(id);
         }
         case 't':
         case 'lt': {
@@ -413,35 +391,6 @@ export default function WorkSpace() {
     searchParams,
   ]);
 
-  useEffect(() => {
-    if (
-      tables?.length === 0 &&
-      areas?.length === 0 &&
-      notes?.length === 0 &&
-      types?.length === 0 &&
-      tasks?.length === 0
-    )
-      return;
-
-    // if (settings.autosave) {
-    //   console.log('Auto saving...');
-    //   setSaveState(State.SAVING);
-    // }
-  }, [
-    undoStack,
-    redoStack,
-    settings.autosave,
-    tables?.length,
-    areas?.length,
-    notes?.length,
-    types?.length,
-    relationships?.length,
-    tasks?.length,
-    transform.zoom,
-    title,
-    setSaveState,
-  ]);
-
   // console.log('WATCH undoStack', undoStack);
   // console.log('WATCH redoStack', redoStack);
   // console.log('WATCH settings.autosave', settings.autosave);
@@ -462,9 +411,8 @@ export default function WorkSpace() {
 
   useEffect(() => {
     document.title = 'Editor | drawDB';
-
     load();
-  }, [load]);
+  }, []);
 
   return (
     <div className="h-screen w-full flex flex-col overflow-hidden theme bg-white">

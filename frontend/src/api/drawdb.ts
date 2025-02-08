@@ -8,7 +8,7 @@ export const getDatabaseDetail = (
   return request.get(`/drawdb/databases/${id}`);
 };
 
-export const getLastestDatabase = (): Promise<DatabaseDetailResponse> => {
+export const getLatestDatabase = (): Promise<DatabaseDetailResponse> => {
   return request.get(`/drawdb/databases/latest`);
 };
 

@@ -1,4 +1,13 @@
-import { DArea, DBValueType, DEnum, DNote, DRelationship, DTable, DTemplate, DType } from "src/data/interface";
+import {
+  DArea,
+  DBValueType,
+  DEnum,
+  DNote,
+  DRelationship,
+  DTable,
+  DTemplate,
+  DType,
+} from 'src/data/interface';
 
 export interface DatabaseDetailResponse {
   id: number;

@@ -27,7 +27,7 @@
     "typeorm": "ts-node --project ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js  -d src/database/typeorm.config.ts" ,
     "migration:show": "pnpm typeorm migration:show",
     "db:migrate": "pnpm typeorm migration:run",
-    "db:refresh": "pnpm db:drop && yarn db:migrate && yarn db:seed",
+    "db:refresh": "pnpm db:drop && pnpm db:migrate && pnpm db:seed",
     "db:drop": "pnpm typeorm schema:drop"
   },
   "dependencies": {
