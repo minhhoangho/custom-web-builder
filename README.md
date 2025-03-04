@@ -1,2 +1,2 @@
-# custom-web-builder
-A custom web builder by drag and drop component
+# custom-db-schema
+A custom db schema drawing
